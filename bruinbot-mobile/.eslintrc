@@ -1,0 +1,34 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": "eslint:recommended",
+	"rules": {
+		"object-property-newline": [
+			"error",
+			{
+				"allowAllPropertiesOnSameLine": true
+			}
+		],
+		"no-console": "off",
+		"no-unused-vars": [
+			"warn",
+			{
+				"argsIgnorePattern": "^_"
+			}
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"quotes": [
+			2,
+			"single"
+		],
+		"indent": [
+			"error",
+			"tab"
+		]
+	}
+}
