@@ -1,5 +1,5 @@
 import { FirebaseError } from 'firebase';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
 	Keyboard,
 	KeyboardAvoidingView,
@@ -12,10 +12,17 @@ import {
 import { Button, Input } from 'react-native-elements';
 import { Ctx } from '../components/StateProvider';
 
-const LoginScreen = () => {
+// TODO: don't use `any`
+const LoginScreen = (props: any) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { state } = useContext(Ctx);
+
+	useEffect(() => {
+		if (state.user)
+			props.navigation.navigate('Blank');
+	});
+
 	return (
 		<TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
 			<KeyboardAvoidingView
@@ -45,6 +52,7 @@ const LoginScreen = () => {
 						onPress={() => {
 							state.firebase.auth().signInWithEmailAndPassword(email, password).catch(function (_error: FirebaseError) {
 								// TODO: Handle error codes
+								console.log(_error.message);
 							});
 						}}
 					/>
@@ -55,6 +63,7 @@ const LoginScreen = () => {
 						onPress={() => {
 							state.firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (_error: FirebaseError) {
 								// TODO: Handle error codes
+								console.log(_error.message);
 							});
 						}}
 					/>

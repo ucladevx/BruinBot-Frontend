@@ -9,7 +9,7 @@ const firebaseConfig = {
 	projectId: 'bruinbot-8d68e',
 	storageBucket: 'bruinbot-8d68e.appspot.com',
 	messagingSenderId: '925978645479',
-	appId: '1:925978645479:web:4caa5997ad0f8236596342'
+	appId: '1:925978645479:web:5aa6b096d01bf1d4596342'
 };
 firebase.initializeApp(firebaseConfig);
 
@@ -21,8 +21,8 @@ const StateProvider = (props: { children: React.ReactNode; }) => {
 		// write actions here
 		if (action.type === 'SET_USER') {
 			return {
+				...state,
 				user: action.user,
-				...state
 			};
 		}
 		return state;
@@ -32,7 +32,7 @@ const StateProvider = (props: { children: React.ReactNode; }) => {
 		firebase.auth().onAuthStateChanged(function (user) {
 			dispatch({ type: 'SET_USER', user });
 		});
-	});
+	}, []);
 	return (
 		<Ctx.Provider value={{ state, dispatch }}>
 			{props.children}
