@@ -25,5 +25,5 @@ jobs:
         working-directory: ./bruinbot-mobile
         run: |
           npm ci 
-          npm run eslint
+          npm run lint
         
