@@ -1,6 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import bobaIcon from '../assets/bobaIcon.jpg';
 
 const data: {
   name: string;
@@ -34,7 +35,7 @@ export default class ItemCatalogue extends React.Component {
 						return (
 							<View key={item.key} style={styles.item}>
 								<Image
-									source={require('../assets/bobaIcon.jpg')}
+									source={bobaIcon}
 									style={styles.image}
 								/>
 								<View style={styles.itemTitle}>
