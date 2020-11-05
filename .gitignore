@@ -1,12 +1,14 @@
-# Created by https://www.toptal.com/developers/gitignore/api/vscode
-# Edit at https://www.toptal.com/developers/gitignore?templates=vscode
-
-### vscode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# End of https://www.toptal.com/developers/gitignore/api/vscode
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+.vscode/
+config.tsx
+# macOS
+.DS_Store
