@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import bobaIcon from '../assets/bobaIcon.jpg';
+import bobaIcon from '../assets/icon.jpg';
 
 const data: {
   name: string;
