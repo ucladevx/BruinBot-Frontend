@@ -9,24 +9,27 @@ const firebaseConfig = {
 	projectId: 'bruinbot-8d68e',
 	storageBucket: 'bruinbot-8d68e.appspot.com',
 	messagingSenderId: '925978645479',
-	appId: '1:925978645479:web:5aa6b096d01bf1d4596342'
+	appId: '1:925978645479:web:5aa6b096d01bf1d4596342',
 };
 firebase.initializeApp(firebaseConfig);
 
 const initialState: State = { firebase, user: null };
 const Ctx = React.createContext<StateAndDispatch>(undefined!);
 
-const StateProvider = (props: { children: React.ReactNode; }) => {
-	const [state, dispatch] = useReducer((state: State, action: SetUserAction): State => {
-		// write actions here
-		if (action.type === 'SET_USER') {
-			return {
-				...state,
-				user: action.user,
-			};
-		}
-		return state;
-	}, initialState);
+const StateProvider = (props: { children: React.ReactNode }) => {
+	const [state, dispatch] = useReducer(
+		(state: State, action: SetUserAction): State => {
+			// write actions here
+			if (action.type === 'SET_USER') {
+				return {
+					...state,
+					user: action.user,
+				};
+			}
+			return state;
+		},
+		initialState
+	);
 
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged(function (user) {
@@ -34,9 +37,7 @@ const StateProvider = (props: { children: React.ReactNode; }) => {
 		});
 	}, []);
 	return (
-		<Ctx.Provider value={{ state, dispatch }}>
-			{props.children}
-		</Ctx.Provider>
+		<Ctx.Provider value={{ state, dispatch }}>{props.children}</Ctx.Provider>
 	);
 };
 

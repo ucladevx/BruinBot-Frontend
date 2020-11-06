@@ -4,11 +4,11 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import bobaIcon from '../assets/icon.jpg';
 
 const data: {
-  name: string;
-  price: string;
-  deliveryTime: number;
-  image: string;
-  key: number;
+	name: string;
+	price: string;
+	deliveryTime: number;
+	image: string;
+	key: number;
 }[] = [];
 for (let i = 0; i < 25; i++) {
 	data.push({
@@ -34,10 +34,7 @@ export default class ItemCatalogue extends React.Component {
 					{data.map((item) => {
 						return (
 							<View key={item.key} style={styles.item}>
-								<Image
-									source={bobaIcon}
-									style={styles.image}
-								/>
+								<Image source={bobaIcon} style={styles.image} />
 								<View style={styles.itemTitle}>
 									<Text style={styles.itemName}>{item.name}</Text>
 									<Text style={styles.itemDeliveryTime}>

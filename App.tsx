@@ -11,7 +11,7 @@ const App = () => {
 	return (
 		<StateProvider>
 			<NavigationContainer>
-				<Stack.Navigator headerMode='none' initialRouteName="Login">
+				<Stack.Navigator headerMode="none" initialRouteName="Login">
 					<Stack.Screen name="Login" component={LoginScreen} />
 					<Stack.Screen name="Blank" component={BlankScreen} />
 				</Stack.Navigator>
