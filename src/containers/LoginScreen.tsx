@@ -5,43 +5,67 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	StyleSheet,
-	Text,
 	TouchableWithoutFeedback,
-	View
+	View,
 } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, Text } from 'react-native-elements';
 import { Ctx } from '../components/StateProvider';
 
-// TODO: don't use `any`
+function handleAuthErrors(error: FirebaseError) {
+	switch (error.code) {
+		case 'auth/user-disabled':
+			return {
+				email: 'The user corresponding to the provided email has been disabled',
+				password: '',
+			};
+		case 'auth/user-not-found':
+			return {
+				email: 'There is no user corresponding to the provided email',
+				password: '',
+			};
+		case 'auth/wrong-password':
+			return { email: '', password: 'The provided password is incorrect' };
+		case 'auth/email-already-in-use':
+			return { email: 'The provided email is already in use', password: '' };
+		case 'auth/invalid-email':
+			return { email: 'The provided email is invalid', password: '' };
+		case 'auth/weak-password':
+			return { email: '', password: 'The provided pasword is too weak' };
+		default:
+			throw 'Invalid Firebase Auth code!';
+	}
+}
+
 const LoginScreen = (props: any) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [formErrors, setFormErrors] = useState({ email: '', password: '' });
 	const { state } = useContext(Ctx);
 
 	useEffect(() => {
-		if (state.user)
-			props.navigation.navigate('Blank');
+		if (state.user) props.navigation.navigate('Blank');
 	});
 
 	return (
 		<TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
 			<KeyboardAvoidingView
 				behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-				style={styles.container} >
+				style={styles.container}
+			>
 				<View style={styles.logoContainer}>
-					<Text>
-						Logo goes here!
+					<Text h1 style={{ fontWeight: 'bold' }}>
+						BruinBot
 					</Text>
 				</View>
 				<View style={styles.formContainer}>
 					<Input
-						placeholder='Email'
-						containerStyle={{ marginBottom: 8 }}
+						placeholder="Email"
+						errorMessage={formErrors.email}
 						onChangeText={(text) => setEmail(text)}
 					/>
 					<Input
-						placeholder='Password'
-						containerStyle={{ marginBottom: 16 }}
+						placeholder="Password"
+						errorMessage={formErrors.password}
 						secureTextEntry={true}
 						onChangeText={(text) => setPassword(text)}
 					/>
@@ -50,10 +74,12 @@ const LoginScreen = (props: any) => {
 						buttonStyle={{ width: 128 }}
 						containerStyle={{ marginBottom: 16 }}
 						onPress={() => {
-							state.firebase.auth().signInWithEmailAndPassword(email, password).catch(function (_error: FirebaseError) {
-								// TODO: Handle error codes
-								console.log(_error.message);
-							});
+							state.firebase
+								.auth()
+								.signInWithEmailAndPassword(email, password)
+								.catch((error: FirebaseError) => {
+									setFormErrors(handleAuthErrors(error));
+								});
 						}}
 					/>
 					<Button
@@ -61,14 +87,16 @@ const LoginScreen = (props: any) => {
 						buttonStyle={{ width: 128 }}
 						containerStyle={{ marginBottom: 16 }}
 						onPress={() => {
-							state.firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (_error: FirebaseError) {
-								// TODO: Handle error codes
-								console.log(_error.message);
-							});
+							state.firebase
+								.auth()
+								.createUserWithEmailAndPassword(email, password)
+								.catch((error: FirebaseError) => {
+									setFormErrors(handleAuthErrors(error));
+								});
 						}}
 					/>
 				</View>
-			</KeyboardAvoidingView >
+			</KeyboardAvoidingView>
 		</TouchableWithoutFeedback>
 	);
 };
@@ -78,13 +106,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		alignItems: 'stretch',
-		backgroundColor: '#fff',
 	},
 	logoContainer: {
 		height: '40%',
 		alignItems: 'center',
 		justifyContent: 'flex-end',
-		paddingBottom: 24
+		paddingBottom: 24,
 	},
 	formContainer: {
 		height: '60%',
@@ -92,8 +119,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		paddingTop: 24,
 		paddingHorizontal: 24,
-		backgroundColor: '#fff',
-	}
+	},
 });
 
 export default LoginScreen;
