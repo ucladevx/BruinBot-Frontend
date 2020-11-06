@@ -82,6 +82,7 @@ const SignupScreen = ({ navigation }: Props) => {
 						}}
 					/>
 				</View>
+				{/* This absolutely positioned icon must be at the bottom to be able to register press */}
 				<View style={{ position: 'absolute', left: 16, top: 32 }}>
 					<Icon
 						name="arrow-left"
