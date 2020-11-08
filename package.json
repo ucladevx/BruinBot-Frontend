@@ -7,13 +7,12 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .tsx",
-    "tsc": "tsc"
+    "lint-fix": "eslint . --ext .tsx --fix"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.8.2",
     "@react-navigation/stack": "^5.11.1",
-    "eslint": "^7.12.1",
     "expo": "~39.0.2",
     "expo-cli": "^3.28.5",
     "expo-status-bar": "~1.0.2",
@@ -36,7 +35,13 @@
     "@types/react-native": "~0.63.2",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "firebase": "^4.8.0",
+    "prettier": "^2.1.2",
     "typescript": "~3.9.5"
   },
   "private": true
