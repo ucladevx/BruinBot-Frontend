@@ -5,8 +5,9 @@ import {
 	Image,
 	StyleSheet,
 	Dimensions,
-	ImageSourcePropType
+	ImageSourcePropType,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 interface MarkerData {
 	id: number;
@@ -23,12 +24,12 @@ interface PropTypes {
 	refresh: () => any;
 }
 
-const Map = ({
+const MapComponent = ({
 	initRegion,
 	markers,
 	markerImg,
 	polygonCoords,
-	refresh
+	refresh,
 }: PropTypes) => {
 	const [_markers, setMarkers] = useState(markers);
 	const mapRef = useRef<MapView>(null);
@@ -43,9 +44,9 @@ const Map = ({
 				{
 					center: {
 						latitude: initRegion.latitude,
-						longitude: initRegion.longitude
+						longitude: initRegion.longitude,
 					},
-					zoom: 14.5
+					zoom: 14.5,
 				},
 				{ duration: 300 }
 			);
@@ -83,10 +84,7 @@ const Map = ({
 				))}
 			</MapView>
 			<TouchableOpacity style={styles.button} onPress={() => refresh()}>
-				<Image
-					style={styles.refreshIcon}
-					source={require('../assets/refresh.png')}
-				/>
+				<Icon name="ios-sync" type="ionicon" size={30} color="#555" />
 			</TouchableOpacity>
 		</>
 	);
@@ -102,7 +100,7 @@ const coordInRegion = (coord: LatLng, region: Region): boolean =>
 const styles = StyleSheet.create({
 	map: {
 		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height
+		height: Dimensions.get('window').height,
 	},
 	button: {
 		position: 'absolute',
@@ -117,14 +115,9 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.8,
 		shadowRadius: 1,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	markerIcon: { width: 50, height: 50 },
-	refreshIcon: {
-		width: 30,
-		height: 30,
-		tintColor: '#777'
-	}
 });
 
-export default Map;
+export default MapComponent;

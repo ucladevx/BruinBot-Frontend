@@ -9,17 +9,17 @@ import MapScreen from './src/containers/MapScreen';
 
 const Stack = createStackNavigator();
 const App = () => {
-  return (
-    <StateProvider>
-      <NavigationContainer>
-        <Stack.Navigator headerMode="none" initialRouteName="Login">
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Map" component={MapScreen} />
-          <Stack.Screen name="Blank" component={BlankScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </StateProvider>
-  );
+	return (
+		<StateProvider>
+			<NavigationContainer>
+				<Stack.Navigator headerMode="none" initialRouteName="Login">
+					<Stack.Screen name="Login" component={LoginScreen} />
+					<Stack.Screen name="Map" component={MapScreen} />
+					<Stack.Screen name="Blank" component={BlankScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</StateProvider>
+	);
 };
 
 export default App;
