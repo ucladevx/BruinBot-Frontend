@@ -20,8 +20,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
+      - uses: actions/setup-node@v1
+      - name: Install dependencies
+        run: npm ci
       - name: Run ESLint
-        run: yarn lint
+        run: npm run lint
         
