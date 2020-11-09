@@ -5,6 +5,7 @@ import 'react-native-gesture-handler';
 import { StateProvider } from './src/components/StateProvider';
 import BlankScreen from './src/containers/BlankScreen';
 import LoginScreen from './src/containers/LoginScreen';
+import MapScreen from './src/containers/MapScreen';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
 			<NavigationContainer>
 				<Stack.Navigator headerMode="none" initialRouteName="Login">
 					<Stack.Screen name="Login" component={LoginScreen} />
+					<Stack.Screen name="Map" component={MapScreen} />
 					<Stack.Screen name="Blank" component={BlankScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
