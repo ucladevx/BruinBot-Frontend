@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import MapView, { Polygon, Marker, LatLng, Region } from 'react-native-maps';
 import {
 	TouchableOpacity,
-	Image,
 	StyleSheet,
 	Dimensions,
 	ImageSourcePropType,
@@ -10,33 +9,37 @@ import {
 import { Icon } from 'react-native-elements';
 
 interface MarkerData {
-	id: number;
+	id: string;
 	name: string;
 	latitude: number;
 	longitude: number;
 }
 
+export interface MapControlledTypes {
+	id: string;
+}
+
 interface PropTypes {
 	initRegion: Region;
 	markers: MarkerData[];
-	markerImg: ImageSourcePropType;
+	markerImg?: ImageSourcePropType;
 	polygonCoords: LatLng[];
-	refresh: () => any;
+	refresh(): any;
+	ControlledComponent(_: MapControlledTypes): any;
 }
 
 const MapComponent = ({
 	initRegion,
 	markers,
-	markerImg,
 	polygonCoords,
 	refresh,
+	ControlledComponent,
 }: PropTypes) => {
-	const [_markers, setMarkers] = useState(markers);
-	const mapRef = useRef<MapView>(null);
+	const [selectedMarker, setSelected] = useState(
+		markers.length && markers[0].id
+	);
 
-	useEffect(() => {
-		setMarkers(markers);
-	}, [markers]);
+	const mapRef = useRef<MapView>(null);
 
 	const centerCamera = () => {
 		if (mapRef && mapRef.current) {
@@ -64,28 +67,44 @@ const MapComponent = ({
 					}
 				}}
 				showsUserLocation={true}
-				showsMyLocationButton={true}
+				showsMyLocationButton={false}
 				style={styles.map}
 				ref={mapRef}
 			>
 				<Polygon
 					coordinates={polygonCoords}
 					strokeColor="#0288d1"
-					fillColor="#0288d110"
+					fillColor="rgba(2, 136, 209, 0.2)"
 				/>
-				{_markers.map((bot) => (
+				{markers.map((marker) => (
 					<Marker
-						key={bot.id}
-						coordinate={{ latitude: bot.latitude, longitude: bot.longitude }}
-						title={bot.name}
+						key={marker.id}
+						coordinate={{
+							latitude: marker.latitude,
+							longitude: marker.longitude,
+						}}
+						title={marker.name}
+						onPress={() => setSelected(marker.id)}
 					>
-						<Image style={styles.markerIcon} source={markerImg} />
+						<Icon
+							name="ios-pin"
+							type="ionicon"
+							size={40}
+							color={marker.id === selectedMarker ? '#0288d1' : '#777'}
+						/>
 					</Marker>
 				))}
 			</MapView>
-			<TouchableOpacity style={styles.button} onPress={() => refresh()}>
+			<TouchableOpacity
+				style={{ ...styles.button, marginBottom: 60 }}
+				onPress={() => refresh()}
+			>
 				<Icon name="ios-sync" type="ionicon" size={30} color="#555" />
 			</TouchableOpacity>
+			<TouchableOpacity style={styles.button}>
+				<Icon name="ios-navigate" type="ionicon" size={30} color="#555" />
+			</TouchableOpacity>
+			<ControlledComponent id={selectedMarker} />
 		</>
 	);
 };
@@ -104,10 +123,10 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		position: 'absolute',
-		bottom: 18,
-		right: 75,
-		width: 58,
-		height: 58,
+		bottom: 160,
+		right: 8,
+		width: 50,
+		height: 50,
 		borderRadius: 60,
 		backgroundColor: '#fff',
 		shadowColor: '#00000070',
@@ -117,7 +136,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	markerIcon: { width: 50, height: 50 },
 });
 
 export default MapComponent;
