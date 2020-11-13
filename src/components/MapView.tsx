@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import MapView, { Polygon, Marker, LatLng, Region } from 'react-native-maps';
 import {
 	TouchableOpacity,
@@ -35,16 +35,11 @@ const MapComponent = ({
 	refresh,
 	ControlledComponent,
 }: PropTypes) => {
-	const [_markers, setMarkers] = useState(markers);
 	const [selectedMarker, setSelected] = useState(
 		markers.length && markers[0].id
 	);
 
 	const mapRef = useRef<MapView>(null);
-
-	useEffect(() => {
-		setMarkers(markers);
-	}, [markers]);
 
 	const centerCamera = () => {
 		if (mapRef && mapRef.current) {
@@ -79,9 +74,9 @@ const MapComponent = ({
 				<Polygon
 					coordinates={polygonCoords}
 					strokeColor="#0288d1"
-					fillColor="#0288d110"
+					fillColor="rgba(2, 136, 209, 0.2)"
 				/>
-				{_markers.map((marker) => (
+				{markers.map((marker) => (
 					<Marker
 						key={marker.id}
 						coordinate={{

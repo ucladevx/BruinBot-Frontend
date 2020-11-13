@@ -87,15 +87,11 @@ const shuffleMarkers = (markers) => {
 	});
 };
 
-const MapControlledComponent = ({ id }: MapControlledTypes) => {
-	const [_id, setId] = useState(id);
-
-	useEffect(() => {
-		setId(id);
-	}, [id]);
-
-	return <Inventory id={_id} info={botInfo} items={botInventories} />;
-};
+// wrapper component that takes in a dynamically updated
+// `id` prop from the MapComponent
+const MapControlledComponent = ({ id }: MapControlledTypes) => (
+	<Inventory id={id} info={botInfo} items={botInventories} />
+);
 
 const MapScreen = () => {
 	const [markers, setMarkers] = useState(botCoords);
