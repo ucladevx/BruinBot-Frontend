@@ -4,12 +4,15 @@ import React, { useContext } from 'react';
 import 'react-native-gesture-handler';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import LoginScreen from './src/containers/auth/LoginScreen';
+import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
+// import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 import BlankScreen from './src/containers/BlankScreen';
 
 export type RootStackParamList = {
 	Login: undefined;
 	Signup: undefined;
+	PasswordReset: undefined;
 	Blank: undefined;
 };
 
@@ -35,6 +38,7 @@ const Home = () => {
 				<>
 					<Stack.Screen name="Login" component={LoginScreen} />
 					<Stack.Screen name="Signup" component={SignupScreen} />
+					<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				</>
 			)}
 		</Stack.Navigator>
