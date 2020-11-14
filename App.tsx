@@ -5,15 +5,15 @@ import 'react-native-gesture-handler';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import LoginScreen from './src/containers/auth/LoginScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
-// import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
-import BlankScreen from './src/containers/BlankScreen';
+import MapScreen from './src/containers/MapScreen';
 
 export type RootStackParamList = {
 	Login: undefined;
 	Signup: undefined;
 	PasswordReset: undefined;
 	Blank: undefined;
+	Map: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -33,7 +33,7 @@ const Home = () => {
 	return (
 		<Stack.Navigator headerMode="none">
 			{state.user ? (
-				<Stack.Screen name="Blank" component={BlankScreen} />
+				<Stack.Screen name="Map" component={MapScreen} />
 			) : (
 				<>
 					<Stack.Screen name="Login" component={LoginScreen} />
