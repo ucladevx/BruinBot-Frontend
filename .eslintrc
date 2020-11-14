@@ -2,7 +2,8 @@
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
 		"@typescript-eslint",
-		"react-hooks"
+		"react-hooks",
+		"prettier"
 	],
 	"extends": [
 		"eslint:recommended",
@@ -15,12 +16,9 @@
 		}
 	},
 	"rules": {
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
-		"@typescript-eslint/no-unused-vars":[
-			"error",
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars":[ 
+			"warn",
 			{
 				"argsIgnorePattern": "^_"
 			}

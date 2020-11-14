@@ -1,4 +1,3 @@
-import { FirebaseError } from 'firebase';
 import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -15,10 +14,7 @@ const BlankScreen = (props: any) => {
 				buttonStyle={{ width: 128 }}
 				containerStyle={{ marginBottom: 16 }}
 				onPress={() => {
-					state.firebase
-						.auth()
-						.signOut()
-						.catch(function (_error: FirebaseError) {});
+					state.firebase.auth().signOut();
 					props.navigation.navigate('Login');
 				}}
 			/>
