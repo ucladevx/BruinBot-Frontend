@@ -1,25 +1,46 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext } from 'react';
 import 'react-native-gesture-handler';
-import { StateProvider } from './src/components/StateProvider';
-import BlankScreen from './src/containers/BlankScreen';
-import LoginScreen from './src/containers/LoginScreen';
+import { Ctx, StateProvider } from './src/components/StateProvider';
+import LoginScreen from './src/containers/auth/LoginScreen';
+import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
+import SignupScreen from './src/containers/auth/SignupScreen';
 import MapScreen from './src/containers/MapScreen';
 
-const Stack = createStackNavigator();
-const App = () => {
+export type RootStackParamList = {
+	Login: undefined;
+	Signup: undefined;
+	PasswordReset: undefined;
+	Blank: undefined;
+	Map: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+export default function App() {
 	return (
 		<StateProvider>
 			<NavigationContainer>
-				<Stack.Navigator headerMode="none" initialRouteName="Login">
-					<Stack.Screen name="Login" component={LoginScreen} />
-					<Stack.Screen name="Map" component={MapScreen} />
-					<Stack.Screen name="Blank" component={BlankScreen} />
-				</Stack.Navigator>
+				<Home />
 			</NavigationContainer>
 		</StateProvider>
 	);
-};
+}
 
-export default App;
+const Home = () => {
+	const { state } = useContext(Ctx);
+	return (
+		<Stack.Navigator headerMode="none">
+			{state.user ? (
+				<Stack.Screen name="Map" component={MapScreen} />
+			) : (
+				<>
+					<Stack.Screen name="Login" component={LoginScreen} />
+					<Stack.Screen name="Signup" component={SignupScreen} />
+					<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
+				</>
+			)}
+		</Stack.Navigator>
+	);
+};

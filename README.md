@@ -1,4 +1,5 @@
 # BruinBot Mobile App
+![Lint status](https://github.com/ucladevx/BruinBot-Frontend/workflows/Lint/badge.svg)
 
 ### To set up:
 * Navigate to this folder in Terminal
