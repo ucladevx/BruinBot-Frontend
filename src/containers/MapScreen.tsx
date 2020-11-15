@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import MapComponent, { MapControlledTypes } from '../components/MapView';
+import MapComponent, {
+	MapControlledTypes,
+	MarkerData,
+} from '../components/MapView';
 import Inventory from '../components/InventoryView';
 
 import CampusData from '../assets/campusCoords.json';
@@ -59,26 +62,26 @@ const botInfo = {
 
 const botInventories = {
 	A: new Array(10).fill(null).map((_, idx) => ({
-		id: idx,
+		id: '' + idx,
 		name: 'Green Eggs and Ham',
 		price: 4.19,
 		imgSrc: Ham,
 	})),
 	B: new Array(2).fill(null).map((_, idx) => ({
-		id: idx,
+		id: '' + idx,
 		name: 'Green Eggs and Ham',
 		price: 4.29,
 		imgSrc: Ham,
 	})),
 	C: new Array(3).fill(null).map((_, idx) => ({
-		id: idx,
+		id: '' + idx,
 		name: 'Green Eggs and Ham',
 		price: 4.39,
 		imgSrc: Ham,
 	})),
 };
 
-const shuffleMarkers = (markers) => {
+const shuffleMarkers = (markers: MarkerData[]) => {
 	// for testing purposes, randomly move around markers
 	return markers.map((bot) => {
 		bot[Math.random() > 0.5 ? 'latitude' : 'longitude'] +=

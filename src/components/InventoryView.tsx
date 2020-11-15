@@ -19,9 +19,9 @@ interface ItemProps {
 	imgSrc: ImageSourcePropType;
 }
 
-const Item = ({ name, price, imgSrc }: ItemProps) => {
+const Item = ({ id, name, price, imgSrc }: ItemProps) => {
 	return (
-		<View style={styles.item}>
+		<View style={styles.item} key={id}>
 			<Image
 				style={{
 					width: '100%',
@@ -82,9 +82,14 @@ const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 
 interface InventoryProps {
 	id: string;
-	info: VendorInfo[];
-	items: ItemProps[];
+	info: { [key: string]: VendorInfo };
+	items: { [key: string]: ItemProps[] };
 	collapsedHeight?: number;
+}
+
+interface WrapValue {
+	value: Animated.Value;
+	collapsed: boolean;
 }
 
 const Inventory = ({
@@ -96,14 +101,16 @@ const Inventory = ({
 	const openOffset = 44; // ios statusbar
 	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
 
-	const translateY = useRef(new Animated.Value(collapsedOffset)).current;
-	translateY.collapsed = true;
+	const translateY: WrapValue = {
+		value: useRef(new Animated.Value(collapsedOffset)).current,
+		collapsed: true,
+	};
 
 	const panResponder = useRef(
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderMove: (_, gesture) => {
-				translateY.setValue(
+				translateY.value.setValue(
 					(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
 				);
 			},
@@ -113,7 +120,7 @@ const Inventory = ({
 					// tapped, no velocity
 					collapse = !translateY.collapsed;
 				}
-				Animated.spring(translateY, {
+				Animated.spring(translateY.value, {
 					toValue: collapse ? collapsedOffset : openOffset,
 					velocity: gesture.vy,
 					speed: 20,
@@ -128,7 +135,7 @@ const Inventory = ({
 		<Animated.View
 			style={{
 				...styles.container,
-				transform: [{ translateY }],
+				transform: [{ translateY: translateY.value }],
 			}}
 		>
 			<InventoryHeader
@@ -140,7 +147,12 @@ const Inventory = ({
 				contentContainerStyle={styles.list}
 				data={items[id]}
 				renderItem={({ item }) => (
-					<Item name={item.name} price={item.price} imgSrc={item.imgSrc} />
+					<Item
+						id={item.id}
+						name={item.name}
+						price={item.price}
+						imgSrc={item.imgSrc}
+					/>
 				)}
 				keyExtractor={(item) => item.id}
 				horizontal={false}

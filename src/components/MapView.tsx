@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-interface MarkerData {
+export interface MarkerData {
 	id: string;
 	name: string;
 	latitude: number;
@@ -36,7 +36,7 @@ const MapComponent = ({
 	ControlledComponent,
 }: PropTypes) => {
 	const [selectedMarker, setSelected] = useState(
-		markers.length && markers[0].id
+		markers.length ? markers[0].id : ''
 	);
 
 	const mapRef = useRef<MapView>(null);
