@@ -8,20 +8,18 @@ import {
 	Animated,
 	PanResponder,
 	StyleSheet,
-	ImageSourcePropType,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-interface ItemProps {
-	id: string;
-	name: string;
-	price: number;
-	imgSrc: ImageSourcePropType;
-}
+import {
+	ItemProps,
+	HeaderProps,
+	InventoryProps,
+} from '../types/inventoryTypes';
 
-const Item = ({ id, name, price, imgSrc }: ItemProps) => {
+const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	return (
-		<View style={styles.item} key={id}>
+		<View style={styles.item} key={_id}>
 			<Image
 				style={{
 					width: '100%',
@@ -35,19 +33,6 @@ const Item = ({ id, name, price, imgSrc }: ItemProps) => {
 		</View>
 	);
 };
-
-interface VendorInfo {
-	name: string;
-	distance: number;
-	inventorySize: number;
-	itemsSold: number;
-	imgSrc: ImageSourcePropType;
-}
-
-interface HeaderProps {
-	height: number;
-	vendor: VendorInfo;
-}
 
 const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 	return (
@@ -79,13 +64,6 @@ const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 		</View>
 	);
 };
-
-interface InventoryProps {
-	id: string;
-	info: { [key: string]: VendorInfo };
-	items: { [key: string]: ItemProps[] };
-	collapsedHeight?: number;
-}
 
 interface WrapValue {
 	value: Animated.Value;
@@ -148,13 +126,13 @@ const Inventory = ({
 				data={items[id]}
 				renderItem={({ item }) => (
 					<Item
-						id={item.id}
+						_id={item._id}
 						name={item.name}
 						price={item.price}
 						imgSrc={item.imgSrc}
 					/>
 				)}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(item) => item._id}
 				horizontal={false}
 				numColumns={2}
 			/>
@@ -201,4 +179,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Inventory;
+export default React.memo(Inventory);
