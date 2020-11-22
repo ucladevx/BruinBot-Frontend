@@ -16,7 +16,8 @@ export interface PropTypes {
 	initRegion: Region;
 	markers: MarkerData[];
 	markerImg?: ImageSourcePropType;
-	polygonCoords: LatLng[];
+	polygonCoords?: LatLng[];
+	lineCoords?: LatLng[];
 	refresh(): any;
 	selected: string;
 	onSelect(id: string): any;
