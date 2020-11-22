@@ -27,7 +27,6 @@
 		"react-hooks/exhaustive-deps": "warn"
 	},
         "globals": {
-                "console": "readable",
                 "setInterval": "readable"
         }
 }

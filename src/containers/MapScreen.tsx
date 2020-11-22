@@ -67,7 +67,7 @@ const MapScreen = () => {
 			setInventories(botItems);
 			setSelected(botArray.length ? botArray[0]._id : '');
 		} catch (err) {
-			console.log(err);
+			// TODO: handle request error
 		}
 	}
 
