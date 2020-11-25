@@ -113,13 +113,13 @@ const Inventory = ({
 		<Animated.View
 			style={{
 				...styles.container,
-				transform: [{ translateY: translateY.value }],
+				//transform: [{ translateY: translateY.value }],
 			}}
 		>
 			<InventoryHeader
 				vendor={info[id]}
 				height={collapsedHeight}
-				{...panResponder.panHandlers}
+				//{...panResponder.panHandlers}
 			/>
 			<FlatList
 				contentContainerStyle={styles.list}
