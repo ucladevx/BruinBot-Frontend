@@ -3,7 +3,7 @@
 
 ### To set up:
 * Navigate to this folder in Terminal
-* Run the command `npm i`
+* Run the command `npm ci`
 
 ### To start:
 * Navigate to this folder in Terminal
