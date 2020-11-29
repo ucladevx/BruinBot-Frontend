@@ -7,7 +7,7 @@ interface ItemWeightProps {
 }
 
 // TODO: Change to not be hardcoded URL after production
-const baseUrl = 'http://10.0.0.131:5000';
+const baseUrl = 'http://localhost:5000';
 
 // mocks getting the weight from the scale inside the bot
 const getWeight = () => {
@@ -21,7 +21,7 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 	const [itemSubmitted, setItemSubmitted] = useState(false);
 	const submitWeight = async () => {
 		await Axios.put(baseUrl + '/items/weight', {
-			itemId: '5fbb368f9c73306115adb26f',
+			itemId: id,
 			weight: weight.toFixed(1),
 		})
 			.then(() => {
