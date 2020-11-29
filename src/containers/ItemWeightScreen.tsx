@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
-import Constants from 'expo-constants';
-import loading from '../assets/loading.gif';
 
 interface ItemWeightProps {
 	id: string;
 }
 
 // TODO: Change to not be hardcoded URL after production
-const baseUrl = 'http://localhost:5000';
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const baseUrl = 'http://10.0.0.131:5000';
 
 // mocks getting the weight from the scale inside the bot
 const getWeight = () => {
@@ -22,18 +18,19 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 	const [weight, setWeight] = useState(0);
 	const [itemDetected, setItemDetected] = useState(false);
 	const [itemMeasured, setItemMeasured] = useState(false);
+	const [itemSubmitted, setItemSubmitted] = useState(false);
 	const submitWeight = async () => {
 		await Axios.put(baseUrl + '/items/weight', {
-			itemId: id,
+			itemId: '5fbb368f9c73306115adb26f',
 			weight: weight.toFixed(1),
 		})
 			.then(() => {
-				Alert.alert('Item weight set successfully\nRedirecting...');
+				setItemSubmitted(true);
 				// TODO: Navigate back to items view
 				//setTimeout(5000);
 			})
-			.catch(() => {
-				Alert.alert('An error has occurred. Please try again.');
+			.catch((err) => {
+				console.log(err);
 			});
 	};
 	const calculateWeight = () => {
@@ -63,24 +60,39 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.headerText}>
-				Please place the item into the BruinBot for weighing
-			</Text>
+			{!itemDetected && !itemMeasured && !itemSubmitted ? (
+				<Text style={styles.itemText}>
+					Please place the item into the BruinBot for weighing
+				</Text>
+			) : (
+				<View></View>
+			)}
 			{itemDetected && !itemMeasured ? (
-				<View>
-					<Text style={styles.itemDetectedText}>
+				<View style={styles.textContainer}>
+					<Text style={styles.itemText}>
 						Item Detected {'\n'} Measuring Weight...
 					</Text>
-					<Image source={loading} />
+					<ActivityIndicator size="large" />
 				</View>
 			) : (
 				<View></View>
 			)}
-			{itemMeasured ? (
-				<View>
-					<Text style={styles.itemMeasuredText}>
+			{itemMeasured && !itemSubmitted ? (
+				<View style={styles.textContainer}>
+					<Text style={styles.itemText}>
 						Item Weight: {weight} lbs {'\n'} Submitting...
 					</Text>
+					<ActivityIndicator size="large" />
+				</View>
+			) : (
+				<View></View>
+			)}
+			{itemSubmitted ? (
+				<View style={styles.textContainer}>
+					<Text style={styles.itemText}>
+						Item weight set successfully {'\n'} Redirecting...
+					</Text>
+					<ActivityIndicator size="large" />
 				</View>
 			) : (
 				<View></View>
@@ -99,21 +111,15 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		justifyContent: 'center',
 	},
-	headerText: {
-		fontWeight: 'bold',
-		fontSize: 35,
-		textAlign: 'center',
-		marginBottom: screenHeight * 0.1,
+	textContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
-	itemDetectedText: {
+	itemText: {
 		textAlign: 'center',
 		fontWeight: 'bold',
 		fontSize: 30,
-	},
-	itemMeasuredText: {
-		textAlign: 'center',
-		fontWeight: 'bold',
-		fontSize: 30,
+		marginBottom: 15,
 	},
 });
 
