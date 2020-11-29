@@ -70,14 +70,11 @@ const InventoryModification = ({
     
     const [infor, setInfor] = useState(botInfo);
 	const [items, setItems] = useState(botItems);
-    
-    //setInfo(botInfo);
-    //setInventories(botItems);
 
 	return (
         <>
 		<View style={{ flex:1}}>
-			<Inventory id="123" info={infor} items={items} />
+			<Inventory id="123" info={infor} items={items} collapsable={false} />
 			<TouchableOpacity style={styles.button} onPress={() => {
                 navigation.navigate('AddItem')
             }}>
@@ -90,7 +87,7 @@ const InventoryModification = ({
 
 const styles = StyleSheet.create({
 	button: {
-		backgroundColor: 'red',
+		backgroundColor: '#3399ff',
 		borderRadius: 30,
 		height: 50,
 		textAlign: 'center',

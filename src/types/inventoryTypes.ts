@@ -25,4 +25,5 @@ export interface InventoryProps {
 	info: { [key: string]: VendorInfo };
 	items: { [key: string]: ItemProps[] };
 	collapsedHeight?: number;
+	collapsable?: boolean;
 }
