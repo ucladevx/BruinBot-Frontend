@@ -75,7 +75,7 @@ const Inventory = ({
 	info,
 	items,
 	collapsedHeight = 150,
-	collapsable = true
+	collapsable = true,
 }: InventoryProps) => {
 	const openOffset = 44; // ios statusbar
 	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
@@ -110,15 +110,15 @@ const Inventory = ({
 		})
 	).current;
 
-	const animatedStyle = collapsable ? ({
-		...styles.container,
-		transform: [{ translateY: translateY.value }],
-	}) : ({...styles.container});
+	const animatedStyle = collapsable
+		? {
+				...styles.container,
+				transform: [{ translateY: translateY.value }],
+		  }
+		: { ...styles.container };
 
 	return (
-		<Animated.View
-			style={animatedStyle}
-		>
+		<Animated.View style={animatedStyle}>
 			<InventoryHeader
 				vendor={info[id]}
 				height={collapsedHeight}
