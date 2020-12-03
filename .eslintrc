@@ -26,7 +26,10 @@
 		"react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "warn"
 	},
-        "globals": {
-                "setInterval": "readable"
-        }
+	"globals": {
+		"setInterval": "readable",
+		"setTimeout": "readable",
+		"clearInterval": "readable",
+		"console": "readable"
+	}
 }
