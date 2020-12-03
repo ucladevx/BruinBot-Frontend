@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
+import Loading from '../components/Loading';
 
 interface ItemWeightProps {
 	id: string;
@@ -70,9 +71,9 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			{itemDetected && !itemMeasured ? (
 				<View style={styles.textContainer}>
 					<Text style={styles.itemText}>
-						Item Detected {'\n'} Measuring Weight...
+						Item Detected
 					</Text>
-					<ActivityIndicator size="large" />
+					<Loading loadingText={'Measuring Weight'} />
 				</View>
 			) : (
 				<View></View>
@@ -80,9 +81,9 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			{itemMeasured && !itemSubmitted ? (
 				<View style={styles.textContainer}>
 					<Text style={styles.itemText}>
-						Item Weight: {weight} lbs {'\n'} Submitting...
+						Item Weight: {weight} lbs
 					</Text>
-					<ActivityIndicator size="large" />
+					<Loading loadingText={'Submitting'} />
 				</View>
 			) : (
 				<View></View>
@@ -90,9 +91,9 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			{itemSubmitted ? (
 				<View style={styles.textContainer}>
 					<Text style={styles.itemText}>
-						Item weight set successfully {'\n'} Redirecting...
+						Item weight set successfully
 					</Text>
-					<ActivityIndicator size="large" />
+					<Loading loadingText={'Redirecting'} />
 				</View>
 			) : (
 				<View></View>

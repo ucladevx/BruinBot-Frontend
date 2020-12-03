@@ -1,117 +1,110 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-import MapComponent, {
-	MapControlledTypes,
-	MarkerData,
-} from '../components/MapView';
+import MapComponent from '../components/MapView';
 import Inventory from '../components/InventoryView';
+import BotService from '../services/BotService';
+
+import { EventBot } from '../types/apiTypes';
+import { MarkerData } from '../types/mapTypes';
+import { ItemProps, InventoryProps } from '../types/inventoryTypes';
 
 import CampusData from '../assets/campusCoords.json';
 import Ham from '../assets/greenHam.jpg';
-import Tank from '../assets/tank.png';
 import Bot from '../assets/robot.png';
+import Tank from '../assets/tank.png';
 import Crane from '../assets/crane.png';
 import Marker from '../assets/marker.png';
 
-// placeholder data
-const botCoords = [
-	{
-		id: 'A',
-		name: 'Optimus',
-		latitude: 34.0714,
-		longitude: -118.4432,
-	},
-	{
-		id: 'B',
-		name: 'Bumble',
-		latitude: 34.0735,
-		longitude: -118.4439,
-	},
-	{
-		id: 'C',
-		name: 'Zilla',
-		latitude: 34.0692,
-		longitude: -118.4463,
-	},
-];
+import Loading from '../components/Loading';
 
-const botInfo = {
-	A: {
-		name: 'Optimus',
-		distance: 0.5,
-		inventorySize: 20,
-		itemsSold: 15,
-		imgSrc: Tank,
-	},
-	B: {
-		name: 'Bumble',
-		distance: 0.7,
-		inventorySize: 15,
-		itemsSold: 2,
-		imgSrc: Crane,
-	},
-	C: {
-		name: 'Zilla',
-		distance: 0.2,
-		inventorySize: 3,
-		itemsSold: 5,
-		imgSrc: Bot,
-	},
-};
+const formatData = (apiData: EventBot[]) => {
+	const botArray: MarkerData[] = [];
+	const botInfo: InventoryProps['info'] = {};
+	const botItems: InventoryProps['items'] = {};
 
-const botInventories = {
-	A: new Array(10).fill(null).map((_, idx) => ({
-		id: '' + idx,
-		name: 'Green Eggs and Ham',
-		price: 4.19,
-		imgSrc: Ham,
-	})),
-	B: new Array(2).fill(null).map((_, idx) => ({
-		id: '' + idx,
-		name: 'Green Eggs and Ham',
-		price: 4.29,
-		imgSrc: Ham,
-	})),
-	C: new Array(3).fill(null).map((_, idx) => ({
-		id: '' + idx,
-		name: 'Green Eggs and Ham',
-		price: 4.39,
-		imgSrc: Ham,
-	})),
-};
+	apiData.forEach((bot) => {
+		const { inventory, ...trimBot } = bot;
+		botArray.push({ ...trimBot, location: { ...trimBot.location } }); // clone location
 
-const shuffleMarkers = (markers: MarkerData[]) => {
-	// for testing purposes, randomly move around markers
-	return markers.map((bot) => {
-		bot[Math.random() > 0.5 ? 'latitude' : 'longitude'] +=
-			Math.random() > 0.5 ? -0.0005 : 0.0005;
-		return bot;
+		const items: ItemProps[] = [];
+		let itemCount = 0;
+		inventory.forEach((obj) => {
+			// TODO: fix item images
+			items.push({ ...obj.item, imgSrc: Ham });
+			itemCount += obj.quantity;
+		});
+
+		botInfo[bot._id] = {
+			name: bot.name,
+			inventorySize: itemCount,
+			// TODO: fix distance, items sold, and bot image
+			distance: 0,
+			itemsSold: 0,
+			imgSrc: [Bot, Tank, Crane][Math.floor(Math.random() * 3)],
+		};
+		botItems[bot._id] = items;
 	});
+	return { botArray, botInfo, botItems };
 };
-
-// wrapper component that takes in a dynamically updated
-// `id` prop from the MapComponent
-const MapControlledComponent = ({ id }: MapControlledTypes) => (
-	<Inventory id={id} info={botInfo} items={botInventories} />
-);
 
 const MapScreen = () => {
-	const [markers, setMarkers] = useState(botCoords);
+	const [markers, setMarkers] = useState<MarkerData[] | null>(null);
+	const [info, setInfo] = useState<InventoryProps['info'] | null>(null);
+	const [inventories, setInventories] = useState<
+		InventoryProps['items'] | null
+	>(null);
+	const [selectedMarker, setSelected] = useState('');
+
+	async function runRequests() {
+		// TODO: use actual API given event id
+		try {
+			// const eventId = '5fb49d9b30f3d1586ff2a354';
+			// const data = await BotService.getEventBots(eventId);
+
+			const data = await BotService.getEventBotsSample();
+			const { botArray, botInfo, botItems } = formatData(data);
+			setMarkers(botArray);
+			setInfo(botInfo);
+			setInventories(botItems);
+			setSelected(botArray.length ? botArray[0]._id : '');
+		} catch (err) {
+			// TODO: handle request error
+		}
+	}
+
+	useEffect(() => {
+		runRequests();
+		setInterval(runRequests, 1000 * 15);
+	}, []);
+
+	// TODO: fix loading screen
+	if (!markers || !info || !inventories || !selectedMarker.length) {
+		return (
+			<View style={styles.container}>
+				<Loading loadingText={'Loading'} />
+			</View>
+		);
+	}
+
 	return (
-		<View style={styles.container}>
-			<MapComponent
-				initRegion={CampusData.region}
-				markers={markers}
-				markerImg={Marker}
-				polygonCoords={CampusData.polygon.map(([lat, lng]) => ({
-					latitude: lat,
-					longitude: lng,
-				}))}
-				refresh={() => setMarkers(shuffleMarkers(markers))}
-				ControlledComponent={MapControlledComponent}
-			/>
-		</View>
+		<>
+			<View style={styles.container}>
+				<MapComponent
+					initRegion={CampusData.region}
+					markers={markers}
+					markerImg={Marker}
+					polygonCoords={CampusData.polygon.map(([lat, lng]) => ({
+						latitude: lat,
+						longitude: lng,
+					}))}
+					refresh={runRequests}
+					selected={selectedMarker}
+					onSelect={(id) => setSelected(id)}
+				/>
+			</View>
+			<Inventory id={selectedMarker} info={info} items={inventories} />
+		</>
 	);
 };
 
