@@ -70,9 +70,7 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			)}
 			{itemDetected && !itemMeasured ? (
 				<View style={styles.textContainer}>
-					<Text style={styles.itemText}>
-						Item Detected
-					</Text>
+					<Text style={styles.itemText}>Item Detected</Text>
 					<Loading loadingText={'Measuring Weight'} />
 				</View>
 			) : (
@@ -80,9 +78,7 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			)}
 			{itemMeasured && !itemSubmitted ? (
 				<View style={styles.textContainer}>
-					<Text style={styles.itemText}>
-						Item Weight: {weight} lbs
-					</Text>
+					<Text style={styles.itemText}>Item Weight: {weight} lbs</Text>
 					<Loading loadingText={'Submitting'} />
 				</View>
 			) : (
@@ -90,9 +86,7 @@ const ItemWeight = ({ id }: ItemWeightProps) => {
 			)}
 			{itemSubmitted ? (
 				<View style={styles.textContainer}>
-					<Text style={styles.itemText}>
-						Item weight set successfully
-					</Text>
+					<Text style={styles.itemText}>Item weight set successfully</Text>
 					<Loading loadingText={'Redirecting'} />
 				</View>
 			) : (

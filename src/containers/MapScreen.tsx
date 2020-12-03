@@ -78,7 +78,6 @@ const MapScreen = () => {
 		setInterval(runRequests, 1000 * 15);
 	}, []);
 
-	// TODO: fix loading screen
 	if (!markers || !info || !inventories || !selectedMarker.length) {
 		return (
 			<View style={styles.container}>
