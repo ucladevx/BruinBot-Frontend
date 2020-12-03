@@ -49,6 +49,13 @@ const LoginScreen = ({ navigation }: Props) => {
 					state.firebase
 						.auth()
 						.signInWithEmailAndPassword(email, password)
+						.then(() => {
+							if (state.bot) {
+								navigation.navigate('Map');
+							} else {
+								navigation.navigate('Qr');
+							}
+						})
 						.catch((error: FirebaseError) => {
 							setFormErrors(handleAuthErrors(error));
 						});

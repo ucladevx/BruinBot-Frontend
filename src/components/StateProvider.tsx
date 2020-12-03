@@ -1,6 +1,12 @@
 import firebase from 'firebase';
 import React, { useEffect, useReducer } from 'react';
-import { SetUserAction, State, StateAndDispatch } from './StateProviderTypes';
+import {
+	Action,
+	SetUserAction,
+	SetBotAction,
+	State,
+	StateAndDispatch,
+} from './StateProviderTypes';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyAcnkdEHyVz37TMFt7tj-_6KnOL3f7l9Bw',
@@ -13,17 +19,23 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const initialState: State = { firebase, user: null };
+const initialState: State = { firebase, user: null, bot: null };
 const Ctx = React.createContext<StateAndDispatch>(undefined!);
 
 const StateProvider = (props: { children: React.ReactNode }) => {
 	const [state, dispatch] = useReducer(
-		(state: State, action: SetUserAction): State => {
+		(state: State, action: Action): State => {
 			// write actions here
 			if (action.type === 'SET_USER') {
 				return {
 					...state,
-					user: action.user,
+					user: (action as SetUserAction).user,
+				};
+			}
+			if (action.type === 'SET_BOT') {
+				return {
+					...state,
+					bot: (action as SetBotAction).bot,
 				};
 			}
 			return state;
