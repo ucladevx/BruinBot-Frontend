@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-	View,
-	Image,
-	Text,
-	StyleSheet,
-	Animated,
-	Dimensions,
-} from 'react-native';
+import { View, Image, StyleSheet, Animated, Dimensions } from 'react-native';
 
 import robotLoading from '../assets/robotLoading.gif';
 
