@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import MapComponent from '../components/MapView';
 import Inventory from '../components/InventoryView';
@@ -15,6 +15,8 @@ import Bot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
 import Crane from '../assets/crane.png';
 import Marker from '../assets/marker.png';
+
+import Loading from '../components/Loading';
 
 const formatData = (apiData: EventBot[]) => {
 	const botArray: MarkerData[] = [];
@@ -76,11 +78,10 @@ const MapScreen = () => {
 		setInterval(runRequests, 1000 * 15);
 	}, []);
 
-	// TODO: fix loading screen
 	if (!markers || !info || !inventories || !selectedMarker.length) {
 		return (
 			<View style={styles.container}>
-				<Text>loading...</Text>
+				<Loading loadingText={'Loading'} />
 			</View>
 		);
 	}
