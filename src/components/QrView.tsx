@@ -8,6 +8,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import Border from '../assets/qr2_from_pngtree.png';
 
 import { Ctx } from './StateProvider';
+import BotService from '../services/BotService';
 
 const { width } = Dimensions.get('window');
 const qrSize = width * 0.7;
@@ -59,29 +60,31 @@ const QrComponent = ({ navigateForward }: Props) => {
 									alertError();
 									return;
 								}
-								const { botid } = JSON.parse(
-									`{"${query}"}`.replaceAll('=', '": "').replaceAll('&', '", "')
+								const qrData = JSON.parse(
+									`{"${query}"}`.replace(/=/g, '": "').replace(/&/g, '", "')
 								);
-								if (!botid || (state.bot && state.bot._id === botid)) {
+								const { botId } = qrData;
+
+								if (!botId || (state.bot && state.bot._id === botId)) {
 									alertError();
 									return;
 								}
-								dispatch({ type: 'SET_BOT', bot: { _id: data } });
-								navigateForward();
-								// How to fetch items after backend is deployed
-								// fetch(`...${data}`)
-								// 	.then(res => res.json())
-								// 	.then(bot => {
-								// 		dispatch({type: 'SET_BOT', bot});
-								// 		navigateForward();
-								// 	})
-								// 	.catch(err => {
-								// 		alert(err);
-								// 		setScanned(false);
-								// 	});
+
+								BotService.getOneBot(botId)
+									.then((bot) => {
+										dispatch({ type: 'SET_BOT', bot });
+										Alert.alert(`Connected to ${bot.name}!`);
+										navigateForward();
+									})
+									.catch(() => {
+										Alert.alert('Could not connect to BruinBot...');
+										setScanned(false);
+									});
+
+								// TODO: dashboard component for viewing BruinBot
 						  }
 				}
-				style={[StyleSheet.absoluteFillObject, styles.scanner]}
+				style={[styles.scanner]}
 			>
 				<Image style={styles.qr} source={Border} />
 			</BarCodeScanner>
@@ -100,7 +103,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		padding: 8,
+		width: Dimensions.get('window').width - 20,
+		borderRadius: 25,
+		overflow: 'hidden',
 	},
 	qr: {
 		marginTop: '20%',

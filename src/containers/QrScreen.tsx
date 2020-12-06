@@ -19,7 +19,7 @@ const QrScreen = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<Text style={styles.title}>Scan a QR code to continue</Text>
+			<Text style={styles.title}>Scan a BruinBot</Text>
 			<QrComponent navigateForward={navigateForward} />
 			{state.user ? (
 				<Text
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	footnote: {
-		margin: 10,
+		margin: 30,
 		textAlign: 'center',
 	},
 });
