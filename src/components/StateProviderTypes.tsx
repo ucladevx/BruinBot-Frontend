@@ -13,7 +13,7 @@ interface Bot {
 
 interface SetBotAction {
 	type: string;
-	bot: Bot;
+	bot: Bot | null;
 }
 
 type Action = SetUserAction | SetBotAction;

@@ -14,7 +14,7 @@ const QrScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
 	const navigateForward = () => {
-		navigation.navigate('Map');
+		navigation.navigate('Dashboard');
 	};
 
 	return (
