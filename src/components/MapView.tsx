@@ -1,5 +1,11 @@
 import React, { useRef } from 'react';
-import MapView, { Polygon, Marker, LatLng, Region } from 'react-native-maps';
+import MapView, {
+	Polygon,
+	Polyline,
+	Marker,
+	LatLng,
+	Region,
+} from 'react-native-maps';
 import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
 
@@ -9,6 +15,7 @@ const MapComponent = ({
 	initRegion,
 	markers,
 	polygonCoords,
+	lineCoords,
 	refresh,
 	selected,
 	onSelect,
@@ -45,11 +52,21 @@ const MapComponent = ({
 				style={styles.map}
 				ref={mapRef}
 			>
-				<Polygon
-					coordinates={polygonCoords}
-					strokeColor="#0288d1"
-					fillColor="rgba(2, 136, 209, 0.2)"
-				/>
+				{polygonCoords && (
+					<Polygon
+						coordinates={polygonCoords}
+						strokeColor="#0288d1"
+						fillColor="rgba(2, 136, 209, 0.2)"
+					/>
+				)}
+				{lineCoords && (
+					<Polyline
+						coordinates={lineCoords}
+						strokeColor="#0288d1"
+						strokeWidth={1.5}
+						lineDashPattern={[40, 20]}
+					/>
+				)}
 				{markers.map((marker) => (
 					<Marker
 						key={marker._id}

@@ -49,6 +49,9 @@ const SignupScreen = ({ navigation }: Props) => {
 					state.firebase
 						.auth()
 						.createUserWithEmailAndPassword(email, password)
+						.then(() => {
+							navigation.navigate('Login');
+						})
 						.catch((error: FirebaseError) => {
 							setFormErrors(handleAuthErrors(error));
 						});
