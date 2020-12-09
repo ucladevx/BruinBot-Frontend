@@ -8,12 +8,9 @@ import LoginScreen from './src/containers/auth/LoginScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 import MapScreen from './src/containers/MapScreen';
-<<<<<<< HEAD
 import InventoryModification from './src/containers/InventoryModification';
 import AddItem from './src/containers/AddItemScreen';
-=======
 import QrScreen from './src/containers/QrScreen';
->>>>>>> origin/main
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -21,12 +18,9 @@ export type RootStackParamList = {
 	PasswordReset: undefined;
 	Blank: undefined;
 	Map: undefined;
-<<<<<<< HEAD
 	InventoryModification: undefined;
 	AddItem: undefined;
-=======
 	Qr: undefined;
->>>>>>> origin/main
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -84,15 +78,12 @@ const Home = () => {
 		<Stack.Navigator headerMode="none">
 			{state.user ? (
 				<>
-<<<<<<< HEAD
 					<Stack.Screen
 						name="InventoryModification"
 						component={InventoryModification}
 					/>
 					<Stack.Screen name="AddItem" component={AddItem} />
-=======
 					<Stack.Screen name="Qr" component={QrScreen} />
->>>>>>> origin/main
 					<Stack.Screen name="Map" component={MapScreen} />
 				</>
 			) : (
