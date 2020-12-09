@@ -7,6 +7,11 @@ import { Ctx } from '../../components/StateProvider';
 import Form from './Form';
 import { styles } from './FormStyles';
 import { handleAuthErrors, PasswordInput } from './FormUtils';
+import Axios from 'axios';
+
+const axios = Axios.create({
+	baseURL: 'http://localhost:5000',
+});
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
@@ -49,7 +54,13 @@ const SignupScreen = ({ navigation }: Props) => {
 					state.firebase
 						.auth()
 						.createUserWithEmailAndPassword(email, password)
-						.then(() => {
+						.then((user) => {
+							user.getIdToken(true);
+						}).then((idToken) => {
+							axios.post('/add', {
+								username: email,
+								firebase_id_token: idToken, 
+							});
 							navigation.navigate('Login');
 						})
 						.catch((error: FirebaseError) => {
