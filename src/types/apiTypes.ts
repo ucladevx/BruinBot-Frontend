@@ -13,6 +13,7 @@ export interface Item {
 	_id: string;
 	name: string;
 	price: number;
+	imgSrc: string;
 }
 
 export interface BotItem {
