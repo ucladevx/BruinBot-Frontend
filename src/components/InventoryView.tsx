@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default React.memo(Inventory);
+export default Inventory;
