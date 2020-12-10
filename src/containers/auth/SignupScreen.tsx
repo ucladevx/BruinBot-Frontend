@@ -9,7 +9,7 @@ import { styles } from './FormStyles';
 import { handleAuthErrors, PasswordInput } from './FormUtils';
 import Axios from 'axios';
 
-const baseUrl = '192.168.1.10:8080';
+const baseUrl = 'http://192.168.1.10:8080';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
@@ -57,15 +57,15 @@ const SignupScreen = ({ navigation }: Props) => {
 							console.log(idToken);
 							//Works up to here. Just learn how to use axios
 							try {
-								const response = await Axios.put(baseUrl + '/users/add', {
+								const response = await Axios.post(baseUrl + '/users/add', {
 									username: email,
-									firebase_id_token: idToken, 
+									firebase_id_token: idToken,
 								});
 								console.log("sucess");
 								console.log(response.data);
 							  } catch (error) {
 								console.log("error")
-								console.error(error.data);
+								console.error(error);
 							  }
 						})
 						.catch((error: FirebaseError) => {
