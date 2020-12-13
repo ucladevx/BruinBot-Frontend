@@ -22,6 +22,11 @@ export interface BotItem {
 	item: Item;
 }
 
+export interface UserData {
+	_id: string;
+	isOrganizer: boolean;
+}
+
 export interface EventBot extends Bot {
 	inventory: BotItem[];
 }
