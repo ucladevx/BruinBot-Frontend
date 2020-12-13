@@ -62,9 +62,9 @@ const SignupScreen = ({ navigation }: Props) => {
 									firebase_id_token: idToken,
 								});
 								console.log(response.data);
-							  } catch (error) {
+							} catch (error) {
 								console.error(error);
-							  }
+							}
 						})
 						.catch((error: FirebaseError) => {
 							setFormErrors(handleAuthErrors(error));
