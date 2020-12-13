@@ -24,12 +24,18 @@ export interface Item extends ApiResponse {
 	_id: string;
 	name: string;
 	price: number;
+	imgSrc: string;
 }
 
 export interface BotItem extends ApiResponse {
 	_id: string;
 	quantity: number;
 	item: Item;
+}
+
+export interface UserData extends ApiResponse {
+	_id: string;
+	isOrganizer: boolean;
 }
 
 export interface EventBot extends Bot {

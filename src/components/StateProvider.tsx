@@ -2,11 +2,11 @@ import firebase from 'firebase';
 import React, { useEffect, useReducer } from 'react';
 import {
 	Action,
-	SetUserAction,
 	SetBotAction,
+	SetUserAction,
 	State,
 	StateAndDispatch,
-} from './StateProviderTypes';
+} from '../types/StateProviderTypes';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyAcnkdEHyVz37TMFt7tj-_6KnOL3f7l9Bw',
@@ -45,7 +45,17 @@ const StateProvider = (props: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged(function (user) {
-			dispatch({ type: 'SET_USER', user });
+			// TODO: Resolve Firebase user with Mongo user data here
+			if (user) {
+				dispatch({
+					type: 'SET_USER',
+					user: {
+						_id: 'hello world',
+						isOrganizer: true,
+						uid: user.uid,
+					},
+				});
+			}
 		});
 	}, []);
 	return (

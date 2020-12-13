@@ -26,8 +26,9 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 					width: '100%',
 					height: 150,
 					borderRadius: 10,
+					resizeMode: 'contain',
 				}}
-				source={imgSrc}
+				source={{ uri: imgSrc }}
 			/>
 			<Text style={{ marginTop: 10 }}>{name}</Text>
 			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
@@ -42,6 +43,11 @@ const InventoryHeader = ({
 	standalone,
 	...rest
 }: HeaderProps) => {
+	if (!info) {
+		// No info, return empty view
+		return <View />;
+	}
+
 	return (
 		<View style={{ ...styles.nav, height }} {...rest}>
 			{!standalone ? (
@@ -152,6 +158,11 @@ const Inventory = ({
 		  }
 		: { ...styles.container };
 
+	if (!id.length || !info[id]) {
+		// invalid id, return empty view
+		return <View />;
+	}
+
 	return (
 		<Animated.View style={animatedStyle}>
 			<InventoryHeader
@@ -229,5 +240,5 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default React.memo(Inventory);
+export default Inventory;
 export { InventoryHeader };

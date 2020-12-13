@@ -16,7 +16,6 @@ import {
 } from '../types/inventoryTypes';
 
 import CampusData from '../assets/campusCoords.json';
-import Ham from '../assets/greenHam.jpg';
 import Bot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
 import Crane from '../assets/crane.png';
@@ -27,7 +26,6 @@ import Marker from '../assets/marker.png';
 
 import Loading from '../components/Loading';
 
-const DOCUMENT_WIDTH = Dimensions.get('window').width;
 const MILLISECONDS_IN_SECOND = 1000;
 
 const MapScreen = () => {
@@ -48,17 +46,15 @@ const MapScreen = () => {
 	> | null>(null);
 
 	async function runRequests() {
-		// TODO: use actual API given event id
+		// TODO: use actual API given event id from logged in user
 		try {
-			// const eventId = '5fb49d9b30f3d1586ff2a354';
-			// const data = await BotService.getEventBots(eventId);
+			const OG_PROD_EVENT = '5fc90164d5869f00143e7fac';
+			const data = await BotService.getEventBots(OG_PROD_EVENT);
 
-			const data = await BotService.getEventBotsSample();
 			const { botArray, botInfo, botItems } = formatEventBotsData(data);
 			setMarkers(botArray);
 			setInfo(botInfo);
 			setInventories(botItems);
-			setSelected(botArray.length ? botArray[0]._id : '');
 		} catch (err) {
 			Alert.alert('Could not retrieve bot information.');
 		}
@@ -66,19 +62,11 @@ const MapScreen = () => {
 
 	async function setMapNodes() {
 		try {
-			/**
-			 * Reset selected so that it does not contain a bot ID when setMarkers
-			 * changes the markers to mapNodes from bots. Otherwise render runs
-			 * into an undefined selected marker.
-			 */
-			setSelected('');
-
 			const mapNodes = await MapService.getMapNodesSample();
 			const { mapNodeArray, mapNodeInfo } = formatMapNodesData(mapNodes);
 
 			setMarkers(mapNodeArray);
 			setInfo(mapNodeInfo);
-			setSelected(mapNodeArray.length ? mapNodeArray[0]._id : '');
 		} catch (err) {
 			Alert.alert('Could not retrieve map nodes.');
 		}
@@ -95,7 +83,7 @@ const MapScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
-	if (!markers || !info || !selectedMarker.length) {
+	if (!markers || !info) {
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
@@ -104,14 +92,6 @@ const MapScreen = () => {
 	}
 
 	if (showMapNodes) {
-		if (!markers || !info || !selectedMarker.length) {
-			return (
-				<View style={styles.container}>
-					<Loading loadingText={'Loading'} />
-				</View>
-			);
-		}
-
 		return (
 			<>
 				<View style={styles.container}>
@@ -140,7 +120,7 @@ const MapScreen = () => {
 			</>
 		);
 	} else {
-		if (!markers || !info || !selectedMarker.length || !inventories) {
+		if (!inventories) {
 			return (
 				<View style={styles.container}>
 					<Loading loadingText={'Loading'} />
@@ -181,12 +161,6 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		alignItems: 'center',
 		justifyContent: 'center',
-		position: 'absolute',
-	},
-	header: {
-		position: 'absolute',
-		bottom: 0,
-		width: DOCUMENT_WIDTH,
 	},
 });
 
@@ -199,7 +173,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 	const botInfo: InventoryProps['info'] = {};
 	const botItems: InventoryProps['items'] = {};
 
-	apiData.forEach((bot) => {
+	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
 		botArray.push({ ...trimBot, location: { ...trimBot.location } }); // clone location
 
@@ -207,7 +181,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		let itemCount = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
-			items.push({ ...obj.item, imgSrc: Ham });
+			items.push({ ...obj.item });
 			itemCount += obj.quantity;
 		});
 
@@ -217,7 +191,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0 ' + 'm away',
 			bottomRight: '0' + ' itemsSold',
-			imgSrc: [Bot, Tank, Crane][Math.floor(Math.random() * 3)],
+			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 		botItems[bot._id] = items;
 	});
