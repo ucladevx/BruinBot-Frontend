@@ -6,7 +6,7 @@ import { Button } from 'react-native-elements';
 import { ItemProps, InventoryProps } from '../types/inventoryTypes';
 import Ham from '../assets/greenHam.jpg';
 import Crane from '../assets/crane.png';
-import Inventory from '../components/InventoryView';
+import Inventory from '../components/MapMenuView';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -60,10 +60,10 @@ const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	];
 
 	botInfo['123'] = {
-		name: 'bot 1',
-		inventorySize: 10,
-		distance: 0,
-		itemsSold: 0,
+		topLeft: 'Random Bear',
+		topRight: '10 items',
+		bottomLeft: '0 m away',
+		bottomRight: '5 items sold',
 		imgSrc: Crane,
 	};
 	botItems['123'] = item;

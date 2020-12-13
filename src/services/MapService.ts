@@ -1,13 +1,6 @@
 import Axios from 'axios';
 
 import { MapNode } from '../types/apiTypes';
-import sampleData from '../assets/sampleMapNodes.json';
-
-const axios = Axios.create({
-	baseURL:
-		'http://bruinbot-load-balancer-1177858409.us-west-1.elb.amazonaws.com/',
-	withCredentials: true,
-});
 
 // TODO: remove later
 async function getMapNodesSample() {

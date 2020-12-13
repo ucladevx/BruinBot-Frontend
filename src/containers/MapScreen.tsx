@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet, View, Dimensions } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import MapComponent from '../components/MapView';
-import Inventory, { InventoryHeader } from '../components/InventoryView';
+import Inventory, { InventoryHeader } from '../components/MapMenuView';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
@@ -110,13 +110,11 @@ const MapScreen = () => {
 						}}
 					/>
 				</View>
-				<View style={styles.header}>
-					<InventoryHeader
-						info={info[selectedMarker]}
-						height={150}
-						standalone={true}
-					/>
-				</View>
+				<InventoryHeader
+					info={info[selectedMarker]}
+					height={150}
+					standalone={true}
+				/>
 			</>
 		);
 	} else {
@@ -189,7 +187,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			topLeft: bot.name + ' BruinBot',
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
-			bottomLeft: '0 ' + 'm away',
+			bottomLeft: '0 ' + ' m away',
 			bottomRight: '0' + ' itemsSold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
