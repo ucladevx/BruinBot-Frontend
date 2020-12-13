@@ -37,13 +37,7 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 	return (
 		<View style={{ ...styles.nav, height }} {...rest}>
-			<Icon
-				name="minus"
-				type="feather"
-				size={40}
-				color="#aaa"
-				iconStyle={{ marginVertical: -10 }}
-			/>
+			<Icon name="minus" type="feather" size={40} color="#aaa" />
 			<Image
 				style={{
 					height: 70,

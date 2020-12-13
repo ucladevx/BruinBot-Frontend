@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
 	SafeAreaView,
 	View,
@@ -6,12 +6,16 @@ import {
 	Text,
 	Image,
 	TouchableOpacity,
-	Switch,
+	Animated,
+	PanResponder,
+	Easing,
 	StyleSheet,
 	Dimensions,
 	ImageSourcePropType,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+
+import Toggle from './Toggle';
 
 interface HeaderProps {
 	imgSrc: ImageSourcePropType;
@@ -44,65 +48,148 @@ interface Link {
 interface MenuProps {
 	header: HeaderProps;
 	links: Link[];
+	widthPercent: number;
 	toggleState: boolean;
 	onToggleChange(val: boolean): void;
+	openState: boolean;
+	onOpenChange(val: boolean): void;
 }
 
-const Menu = ({ header, links, toggleState, onToggleChange }: MenuProps) => {
-	return (
-		<SafeAreaView style={styles.menu}>
-			<MenuHeader {...header} />
-			<FlatList
-				style={styles.menuList}
-				data={links}
-				renderItem={({ item }) => (
-					<TouchableOpacity
-						key={item.route}
-						style={{
-							flexDirection: 'row',
-							alignItems: 'center',
-						}}
-					>
-						<Icon
-							containerStyle={{ width: 50, paddingLeft: 20 }}
-							name={item.iconName}
-							type="ionicon"
-						/>
-						<Text style={styles.link}>{item.text}</Text>
-					</TouchableOpacity>
-				)}
-				keyExtractor={(link) => link.route}
-				horizontal={false}
-				numColumns={1}
+const Menu = ({
+	header,
+	links,
+	widthPercent,
+	toggleState,
+	onToggleChange,
+	openState,
+	onOpenChange,
+}: MenuProps) => {
+	// All translations are offset by `width`,
+	// to account for the visual buffer on the left of the menu if the user swipes too far.
+	// (the full width of the sidebar menu is `2 * width`)
+
+	const width = Dimensions.get('window').width * widthPercent;
+	const openOffset = -width;
+	const closeOffset = -2 * width;
+
+	const translateX = useRef(new Animated.Value(-width));
+	const opacity = useRef(new Animated.Value(0));
+
+	const animateSidemenu = useCallback(
+		(open: boolean) => {
+			Animated.timing(translateX.current, {
+				toValue: open ? openOffset : closeOffset,
+				duration: 120,
+				easing: Easing.ease,
+				useNativeDriver: true,
+			}).start();
+
+			Animated.timing(opacity.current, {
+				toValue: open ? 1 : 0,
+				duration: 120,
+				easing: Easing.ease,
+				useNativeDriver: true,
+			}).start();
+		},
+		[openOffset, closeOffset]
+	);
+
+	useEffect(() => {
+		animateSidemenu(openState);
+	}, [openState, animateSidemenu]);
+
+	const panResponder = useRef(
+		PanResponder.create({
+			onMoveShouldSetPanResponder: () => true,
+			onPanResponderMove: (_, gesture) => {
+				if (gesture.dx < width) {
+					translateX.current.setValue(openOffset + gesture.dx);
+				}
+			},
+			onPanResponderRelease: (_, gesture) => {
+				const collapse = gesture.vx < 0; // swiping left
+				onOpenChange(!collapse);
+				if (!collapse) {
+					animateSidemenu(true);
+				}
+			},
+		})
+	).current;
+
+	const overlay = (
+		<Animated.View
+			pointerEvents={openState ? 'auto' : 'none'}
+			style={{
+				position: 'absolute',
+				zIndex: 1,
+				opacity: opacity.current,
+			}}
+		>
+			<TouchableOpacity
+				style={styles.overlay}
+				onPress={() => onOpenChange(!openState)}
+				activeOpacity={1}
 			/>
-			<View
+		</Animated.View>
+	);
+
+	const linkList = (
+		<FlatList
+			style={styles.menuList}
+			data={links}
+			renderItem={({ item }) => (
+				<TouchableOpacity
+					key={item.route}
+					style={{
+						flexDirection: 'row',
+						alignItems: 'center',
+					}}
+				>
+					<Icon
+						containerStyle={{ width: 50, paddingLeft: 20 }}
+						name={item.iconName}
+						type="ionicon"
+					/>
+					<Text style={styles.link}>{item.text}</Text>
+				</TouchableOpacity>
+			)}
+			keyExtractor={(link) => link.route}
+			horizontal={false}
+			numColumns={1}
+		/>
+	);
+
+	return (
+		<>
+			{overlay}
+			<Animated.View
 				style={{
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-					paddingBottom: 50,
-					backgroundColor: '#fff',
+					...styles.menu,
+					transform: [{ translateX: translateX.current }],
 				}}
+				{...panResponder.panHandlers}
 			>
 				<Icon
-					style={{ marginRight: 15 }}
-					name="md-person"
-					type="ionicon"
-					color={!toggleState ? '#000' : '#ccc'}
+					containerStyle={{
+						position: 'absolute',
+						top: '50%',
+						right: -10,
+						zIndex: 1,
+						transform: [{ rotate: '90deg' }],
+					}}
+					name="minus"
+					type="feather"
+					size={40}
+					color="#aaa"
 				/>
-				<Switch
-					trackColor={{ false: '#eee', true: '#aaa' }}
-					value={toggleState}
-					onValueChange={() => onToggleChange(!toggleState)}
+				<MenuHeader {...header} />
+				{linkList}
+				<Toggle
+					state={toggleState}
+					onChange={(val: boolean) => onToggleChange(val)}
 				/>
-				<Icon
-					style={{ marginLeft: 15 }}
-					name="md-people"
-					type="ionicon"
-					color={toggleState ? '#000' : '#ccc'}
-				/>
-			</View>
-		</SafeAreaView>
+			</Animated.View>
+		</>
 	);
 };
 
@@ -111,6 +198,8 @@ interface NavProps {
 	title: string;
 	imgSrc?: ImageSourcePropType;
 }
+
+const SIDEBAR_WIDTH_PERCENT = 0.78;
 
 const NavMenu = ({ menu, title, imgSrc }: NavProps) => {
 	const [open, setOpen] = useState(false);
@@ -138,43 +227,53 @@ const NavMenu = ({ menu, title, imgSrc }: NavProps) => {
 					<Text style={styles.text}>{title}</Text>
 				</View>
 			</SafeAreaView>
-			{open && (
-				<>
-					<TouchableOpacity
-						style={styles.overlay}
-						onPress={() => setOpen(false)}
-						activeOpacity={1}
-					/>
-					<Menu {...menu} />
-				</>
-			)}
+			<Menu
+				{...menu}
+				openState={open}
+				onOpenChange={(val) => setOpen(val)}
+				widthPercent={SIDEBAR_WIDTH_PERCENT}
+			/>
 		</>
 	);
 };
+
+const window = Dimensions.get('window');
+const menuWidth = window.width * SIDEBAR_WIDTH_PERCENT;
 
 const styles = StyleSheet.create({
 	overlay: {
 		position: 'absolute',
 		backgroundColor: 'rgba(0, 0, 0, 0.4)',
-		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height,
+		width: window.width,
+		height: window.height,
 		zIndex: 1,
 	},
 	menu: {
 		position: 'absolute',
-		backgroundColor: '#eee',
-		width: Dimensions.get('window').width * 0.78,
-		height: Dimensions.get('window').height,
-		zIndex: 1,
+		backgroundColor: '#fff',
+		height: window.height,
+
+		// menu is `2 * width`, with a padded offset of `width`
+		// to prevent user from swiping too far
+		width: 2 * menuWidth,
+		paddingLeft: menuWidth,
+
+		zIndex: 2,
 	},
 	menuHeader: {
 		padding: 15,
+		paddingTop: 50,
+
+		// move back to the left and repad,
+		// so that the background color is not white
+		marginLeft: -menuWidth,
+		paddingLeft: menuWidth + 15,
+
 		backgroundColor: '#eee',
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 	menuList: {
-		height: '100%',
 		backgroundColor: '#fff',
 	},
 	nav: {
