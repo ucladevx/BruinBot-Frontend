@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 import MapComponent from '../components/MapView';
-import Inventory, { InventoryHeader } from '../components/MapMenuView';
+import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
 import { EventBot, MapNode } from '../types/apiTypes';
 import { MarkerData } from '../types/mapTypes';
-import {
-	ItemProps,
-	MenuProps,
-	InventoryProps,
-	MapNodeProps,
-} from '../types/inventoryTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 
 import CampusData from '../assets/campusCoords.json';
 import Bot from '../assets/robot.png';
@@ -30,10 +25,10 @@ const MILLISECONDS_IN_SECOND = 1000;
 
 const MapScreen = () => {
 	const [markers, setMarkers] = useState<MarkerData[] | null>(null);
-	const [info, setInfo] = useState<MenuProps['info'] | null>(null);
-	const [inventories, setInventories] = useState<
-		InventoryProps['items'] | null
-	>(null);
+	const [info, setInfo] = useState<MapMenuProps['info'] | null>(null);
+	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
+		null
+	);
 	const [selectedMarker, setSelected] = useState('');
 
 	/**
@@ -110,7 +105,7 @@ const MapScreen = () => {
 						}}
 					/>
 				</View>
-				<InventoryHeader
+				<MapMenuHeader
 					info={info[selectedMarker]}
 					height={150}
 					standalone={true}
@@ -142,7 +137,7 @@ const MapScreen = () => {
 						onSelect={(id) => setSelected(id)}
 					/>
 				</View>
-				<Inventory
+				<MapMenu
 					id={selectedMarker}
 					info={info}
 					items={inventories}
@@ -168,8 +163,8 @@ export default MapScreen;
 
 const formatEventBotsData = (apiData: EventBot[]) => {
 	const botArray: MarkerData[] = [];
-	const botInfo: InventoryProps['info'] = {};
-	const botItems: InventoryProps['items'] = {};
+	const botInfo: MapMenuProps['info'] = {};
+	const botItems: MapMenuProps['items'] = {};
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
@@ -187,7 +182,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			topLeft: bot.name + ' BruinBot',
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
-			bottomLeft: '0 ' + ' m away',
+			bottomLeft: '0' + 'm away',
 			bottomRight: '0' + ' itemsSold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
@@ -198,7 +193,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 
 const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeArray: MarkerData[] = [];
-	const mapNodeInfo: MapNodeProps['info'] = {};
+	const mapNodeInfo: MapMenuProps['info'] = {};
 
 	apiData.forEach((node, idx) => {
 		let name = node.name ? node.name : 'Intermediate checkpoint';

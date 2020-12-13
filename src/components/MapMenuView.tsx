@@ -12,11 +12,7 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-import {
-	ItemProps,
-	HeaderProps,
-	InventoryProps,
-} from '../types/inventoryTypes';
+import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
 
 const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	return (
@@ -36,7 +32,7 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	);
 };
 
-const InventoryHeader = ({
+const MapMenuHeader = ({
 	height,
 	info,
 	onButton,
@@ -110,14 +106,14 @@ interface WrapValue {
 	collapsed: boolean;
 }
 
-const Inventory = ({
+const MapMenu = ({
 	id,
 	info,
 	items,
 	collapsedHeight = 150,
 	collapsable = true,
 	setMapProperty,
-}: InventoryProps) => {
+}: MapMenuProps) => {
 	const openOffset = 44; // ios statusbar
 	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
 
@@ -163,32 +159,42 @@ const Inventory = ({
 		return <View />;
 	}
 
-	return (
-		<Animated.View style={animatedStyle}>
-			<InventoryHeader
+	if (!items) {
+		return (
+			<MapMenuHeader
 				info={info[id]}
 				height={collapsedHeight}
-				onButton={setMapProperty}
-				standalone={false}
-				{...panResponder.panHandlers}
+				standalone={true}
 			/>
-			<FlatList
-				contentContainerStyle={styles.list}
-				data={items[id]}
-				renderItem={({ item }) => (
-					<Item
-						_id={item._id}
-						name={item.name}
-						price={item.price}
-						imgSrc={item.imgSrc}
-					/>
-				)}
-				keyExtractor={(item) => item._id}
-				horizontal={false}
-				numColumns={2}
-			/>
-		</Animated.View>
-	);
+		);
+	} else {
+		return (
+			<Animated.View style={animatedStyle}>
+				<MapMenuHeader
+					info={info[id]}
+					height={collapsedHeight}
+					onButton={setMapProperty}
+					standalone={false}
+					{...panResponder.panHandlers}
+				/>
+				<FlatList
+					contentContainerStyle={styles.list}
+					data={items[id]}
+					renderItem={({ item }) => (
+						<Item
+							_id={item._id}
+							name={item.name}
+							price={item.price}
+							imgSrc={item.imgSrc}
+						/>
+					)}
+					keyExtractor={(item) => item._id}
+					horizontal={false}
+					numColumns={2}
+				/>
+			</Animated.View>
+		);
+	}
 };
 
 const styles = StyleSheet.create({
@@ -240,5 +246,5 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Inventory;
-export { InventoryHeader };
+export default MapMenu;
+export { MapMenuHeader };

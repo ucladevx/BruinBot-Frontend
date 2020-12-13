@@ -38,9 +38,10 @@ export interface HeaderProps {
 	onButton?(bool: boolean): any;
 }
 
-export interface MenuProps {
+export interface MapMenuProps {
 	id: string;
 	info: { [key: string]: HeaderInfo };
+	items?: { [key: string]: ItemProps[] };
 	collapsedHeight?: number;
 	collapsable?: boolean;
 
@@ -51,9 +52,3 @@ export interface MenuProps {
 	 */
 	setMapProperty?(val: any): any;
 }
-
-export interface InventoryProps extends MenuProps {
-	items: { [key: string]: ItemProps[] };
-}
-
-export interface MapNodeProps extends MenuProps {}
