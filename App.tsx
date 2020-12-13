@@ -87,6 +87,7 @@ const Home = () => {
 			</>
 		);
 	} else {
+		// TODO: Change this to be something the user can toggle
 		stack = state.user.isOrganizer ? (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
