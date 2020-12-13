@@ -194,7 +194,7 @@ const Menu = ({
 };
 
 interface NavProps {
-	menu: MenuProps;
+	menu: Omit<MenuProps, 'widthPercent' | 'openState' | 'onOpenChange'>;
 	title: string;
 	imgSrc?: ImageSourcePropType;
 }
