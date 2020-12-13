@@ -8,6 +8,7 @@ import {
 	Animated,
 	PanResponder,
 	StyleSheet,
+	Pressable,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
@@ -34,16 +35,32 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	);
 };
 
-const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
+const InventoryHeader = ({
+	height,
+	info,
+	onButton,
+	standalone,
+	...rest
+}: HeaderProps) => {
 	return (
 		<View style={{ ...styles.nav, height }} {...rest}>
-			<Icon
-				name="minus"
-				type="feather"
-				size={40}
-				color="#aaa"
-				iconStyle={{ marginVertical: -10 }}
-			/>
+			{!standalone ? (
+				<Icon
+					name="minus"
+					type="feather"
+					size={40}
+					color="#aaa"
+					iconStyle={{ marginVertical: -10 }}
+				/>
+			) : (
+				<Icon
+					name="minus"
+					type="feather"
+					size={40}
+					color="#fff" // Hides the drag bar
+					iconStyle={{ marginVertical: -10 }}
+				/>
+			)}
 			<Image
 				style={{
 					height: 70,
@@ -51,16 +68,33 @@ const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 					marginLeft: 'auto',
 					marginRight: 'auto',
 				}}
-				source={vendor.imgSrc}
+				source={info.imgSrc}
 			/>
 			<View style={styles.flexBetween}>
-				<Text style={{ fontWeight: 'bold' }}>{vendor.name} BruinBot</Text>
-				<Text style={{ fontWeight: 'bold' }}>{vendor.inventorySize} items</Text>
+				<Text style={{ fontWeight: 'bold' }}>{info.topLeft}</Text>
+				<Text style={{ fontWeight: 'bold' }}>{info.topRight}</Text>
 			</View>
 			<View style={styles.flexBetween}>
-				<Text>{vendor.distance.toFixed(2)} miles away</Text>
-				<Text>{vendor.itemsSold} items sold</Text>
+				<Text>{info.bottomLeft}</Text>
+				<Text>{info.bottomRight}</Text>
 			</View>
+			{onButton && (
+				<Pressable
+					onPressOut={() => {
+						onButton(true);
+					}}
+					style={({ pressed }) => [
+						{
+							backgroundColor: pressed
+								? 'rgb(210, 230, 255)'
+								: 'rgb(179, 236, 238)',
+						},
+						styles.orderButton,
+					]}
+				>
+					<Text>Order</Text>
+				</Pressable>
+			)}
 		</View>
 	);
 };
@@ -76,6 +110,7 @@ const Inventory = ({
 	items,
 	collapsedHeight = 150,
 	collapsable = true,
+	setMapProperty,
 }: InventoryProps) => {
 	const openOffset = 44; // ios statusbar
 	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
@@ -120,8 +155,10 @@ const Inventory = ({
 	return (
 		<Animated.View style={animatedStyle}>
 			<InventoryHeader
-				vendor={info[id]}
+				info={info[id]}
 				height={collapsedHeight}
+				onButton={setMapProperty}
+				standalone={false}
 				{...panResponder.panHandlers}
 			/>
 			<FlatList
@@ -148,6 +185,7 @@ const styles = StyleSheet.create({
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
 		paddingHorizontal: 10,
+		backgroundColor: '#fff',
 	},
 	flexBetween: {
 		display: 'flex',
@@ -180,6 +218,16 @@ const styles = StyleSheet.create({
 		shadowRadius: 3,
 		elevation: 3,
 	},
+	orderButton: {
+		position: 'absolute',
+		top: 10,
+		left: 10,
+		borderRadius: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		padding: 5,
+	},
 });
 
 export default React.memo(Inventory);
+export { InventoryHeader };
