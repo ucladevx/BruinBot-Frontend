@@ -22,10 +22,7 @@ interface HeaderProps {
 const MenuHeader = ({ imgSrc, title, subtitles }: HeaderProps) => {
 	return (
 		<View style={styles.menuHeader}>
-			<Image
-				source={imgSrc}
-				style={{ width: 100, height: 100, marginRight: 15 }}
-			/>
+			<Image source={imgSrc} style={imageStyles.headerImage} />
 			<View>
 				<Text style={styles.text}>{title}</Text>
 				{subtitles.map((sub) => (
@@ -109,7 +106,13 @@ const Menu = ({ header, links, toggleState, onToggleChange }: MenuProps) => {
 	);
 };
 
-const NavMenu = (props: MenuProps) => {
+interface NavProps {
+	menu: MenuProps;
+	title: string;
+	imgSrc?: ImageSourcePropType;
+}
+
+const NavMenu = ({ menu, title, imgSrc }: NavProps) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -122,16 +125,18 @@ const NavMenu = (props: MenuProps) => {
 					size={30}
 					onPress={() => setOpen(true)}
 				/>
-				<Text
+				<View
 					style={{
-						...styles.text,
-						textAlign: 'center',
-						flex: 1,
-						paddingRight: 50,
+						width: '100%',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'center',
+						paddingRight: 100,
 					}}
 				>
-					BruinBot
-				</Text>
+					{imgSrc && <Image style={imageStyles.navImage} source={imgSrc} />}
+					<Text style={styles.text}>{title}</Text>
+				</View>
 			</SafeAreaView>
 			{open && (
 				<>
@@ -140,7 +145,7 @@ const NavMenu = (props: MenuProps) => {
 						onPress={() => setOpen(false)}
 						activeOpacity={1}
 					/>
-					<Menu {...props} />
+					<Menu {...menu} />
 				</>
 			)}
 		</>
@@ -185,6 +190,23 @@ const styles = StyleSheet.create({
 		padding: 20,
 		fontSize: 20,
 		textAlign: 'left',
+	},
+});
+
+const imageStyles = StyleSheet.create({
+	navImage: {
+		width: 30,
+		height: 30,
+		borderRadius: 10,
+		borderWidth: 2,
+		borderColor: '#ddd',
+		marginRight: 5,
+	},
+	headerImage: {
+		width: 100,
+		height: 100,
+		marginRight: 15,
+		borderRadius: 5,
 	},
 });
 

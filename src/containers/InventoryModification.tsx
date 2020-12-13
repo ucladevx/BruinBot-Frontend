@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { Dimensions, StyleSheet, View, Text } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ItemProps, InventoryProps } from '../types/inventoryTypes';
 import Ham from '../assets/greenHam.jpg';
@@ -14,10 +14,7 @@ interface InventoryModificationProps {
 	navigation: StackNavigationProp<RootStackParamList, 'InventoryModification'>;
 	botId: string;
 }
-const InventoryModification = ({
-	navigation,
-	botId,
-}: InventoryModificationProps) => {
+const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	//GET PROPER PROPS
 
 	const botInfo: InventoryProps['info'] = {};
@@ -71,8 +68,8 @@ const InventoryModification = ({
 	};
 	botItems['123'] = item;
 
-	const [info, _setInfo] = useState(botInfo);
-	const [items, _setItems] = useState(botItems);
+	const [info] = useState(botInfo);
+	const [items] = useState(botItems);
 
 	return (
 		<>

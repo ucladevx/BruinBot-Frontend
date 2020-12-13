@@ -20,13 +20,13 @@ interface AddItemProps {
 	botId: string;
 }
 
-const AddItem = ({ navigation, botId }: AddItemProps) => {
-	const [nameErrorMessage, setNameErrorMessage] = useState('');
+const AddItem = ({ navigation }: AddItemProps) => {
+	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
 	const [quantityErrorMessage, setQuantityErrorMessage] = useState('');
 
 	const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-	const [type, setType] = useState(Camera.Constants.Type.back);
+	const [type] = useState(Camera.Constants.Type.back);
 	const [camera, setCamera] = useState<Camera | null>(null);
 	const [photo, setPhoto] = useState<string | null>(null);
 	const [itemName, setItemName] = useState('');

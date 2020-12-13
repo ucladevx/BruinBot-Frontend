@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Ham from '../assets/greenHam.jpg';
+import Logo from '../assets/logo.png';
 import NavMenu from '../components/NavMenu';
 
 const userLinks = [
@@ -51,14 +52,14 @@ const NavMenuScreen = () => {
 		imgSrc: Ham,
 	};
 
-	return (
-		<NavMenu
-			header={enterpriseMode ? enterpriseHeader : userHeader}
-			links={enterpriseMode ? enterpriseLinks : userLinks}
-			toggleState={enterpriseMode}
-			onToggleChange={(val) => setEnterpriseMode(val)}
-		/>
-	);
+	const menuProps = {
+		header: enterpriseMode ? enterpriseHeader : userHeader,
+		links: enterpriseMode ? enterpriseLinks : userLinks,
+		toggleState: enterpriseMode,
+		onToggleChange: (val: boolean) => setEnterpriseMode(val),
+	};
+
+	return <NavMenu menu={menuProps} title="BruinBot" imgSrc={Logo} />;
 };
 
 export default NavMenuScreen;
