@@ -61,10 +61,8 @@ const SignupScreen = ({ navigation }: Props) => {
 									username: email,
 									firebase_id_token: idToken,
 								});
-								console.log("sucess");
 								console.log(response.data);
 							  } catch (error) {
-								console.log("error")
 								console.error(error);
 							  }
 						})
