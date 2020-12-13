@@ -4,7 +4,7 @@ export interface ItemProps {
 	_id: string;
 	name: string;
 	price: number;
-	imgSrc: ImageSourcePropType;
+	imgSrc: string;
 }
 
 export interface VendorInfo {

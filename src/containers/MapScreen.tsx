@@ -10,7 +10,6 @@ import { MarkerData } from '../types/mapTypes';
 import { ItemProps, InventoryProps } from '../types/inventoryTypes';
 
 import CampusData from '../assets/campusCoords.json';
-import Ham from '../assets/greenHam.jpg';
 import Bot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
 import Crane from '../assets/crane.png';
@@ -23,7 +22,7 @@ const formatData = (apiData: EventBot[]) => {
 	const botInfo: InventoryProps['info'] = {};
 	const botItems: InventoryProps['items'] = {};
 
-	apiData.forEach((bot) => {
+	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
 		botArray.push({ ...trimBot, location: { ...trimBot.location } }); // clone location
 
@@ -31,7 +30,7 @@ const formatData = (apiData: EventBot[]) => {
 		let itemCount = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
-			items.push({ ...obj.item, imgSrc: Ham });
+			items.push({ ...obj.item });
 			itemCount += obj.quantity;
 		});
 
@@ -41,7 +40,7 @@ const formatData = (apiData: EventBot[]) => {
 			// TODO: fix distance, items sold, and bot image
 			distance: 0,
 			itemsSold: 0,
-			imgSrc: [Bot, Tank, Crane][Math.floor(Math.random() * 3)],
+			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 		botItems[bot._id] = items;
 	});
@@ -57,17 +56,15 @@ const MapScreen = () => {
 	const [selectedMarker, setSelected] = useState('');
 
 	async function runRequests() {
-		// TODO: use actual API given event id
+		// TODO: use actual API given event id from logged in user
 		try {
-			// const eventId = '5fb49d9b30f3d1586ff2a354';
-			// const data = await BotService.getEventBots(eventId);
+			const OG_PROD_EVENT = '5fc90164d5869f00143e7fac';
+			const data = await BotService.getEventBots(OG_PROD_EVENT);
 
-			const data = await BotService.getEventBotsSample();
 			const { botArray, botInfo, botItems } = formatData(data);
 			setMarkers(botArray);
 			setInfo(botInfo);
 			setInventories(botItems);
-			setSelected(botArray.length ? botArray[0]._id : '');
 		} catch (err) {
 			// TODO: handle request error
 		}
@@ -75,10 +72,10 @@ const MapScreen = () => {
 
 	useEffect(() => {
 		runRequests();
-		setInterval(runRequests, 1000 * 15);
+		setInterval(runRequests, 1000 * 10);
 	}, []);
 
-	if (!markers || !info || !inventories || !selectedMarker.length) {
+	if (!markers || !info || !inventories) {
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
