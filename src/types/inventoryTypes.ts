@@ -30,8 +30,7 @@ export interface HeaderProps {
 	standalone: boolean;
 
 	/**
-	 * Callback for button on the header. Currently used to pass in bool to the flag
-	 * showMapNodes, which determines whether the map shows bots or map nodes
+	 * Callback for the button on the header. Could be used for anything
 	 *
 	 * @param bool Boolean for whether to show
 	 */
@@ -46,7 +45,8 @@ export interface MapMenuProps {
 	collapsable?: boolean;
 
 	/**
-	 * Function to change some map property, e.g. setVar of useState()
+	 * Function to change some map property, e.g. setVar of useState(), currently
+	 * used to pass along MapScreen's setShowMap() hook to MapMenuHeader's onButton()
 	 *
 	 * @param val Value to be passed into the function
 	 */
