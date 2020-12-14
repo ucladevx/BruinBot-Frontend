@@ -16,7 +16,6 @@ export interface VendorInfo {
 }
 
 export interface HeaderProps {
-	height: number;
 	vendor: VendorInfo;
 }
 
