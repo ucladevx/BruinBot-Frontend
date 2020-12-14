@@ -31,7 +31,6 @@ const MapComponent = ({
 						longitude: initRegion.longitude,
 					},
 					zoom: 14.5,
-					altitude: 8000,
 				},
 				{ duration: 300 }
 			);
@@ -41,8 +40,9 @@ const MapComponent = ({
 	return (
 		<>
 			<MapView
+				provider={'google'}
 				initialRegion={{ ...initRegion }}
-				onRegionChangeComplete={(coord) => {
+				onRegionChange={(coord) => {
 					if (!coordInRegion(coord, initRegion)) {
 						centerCamera();
 					}
@@ -69,7 +69,6 @@ const MapComponent = ({
 				)}
 				{markers.map((marker) => (
 					<Marker
-						tracksViewChanges={false}
 						key={marker._id}
 						coordinate={{
 							latitude: marker.location.latitude,
@@ -81,7 +80,7 @@ const MapComponent = ({
 						<Icon
 							name="ios-pin"
 							type="ionicon"
-							size={50}
+							size={40}
 							color={marker._id === selected ? '#0288d1' : '#777'}
 						/>
 					</Marker>

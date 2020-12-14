@@ -17,12 +17,6 @@ import {
 	InventoryProps,
 } from '../types/inventoryTypes';
 
-const NAV_HEIGHT = 90;
-const HEADER_HEIGHT = 150;
-const BUFFER_HEIGHT = 30;
-
-const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
-
 const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	return (
 		<View style={styles.item} key={_id}>
@@ -40,16 +34,10 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	);
 };
 
-const InventoryHeader = ({ vendor, ...rest }: HeaderProps) => {
+const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 	return (
-		<View style={{ ...styles.header }} {...rest}>
-			<Icon
-				name="minus"
-				type="feather"
-				size={40}
-				color="#aaa"
-				style={{ marginTop: -10 }}
-			/>
+		<View style={{ ...styles.nav, height }} {...rest}>
+			<Icon name="minus" type="feather" size={40} color="#aaa" />
 			<Image
 				style={{
 					height: 70,
@@ -76,9 +64,15 @@ interface WrapValue {
 	collapsed: boolean;
 }
 
-const Inventory = ({ id, info, items, collapsable = true }: InventoryProps) => {
-	const openOffset = -inventoryHeight + HEADER_HEIGHT;
-	const collapsedOffset = 0;
+const Inventory = ({
+	id,
+	info,
+	items,
+	collapsedHeight = 150,
+	collapsable = true,
+}: InventoryProps) => {
+	const openOffset = 44; // ios statusbar
+	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
 
 	const translateY: WrapValue = {
 		value: useRef(new Animated.Value(collapsedOffset)).current,
@@ -89,18 +83,9 @@ const Inventory = ({ id, info, items, collapsable = true }: InventoryProps) => {
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderMove: (_, gesture) => {
-				// dy < 0 is upwards, dy > 0 is downwards
-				const opening = translateY.collapsed
-					? gesture.dy < 0 // opening inventory
-					: gesture.dy > -BUFFER_HEIGHT; // allow opening up to buffer
-				const closing = !translateY.collapsed
-					? gesture.dy > 0 // closing inventory
-					: gesture.dy < BUFFER_HEIGHT; // allow closing down to buffer
-				if (opening || closing) {
-					translateY.value.setValue(
-						(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
-					);
-				}
+				translateY.value.setValue(
+					(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
+				);
 			},
 			onPanResponderRelease: (_, gesture) => {
 				let collapse = gesture.vy > 0; // swiping down
@@ -128,7 +113,11 @@ const Inventory = ({ id, info, items, collapsable = true }: InventoryProps) => {
 
 	return (
 		<Animated.View style={animatedStyle}>
-			<InventoryHeader vendor={info[id]} {...panResponder.panHandlers} />
+			<InventoryHeader
+				vendor={info[id]}
+				height={collapsedHeight}
+				{...panResponder.panHandlers}
+			/>
 			<FlatList
 				contentContainerStyle={styles.list}
 				data={items[id]}
@@ -149,8 +138,7 @@ const Inventory = ({ id, info, items, collapsable = true }: InventoryProps) => {
 };
 
 const styles = StyleSheet.create({
-	header: {
-		height: HEADER_HEIGHT,
+	nav: {
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
 		paddingHorizontal: 10,
@@ -162,9 +150,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: Dimensions.get('window').width,
-		height: inventoryHeight + BUFFER_HEIGHT,
+		height: Dimensions.get('window').height,
 		position: 'absolute',
-		bottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
 		overflow: 'scroll',
 	},
