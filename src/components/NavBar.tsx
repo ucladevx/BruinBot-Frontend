@@ -8,7 +8,6 @@ import {
 	TouchableOpacity,
 	Animated,
 	PanResponder,
-	Easing,
 	StyleSheet,
 	Dimensions,
 	ImageSourcePropType,
@@ -16,6 +15,10 @@ import {
 import { Icon } from 'react-native-elements';
 
 import Toggle from './Toggle';
+
+const SIDEBAR_WIDTH_PERCENT = 0.78;
+const BUFFER_WIDTH = 15;
+const NAV_HEIGHT = 90;
 
 interface HeaderProps {
 	imgSrc: ImageSourcePropType;
@@ -28,7 +31,7 @@ const MenuHeader = ({ imgSrc, title, subtitles }: HeaderProps) => {
 		<View style={styles.menuHeader}>
 			<Image source={imgSrc} style={imageStyles.headerImage} />
 			<View>
-				<Text style={styles.text}>{title}</Text>
+				<Text style={styles.headerText}>{title}</Text>
 				{subtitles.map((sub) => (
 					<Text style={{ fontSize: 12 }} key={sub}>
 						{sub}
@@ -48,7 +51,6 @@ interface Link {
 interface MenuProps {
 	header: HeaderProps;
 	links: Link[];
-	widthPercent: number;
 	toggleState: boolean;
 	onToggleChange(val: boolean): void;
 	openState: boolean;
@@ -58,36 +60,31 @@ interface MenuProps {
 const Menu = ({
 	header,
 	links,
-	widthPercent,
 	toggleState,
 	onToggleChange,
 	openState,
 	onOpenChange,
 }: MenuProps) => {
-	// All translations are offset by `width`,
-	// to account for the visual buffer on the left of the menu if the user swipes too far.
-	// (the full width of the sidebar menu is `2 * width`)
-
-	const width = Dimensions.get('window').width * widthPercent;
-	const openOffset = -width;
-	const closeOffset = -2 * width;
+	// Translations are offset by a buffer to make swiping feel more natural
+	// and allow for a `Animated.spring` bounce animation.
+	const width = Dimensions.get('window').width * SIDEBAR_WIDTH_PERCENT;
+	const openOffset = -BUFFER_WIDTH;
+	const closeOffset = -1 * (width + BUFFER_WIDTH);
 
 	const translateX = useRef(new Animated.Value(-width));
 	const opacity = useRef(new Animated.Value(0));
 
 	const animateSidemenu = useCallback(
 		(open: boolean) => {
-			Animated.timing(translateX.current, {
+			Animated.spring(translateX.current, {
 				toValue: open ? openOffset : closeOffset,
-				duration: 120,
-				easing: Easing.ease,
+				speed: 20,
 				useNativeDriver: true,
 			}).start();
 
-			Animated.timing(opacity.current, {
+			Animated.spring(opacity.current, {
 				toValue: open ? 1 : 0,
-				duration: 120,
-				easing: Easing.ease,
+				speed: 20,
 				useNativeDriver: true,
 			}).start();
 		},
@@ -102,7 +99,7 @@ const Menu = ({
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderMove: (_, gesture) => {
-				if (gesture.dx < width) {
+				if (gesture.dx < BUFFER_WIDTH) {
 					translateX.current.setValue(openOffset + gesture.dx);
 				}
 			},
@@ -169,24 +166,13 @@ const Menu = ({
 				}}
 				{...panResponder.panHandlers}
 			>
-				<Icon
-					containerStyle={{
-						position: 'absolute',
-						top: '50%',
-						right: -10,
-						zIndex: 1,
-						transform: [{ rotate: '90deg' }],
-					}}
-					name="minus"
-					type="feather"
-					size={40}
-					color="#aaa"
-				/>
 				<MenuHeader {...header} />
 				{linkList}
 				<Toggle
 					state={toggleState}
 					onChange={(val: boolean) => onToggleChange(val)}
+					disabledIcon="md-person"
+					enabledIcon="md-people"
 				/>
 			</Animated.View>
 		</>
@@ -196,12 +182,10 @@ const Menu = ({
 interface NavProps {
 	menu: Omit<MenuProps, 'widthPercent' | 'openState' | 'onOpenChange'>;
 	title: string;
-	imgSrc?: ImageSourcePropType;
+	logoSrc?: ImageSourcePropType;
 }
 
-const SIDEBAR_WIDTH_PERCENT = 0.78;
-
-const NavMenu = ({ menu, title, imgSrc }: NavProps) => {
+const NavBar = ({ menu, title, logoSrc }: NavProps) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -223,16 +207,11 @@ const NavMenu = ({ menu, title, imgSrc }: NavProps) => {
 						paddingRight: 100,
 					}}
 				>
-					{imgSrc && <Image style={imageStyles.navImage} source={imgSrc} />}
-					<Text style={styles.text}>{title}</Text>
+					{logoSrc && <Image style={imageStyles.navImage} source={logoSrc} />}
+					<Text style={styles.headerText}>{title}</Text>
 				</View>
 			</SafeAreaView>
-			<Menu
-				{...menu}
-				openState={open}
-				onOpenChange={(val) => setOpen(val)}
-				widthPercent={SIDEBAR_WIDTH_PERCENT}
-			/>
+			<Menu {...menu} openState={open} onOpenChange={(val) => setOpen(val)} />
 		</>
 	);
 };
@@ -252,23 +231,17 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		backgroundColor: '#fff',
 		height: window.height,
-
-		// menu is `2 * width`, with a padded offset of `width`
-		// to prevent user from swiping too far
-		width: 2 * menuWidth,
-		paddingLeft: menuWidth,
-
+		width: menuWidth + BUFFER_WIDTH, // pad
+		paddingLeft: BUFFER_WIDTH,
 		zIndex: 2,
 	},
 	menuHeader: {
 		padding: 15,
 		paddingTop: 50,
-
 		// move back to the left and repad,
 		// so that the background color is not white
-		marginLeft: -menuWidth,
-		paddingLeft: menuWidth + 15,
-
+		marginLeft: -BUFFER_WIDTH,
+		paddingLeft: BUFFER_WIDTH + 15,
 		backgroundColor: '#eee',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -277,11 +250,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	nav: {
+		height: NAV_HEIGHT,
+		backgroundColor: 'white',
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginVertical: 10,
+		zIndex: 1,
 	},
-	text: {
+	headerText: {
 		fontWeight: 'bold',
 		fontSize: 17,
 	},
@@ -309,4 +284,4 @@ const imageStyles = StyleSheet.create({
 	},
 });
 
-export default NavMenu;
+export default NavBar;

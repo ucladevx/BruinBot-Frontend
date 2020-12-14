@@ -2,12 +2,21 @@ import React from 'react';
 import { View, Switch } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-interface ToggleProps {
+interface Props {
 	state: boolean;
 	onChange(val: boolean): void;
+	disabledIcon: string;
+	enabledIcon: string;
+	iconType?: string;
 }
 
-const Toggle = ({ state, onChange }: ToggleProps) => {
+const Toggle = ({
+	state,
+	onChange,
+	disabledIcon,
+	enabledIcon,
+	iconType = 'ionicon',
+}: Props) => {
 	return (
 		<View
 			style={{
@@ -20,8 +29,8 @@ const Toggle = ({ state, onChange }: ToggleProps) => {
 		>
 			<Icon
 				style={{ marginRight: 15 }}
-				name="md-person"
-				type="ionicon"
+				name={disabledIcon}
+				type={iconType}
 				color={!state ? '#000' : '#ccc'}
 			/>
 			<Switch
@@ -31,8 +40,8 @@ const Toggle = ({ state, onChange }: ToggleProps) => {
 			/>
 			<Icon
 				style={{ marginLeft: 15 }}
-				name="md-people"
-				type="ionicon"
+				name={enabledIcon}
+				type={iconType}
 				color={state ? '#000' : '#ccc'}
 			/>
 		</View>

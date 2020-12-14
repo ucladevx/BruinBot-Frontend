@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Ham from '../assets/greenHam.jpg';
 import Logo from '../assets/logo.png';
-import NavMenu from '../components/NavMenu';
+import NavBar from '../components/NavBar';
 
 const userLinks = [
 	{
@@ -35,7 +35,7 @@ const enterpriseLinks = [
 	},
 ];
 
-const NavMenuScreen = () => {
+const NavBarScreen = () => {
 	const [enterpriseMode, setEnterpriseMode] = useState(true);
 
 	const userHeader = {
@@ -52,6 +52,9 @@ const NavMenuScreen = () => {
 		imgSrc: Ham,
 	};
 
+	// TODO: This should check whether the user has organizer privileges and also should set some
+	// context field so that the rest of our app knows which mode our user is in.
+
 	const menuProps = {
 		header: enterpriseMode ? enterpriseHeader : userHeader,
 		links: enterpriseMode ? enterpriseLinks : userLinks,
@@ -59,7 +62,7 @@ const NavMenuScreen = () => {
 		onToggleChange: (val: boolean) => setEnterpriseMode(val),
 	};
 
-	return <NavMenu menu={menuProps} title="BruinBot" imgSrc={Logo} />;
+	return <NavBar menu={menuProps} title="BruinBot" logoSrc={Logo} />;
 };
 
-export default NavMenuScreen;
+export default NavBarScreen;

@@ -12,7 +12,7 @@ import MapScreen from './src/containers/MapScreen';
 import InventoryModification from './src/containers/InventoryModification';
 import AddItem from './src/containers/AddItemScreen';
 import QrScreen from './src/containers/QrScreen';
-import NavMenuScreen from './src/containers/NavMenuScreen';
+import NavBar from './src/containers/NavBar';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -78,7 +78,7 @@ const Home = () => {
 
 	return (
 		<>
-			<NavMenuScreen />
+			<NavBar />
 			<Stack.Navigator headerMode="none">
 				{state.user ? (
 					<>
