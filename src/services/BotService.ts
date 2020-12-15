@@ -33,7 +33,6 @@ async function getAllBots() {
 }
 
 async function getOneBot(botId: string) {
-	console.log(botId);
 	try {
 		let data: Bot = (
 			await axios.get('/bots/bot', {

@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
+import { Alert } from 'react-native';
 import 'react-native-gesture-handler';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import AddItem from './src/containers/AddItemScreen';
@@ -12,6 +13,8 @@ import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
 import NavMenuScreen from './src/containers/NavMenuScreen';
 import QrScreen from './src/containers/QrScreen';
+import DashboardScreen from './src/containers/DashboardScreen';
+import BotService from './src/services/BotService';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -22,6 +25,7 @@ export type RootStackParamList = {
 	InventoryModification: undefined;
 	AddItem: undefined;
 	Qr: undefined;
+	Dashboard: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -46,22 +50,24 @@ const Home = () => {
 	const { state, dispatch } = useContext(Ctx);
 
 	const updateBotFromDeepLink = useCallback(
-		(botid: any) => {
-			if (state.bot && botid === state.bot._id) {
-				return;
-			}
-			// Dispatch with placeholder bot
-			dispatch({ type: 'SET_BOT', bot: { _id: botid } });
-			// Change it to inventory view if user not logged in
-			Linking.openURL(Linking.makeUrl('Map'));
+		(botId: string) => {
+			BotService.getOneBot(botId)
+				.then((bot) => {
+					dispatch({ type: 'SET_BOT', bot });
+					Alert.alert(`Connected to ${bot.name}!`);
+					Linking.openURL(Linking.makeUrl('Dashboard'));
+				})
+				.catch(() => {
+					Alert.alert('Could not connect to BruinBot...');
+				});
 		},
-		[dispatch, state.bot]
+		[dispatch]
 	);
 
 	useEffect(() => {
 		Linking.parseInitialURLAsync().then(({ path: _path, queryParams }) => {
-			if (queryParams && queryParams.botid) {
-				updateBotFromDeepLink(queryParams.botid);
+			if (queryParams && queryParams.botId) {
+				updateBotFromDeepLink(queryParams.botId);
 			}
 		});
 	}, [updateBotFromDeepLink]);
@@ -69,8 +75,8 @@ const Home = () => {
 	Linking.addEventListener('url', ({ url }) => {
 		if (url) {
 			const { queryParams } = Linking.parse(url);
-			if (queryParams && queryParams.botid) {
-				updateBotFromDeepLink(queryParams.botid);
+			if (queryParams && queryParams.botId) {
+				updateBotFromDeepLink(queryParams.botId);
 			}
 		}
 	});
@@ -83,6 +89,7 @@ const Home = () => {
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
 			</>
 		);
@@ -91,6 +98,7 @@ const Home = () => {
 		stack = state.user.isOrganizer ? (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
 				<Stack.Screen
 					name="InventoryModification"
@@ -101,6 +109,7 @@ const Home = () => {
 		) : (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
 			</>
 		);
