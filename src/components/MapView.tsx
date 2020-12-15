@@ -109,12 +109,14 @@ const coordInRegion = (coord: LatLng, region: Region): boolean =>
 
 const styles = StyleSheet.create({
 	map: {
+		position: 'absolute',
+		top: 0,
 		width: Dimensions.get('window').width,
 		height: Dimensions.get('window').height,
 	},
 	button: {
 		position: 'absolute',
-		bottom: 160,
+		bottom: 30,
 		right: 8,
 		width: 50,
 		height: 50,

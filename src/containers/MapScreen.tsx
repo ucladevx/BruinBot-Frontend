@@ -107,8 +107,11 @@ const MapScreen = () => {
 				</View>
 				<MapMenuHeader
 					info={info[selectedMarker]}
-					height={150}
 					standalone={true}
+					onButton={() => {
+						// for now, go back to map with btos
+						setShowMapNodes(false);
+					}}
 				/>
 			</>
 		);
@@ -141,7 +144,7 @@ const MapScreen = () => {
 					id={selectedMarker}
 					info={info}
 					items={inventories}
-					setMapProperty={setShowMapNodes}
+					setMapProperty={() => setShowMapNodes(true)}
 				/>
 			</>
 		);
@@ -183,7 +186,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0' + 'm away',
-			bottomRight: '0' + ' itemsSold',
+			bottomRight: '0' + ' items sold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 		botItems[bot._id] = items;

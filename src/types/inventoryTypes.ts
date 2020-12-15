@@ -19,7 +19,6 @@ export interface HeaderInfo {
 }
 
 export interface HeaderProps {
-	height: number;
 	info: HeaderInfo;
 
 	/**
