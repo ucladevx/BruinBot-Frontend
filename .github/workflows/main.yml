@@ -22,4 +22,4 @@ jobs:
       - name: Run TS compiler
         run: npx tsc
       - name: Run ESLint
-        run: npm run lint:fix
+        run: npm run lint

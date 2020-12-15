@@ -1,14 +1,17 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 import 'react-native-gesture-handler';
-import * as Linking from 'expo-linking';
 import { Ctx, StateProvider } from './src/components/StateProvider';
+import AddItem from './src/containers/AddItemScreen';
 import LoginScreen from './src/containers/auth/LoginScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
+import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
+import NavMenuScreen from './src/containers/NavMenuScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
@@ -19,6 +22,8 @@ export type RootStackParamList = {
 	PasswordReset: undefined;
 	Blank: undefined;
 	Map: undefined;
+	InventoryModification: undefined;
+	AddItem: undefined;
 	Qr: undefined;
 	Dashboard: undefined;
 };
@@ -76,24 +81,44 @@ const Home = () => {
 		}
 	});
 
+	let stack;
+	if (state.user == null) {
+		stack = (
+			<>
+				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Login" component={LoginScreen} />
+				<Stack.Screen name="Signup" component={SignupScreen} />
+				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
+				<Stack.Screen name="Map" component={MapScreen} />
+			</>
+		);
+	} else {
+		// TODO: Change this to be something the user can toggle
+		stack = state.user.isOrganizer ? (
+			<>
+				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
+				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen
+					name="InventoryModification"
+					component={InventoryModification}
+				/>
+				<Stack.Screen name="AddItem" component={AddItem} />
+			</>
+		) : (
+			<>
+				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Dashboard" component={DashboardScreen} />
+				<Stack.Screen name="Map" component={MapScreen} />
+			</>
+		);
+	}
+
 	return (
-		<Stack.Navigator headerMode="none">
-			{state.user ? (
-				<>
-					<Stack.Screen name="Qr" component={QrScreen} />
-					<Stack.Screen name="Dashboard" component={DashboardScreen} />
-					<Stack.Screen name="Map" component={MapScreen} />
-				</>
-			) : (
-				<>
-					<Stack.Screen name="Qr" component={QrScreen} />
-					<Stack.Screen name="Dashboard" component={DashboardScreen} />
-					<Stack.Screen name="Login" component={LoginScreen} />
-					<Stack.Screen name="Signup" component={SignupScreen} />
-					<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
-					<Stack.Screen name="Map" component={MapScreen} />
-				</>
-			)}
-		</Stack.Navigator>
+		<>
+			<NavMenuScreen />
+			<Stack.Navigator headerMode="none">{stack}</Stack.Navigator>
+		</>
 	);
 };

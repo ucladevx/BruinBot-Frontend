@@ -18,7 +18,14 @@ export interface PropTypes {
 	markerImg?: ImageSourcePropType;
 	polygonCoords?: LatLng[];
 	lineCoords?: LatLng[];
+	mapNodes?: MarkerData[];
 	refresh(): any;
 	selected: string;
+
+	/**
+	 * Function for when a bot is selected
+	 *
+	 * @param id Id of bot
+	 */
 	onSelect(id: string): any;
 }
