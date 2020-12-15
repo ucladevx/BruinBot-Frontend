@@ -22,26 +22,27 @@ const MapComponent = ({
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
 
+	const initCameraView = {
+		center: {
+			latitude: initRegion.latitude,
+			longitude: initRegion.longitude,
+		},
+		heading: 0,
+		pitch: 0,
+		zoom: 14.5,
+		altitude: 8000,
+	};
+
 	const centerCamera = () => {
 		if (mapRef && mapRef.current) {
-			mapRef.current.animateCamera(
-				{
-					center: {
-						latitude: initRegion.latitude,
-						longitude: initRegion.longitude,
-					},
-					zoom: 14.5,
-					altitude: 8000,
-				},
-				{ duration: 300 }
-			);
+			mapRef.current.animateCamera(initCameraView, { duration: 300 });
 		}
 	};
 
 	return (
 		<>
 			<MapView
-				initialRegion={{ ...initRegion }}
+				initialCamera={initCameraView}
 				onRegionChangeComplete={(coord) => {
 					if (!coordInRegion(coord, initRegion)) {
 						centerCamera();
