@@ -9,7 +9,8 @@ import { styles } from './FormStyles';
 import { handleAuthErrors, PasswordInput } from './FormUtils';
 import Axios from 'axios';
 
-const baseUrl = 'http://bruinbot-load-balancer-1177858409.us-west-1.elb.amazonaws.com';
+const baseUrl =
+	'http://bruinbot-load-balancer-1177858409.us-west-1.elb.amazonaws.com';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
