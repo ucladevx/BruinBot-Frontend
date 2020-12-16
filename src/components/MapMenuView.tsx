@@ -8,14 +8,11 @@ import {
 	Animated,
 	PanResponder,
 	StyleSheet,
+	Pressable,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-import {
-	ItemProps,
-	HeaderProps,
-	InventoryProps,
-} from '../types/inventoryTypes';
+import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
 
 const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	return (
@@ -25,8 +22,9 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 					width: '100%',
 					height: 150,
 					borderRadius: 10,
+					resizeMode: 'contain',
 				}}
-				source={imgSrc}
+				source={{ uri: imgSrc }}
 			/>
 			<Text style={{ marginTop: 10 }}>{name}</Text>
 			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
@@ -34,10 +32,37 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	);
 };
 
-const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
+const MapMenuHeader = ({
+	height,
+	info,
+	onButton,
+	standalone,
+	...rest
+}: HeaderProps) => {
+	if (!info) {
+		// No info, return empty view
+		return <View />;
+	}
+
 	return (
 		<View style={{ ...styles.nav, height }} {...rest}>
-			<Icon name="minus" type="feather" size={40} color="#aaa" />
+			{!standalone ? (
+				<Icon
+					name="minus"
+					type="feather"
+					size={40}
+					color="#aaa"
+					iconStyle={{ marginVertical: -10 }}
+				/>
+			) : (
+				<Icon
+					name="minus"
+					type="feather"
+					size={40}
+					color="#fff" // Hides the drag bar
+					iconStyle={{ marginVertical: -10 }}
+				/>
+			)}
 			<Image
 				style={{
 					height: 70,
@@ -45,16 +70,33 @@ const InventoryHeader = ({ height, vendor, ...rest }: HeaderProps) => {
 					marginLeft: 'auto',
 					marginRight: 'auto',
 				}}
-				source={vendor.imgSrc}
+				source={info.imgSrc}
 			/>
 			<View style={styles.flexBetween}>
-				<Text style={{ fontWeight: 'bold' }}>{vendor.name} BruinBot</Text>
-				<Text style={{ fontWeight: 'bold' }}>{vendor.inventorySize} items</Text>
+				<Text style={{ fontWeight: 'bold' }}>{info.topLeft}</Text>
+				<Text style={{ fontWeight: 'bold' }}>{info.topRight}</Text>
 			</View>
 			<View style={styles.flexBetween}>
-				<Text>{vendor.distance.toFixed(2)} miles away</Text>
-				<Text>{vendor.itemsSold} items sold</Text>
+				<Text>{info.bottomLeft}</Text>
+				<Text>{info.bottomRight}</Text>
 			</View>
+			{onButton && (
+				<Pressable
+					onPressOut={() => {
+						onButton(true);
+					}}
+					style={({ pressed }) => [
+						{
+							backgroundColor: pressed
+								? 'rgb(210, 230, 255)'
+								: 'rgb(179, 236, 238)',
+						},
+						styles.orderButton,
+					]}
+				>
+					<Text>Order</Text>
+				</Pressable>
+			)}
 		</View>
 	);
 };
@@ -64,13 +106,14 @@ interface WrapValue {
 	collapsed: boolean;
 }
 
-const Inventory = ({
+const MapMenu = ({
 	id,
 	info,
 	items,
 	collapsedHeight = 150,
 	collapsable = true,
-}: InventoryProps) => {
+	setMapProperty,
+}: MapMenuProps) => {
 	const openOffset = 44; // ios statusbar
 	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
 
@@ -111,30 +154,47 @@ const Inventory = ({
 		  }
 		: { ...styles.container };
 
-	return (
-		<Animated.View style={animatedStyle}>
-			<InventoryHeader
-				vendor={info[id]}
+	if (!id.length || !info[id]) {
+		// invalid id, return empty view
+		return <View />;
+	}
+
+	if (!items) {
+		return (
+			<MapMenuHeader
+				info={info[id]}
 				height={collapsedHeight}
-				{...panResponder.panHandlers}
+				standalone={true}
 			/>
-			<FlatList
-				contentContainerStyle={styles.list}
-				data={items[id]}
-				renderItem={({ item }) => (
-					<Item
-						_id={item._id}
-						name={item.name}
-						price={item.price}
-						imgSrc={item.imgSrc}
-					/>
-				)}
-				keyExtractor={(item) => item._id}
-				horizontal={false}
-				numColumns={2}
-			/>
-		</Animated.View>
-	);
+		);
+	} else {
+		return (
+			<Animated.View style={animatedStyle}>
+				<MapMenuHeader
+					info={info[id]}
+					height={collapsedHeight}
+					onButton={setMapProperty}
+					standalone={false}
+					{...panResponder.panHandlers}
+				/>
+				<FlatList
+					contentContainerStyle={styles.list}
+					data={items[id]}
+					renderItem={({ item }) => (
+						<Item
+							_id={item._id}
+							name={item.name}
+							price={item.price}
+							imgSrc={item.imgSrc}
+						/>
+					)}
+					keyExtractor={(item) => item._id}
+					horizontal={false}
+					numColumns={2}
+				/>
+			</Animated.View>
+		);
+	}
 };
 
 const styles = StyleSheet.create({
@@ -142,6 +202,7 @@ const styles = StyleSheet.create({
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
 		paddingHorizontal: 10,
+		backgroundColor: '#fff',
 	},
 	flexBetween: {
 		display: 'flex',
@@ -174,6 +235,16 @@ const styles = StyleSheet.create({
 		shadowRadius: 3,
 		elevation: 3,
 	},
+	orderButton: {
+		position: 'absolute',
+		top: 10,
+		left: 10,
+		borderRadius: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		padding: 5,
+	},
 });
 
-export default Inventory;
+export default MapMenu;
+export { MapMenuHeader };

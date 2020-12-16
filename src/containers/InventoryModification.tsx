@@ -3,10 +3,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { ItemProps, InventoryProps } from '../types/inventoryTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import Ham from '../assets/greenHam.jpg';
 import Crane from '../assets/crane.png';
-import Inventory from '../components/InventoryView';
+import MapMenu from '../components/MapMenuView';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -17,8 +17,8 @@ interface InventoryModificationProps {
 const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	//GET PROPER PROPS
 
-	const botInfo: InventoryProps['info'] = {};
-	const botItems: InventoryProps['items'] = {};
+	const botInfo: MapMenuProps['info'] = {};
+	const botItems: MapMenuProps['items'] = {};
 
 	const item: ItemProps[] = [
 		{
@@ -60,10 +60,10 @@ const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	];
 
 	botInfo['123'] = {
-		name: 'bot 1',
-		inventorySize: 10,
-		distance: 0,
-		itemsSold: 0,
+		topLeft: 'Random Bear',
+		topRight: '10 items',
+		bottomLeft: '0 m away',
+		bottomRight: '5 items sold',
 		imgSrc: Crane,
 	};
 	botItems['123'] = item;
@@ -74,7 +74,7 @@ const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	return (
 		<>
 			<View style={{ flex: 1 }}>
-				<Inventory id="123" info={info} items={items} collapsable={false} />
+				<MapMenu id="123" info={info} items={items} collapsable={false} />
 				<Button
 					title="Add Item"
 					buttonStyle={styles.button}

@@ -7,6 +7,10 @@ import { Ctx } from '../../components/StateProvider';
 import Form from './Form';
 import { styles } from './FormStyles';
 import { handleAuthErrors, PasswordInput } from './FormUtils';
+import Axios from 'axios';
+
+const baseUrl =
+	'http://bruinbot-load-balancer-1177858409.us-west-1.elb.amazonaws.com';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
@@ -49,8 +53,19 @@ const SignupScreen = ({ navigation }: Props) => {
 					state.firebase
 						.auth()
 						.createUserWithEmailAndPassword(email, password)
-						.then(() => {
-							navigation.navigate('Login');
+						.then(async (user) => {
+							const idToken = await user.getIdToken(true);
+							console.log(idToken);
+							//Works up to here. Just learn how to use axios
+							try {
+								const response = await Axios.post(baseUrl + '/users/add', {
+									username: email,
+									firebase_id_token: idToken,
+								});
+								console.log(response.data);
+							} catch (error) {
+								console.error(error);
+							}
 						})
 						.catch((error: FirebaseError) => {
 							setFormErrors(handleAuthErrors(error));

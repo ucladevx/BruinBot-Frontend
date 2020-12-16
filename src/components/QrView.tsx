@@ -26,7 +26,6 @@ const QrComponent = ({ navigateForward }: Props) => {
 	useEffect(() => {
 		Permissions.askAsync(Permissions.CAMERA).then((res) => {
 			setCameraPermission(res.status);
-			setScanned(false);
 		});
 	}, []);
 
@@ -49,45 +48,45 @@ const QrComponent = ({ navigateForward }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<BarCodeScanner
-				onBarCodeScanned={
-					scanned
-						? () => {}
-						: ({ type: _type, data }) => {
-								setScanned(true);
-								const { query } = URL.parse(data);
-								if (!query) {
-									alertError();
-									return;
-								}
-								const qrData = JSON.parse(
-									`{"${query}"}`.replace(/=/g, '": "').replace(/&/g, '", "')
-								);
-								const { botId } = qrData;
+			{!state.bot && (
+				<BarCodeScanner
+					onBarCodeScanned={
+						scanned
+							? () => {}
+							: async ({ type: _type, data }) => {
+									setScanned(true);
+									const { query } = URL.parse(data);
+									if (!query) {
+										alertError();
+										return;
+									}
+									const qrData = JSON.parse(
+										`{"${query}"}`.replace(/=/g, '": "').replace(/&/g, '", "')
+									);
+									const { botId } = qrData;
 
-								if (!botId || (state.bot && state.bot._id === botId)) {
-									alertError();
-									return;
-								}
+									if (!botId) {
+										alertError();
+										return;
+									}
 
-								BotService.getOneBot(botId)
-									.then((bot) => {
+									try {
+										const bot = await BotService.getOneBot(botId);
 										dispatch({ type: 'SET_BOT', bot });
 										Alert.alert(`Connected to ${bot.name}!`);
 										navigateForward();
-									})
-									.catch(() => {
+									} catch (err) {
 										Alert.alert('Could not connect to BruinBot...');
+									} finally {
 										setScanned(false);
-									});
-
-								// TODO: dashboard component for viewing BruinBot
-						  }
-				}
-				style={[styles.scanner]}
-			>
-				<Image style={styles.qr} source={Border} />
-			</BarCodeScanner>
+									}
+							  }
+					}
+					style={[styles.scanner]}
+				>
+					<Image style={styles.qr} source={Border} />
+				</BarCodeScanner>
+			)}
 		</View>
 	);
 };

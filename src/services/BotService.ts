@@ -1,7 +1,6 @@
 import Axios from 'axios';
 
 import { EventBot, Bot } from '../types/apiTypes';
-import sampleData from '../assets/sampleData.json';
 
 const axios = Axios.create({
 	baseURL:
@@ -9,17 +8,11 @@ const axios = Axios.create({
 	withCredentials: true,
 });
 
-// TODO: remove later
-async function getEventBotsSample() {
-	const data: EventBot[] = sampleData;
-	return Promise.resolve(data);
-}
-
 async function getEventBots(eventId: string) {
 	try {
 		const data: EventBot[] = (
 			await axios.get('/events/bots', {
-				data: { id: eventId },
+				params: { eventId },
 			})
 		).data;
 		return data;
@@ -40,7 +33,6 @@ async function getAllBots() {
 }
 
 async function getOneBot(botId: string) {
-	console.log(botId);
 	try {
 		let data: Bot = (
 			await axios.get('/bots/bot', {
@@ -56,4 +48,4 @@ async function getOneBot(botId: string) {
 	}
 }
 
-export default { getEventBots, getAllBots, getOneBot, getEventBotsSample };
+export default { getEventBots, getAllBots, getOneBot };
