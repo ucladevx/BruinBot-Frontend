@@ -193,6 +193,7 @@ const NavBar = ({ menu, title, logoSrc }: NavProps) => {
 			<SafeAreaView style={styles.nav}>
 				<Icon
 					containerStyle={{ width: 50 }}
+					color="gray"
 					name="md-menu"
 					type="ionicon"
 					size={30}
@@ -255,6 +256,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		zIndex: 1,
+		borderBottomColor: '#dedcd8',
+		borderBottomWidth: 1,
 	},
 	headerText: {
 		fontWeight: 'bold',
@@ -269,8 +272,8 @@ const styles = StyleSheet.create({
 
 const imageStyles = StyleSheet.create({
 	navImage: {
-		width: 40,
-		height: 40,
+		width: 35,
+		height: 35,
 		borderRadius: 10,
 		marginRight: 5,
 	},
