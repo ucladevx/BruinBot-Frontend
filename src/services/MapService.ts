@@ -1,48 +1,28 @@
 import Axios from 'axios';
 
+import { baseUrl } from '../config';
 import { MapNode } from '../types/apiTypes';
 
-// TODO: remove later
-async function getMapNodesSample() {
-	const data: MapNode[] = [
-		{
-			_id: '5fc86e16b9d0df06d8a3b95c',
-			location: {
-				_id: '5fc86e16b9d0df06d8a3b95b',
-				latitude: 34.0714,
-				longitude: -118.4439,
-			},
-			name: 'Powell Library',
-			distance: 1.0,
-			eta: 90,
-			__v: 0,
-		},
-		{
-			_id: '5fc86e16b9d0df06d8a3b959',
-			location: {
-				_id: '5fc86e16b9d0df06d8a3b958',
-				latitude: 34.0735,
-				longitude: -118.4432,
-			},
-			name: 'Sculpture Garden',
-			distance: 5.0,
-			eta: 60,
-			__v: 0,
-		},
-		{
-			_id: '5fc86e21b9d0df06d8a3b962',
-			location: {
-				_id: '5fc86e21b9d0df06d8a3b961',
-				latitude: 34.067,
-				longitude: -118.443,
-			},
-			name: 'Boelter Hall',
-			distance: 15.0,
-			eta: 80,
-			__v: 0,
-		},
-	];
-	return Promise.resolve(data);
+const axios = Axios.create({
+	baseURL: baseUrl,
+	withCredentials: true,
+});
+
+async function getMapNodes(latitude: number, longitude: number) {
+	try {
+		const data: MapNode[] = (
+			await axios.get('/paths/nodes/location', {
+				params: {
+					latitude: latitude,
+					longitude: longitude,
+				},
+			})
+		).data;
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 }
 
-export default { getMapNodesSample };
+export default { getMapNodes };

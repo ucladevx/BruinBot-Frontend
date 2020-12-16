@@ -26,6 +26,8 @@ export interface PropTypes {
 	 * Function for when a bot is selected
 	 *
 	 * @param id Id of bot
+	 * @param lat Latitude of bot
+	 * @param lon Longitude of bot
 	 */
-	onSelect(id: string): any;
+	onSelect(id: string, lat?: number, lon?: number): any;
 }

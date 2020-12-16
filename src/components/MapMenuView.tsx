@@ -173,7 +173,12 @@ const MapMenu = ({
 				<MapMenuHeader
 					info={info[id]}
 					height={collapsedHeight}
-					onButton={setMapProperty}
+					onButton={
+						setMapProperty &&
+						(() => {
+							setMapProperty(id);
+						})
+					}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>

@@ -1,16 +1,16 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { FirebaseError } from 'firebase';
 import React, { useContext, useState } from 'react';
 import { Button, Input } from 'react-native-elements';
+
+import { StackNavigationProp } from '@react-navigation/stack';
+import { FirebaseError } from 'firebase';
+import Axios from 'axios';
+
+import { baseUrl } from '../../config';
 import { RootStackParamList } from '../../../App';
 import { Ctx } from '../../components/StateProvider';
 import Form from './Form';
 import { styles } from './FormStyles';
 import { handleAuthErrors, PasswordInput } from './FormUtils';
-import Axios from 'axios';
-
-const baseUrl =
-	'http://bruinbot-load-balancer-1177858409.us-west-1.elb.amazonaws.com';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
