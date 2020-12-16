@@ -4,6 +4,7 @@ import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 import 'react-native-gesture-handler';
+
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import AddItem from './src/containers/AddItemScreen';
 import LoginScreen from './src/containers/auth/LoginScreen';
@@ -11,10 +12,10 @@ import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
-import NavMenuScreen from './src/containers/NavMenuScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
+import NavBar from './src/containers/NavBar';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -117,7 +118,7 @@ const Home = () => {
 
 	return (
 		<>
-			<NavMenuScreen />
+			<NavBar />
 			<Stack.Navigator headerMode="none">{stack}</Stack.Navigator>
 		</>
 	);
