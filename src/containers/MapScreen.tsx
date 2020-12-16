@@ -222,6 +222,7 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
 	console.log(apiData);
 	apiData.forEach((node, idx) => {
+		// TODO: figure out what to name intermediate checkpoints
 		let name = node.name
 			? node.name
 			: 'Checkpoint ' +
@@ -235,7 +236,7 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 		mapNodeHeaderInfo[node._id] = {
 			topLeft: name,
 			topRight: node.distance.toFixed(0).toString() + 'm away',
-			bottomRight: node.eta.toFixed(1).toString() + ' minute(s)',
+			bottomRight: node.eta.toFixed(1).toString() + ' minutes',
 			imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
 		};
 	});
