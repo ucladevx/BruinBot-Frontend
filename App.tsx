@@ -9,11 +9,11 @@ import AddItem from './src/containers/AddItemScreen';
 import LoginScreen from './src/containers/auth/LoginScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
+import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
 import NavMenuScreen from './src/containers/NavMenuScreen';
 import QrScreen from './src/containers/QrScreen';
-import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
 
 export type RootStackParamList = {
@@ -85,18 +85,19 @@ const Home = () => {
 	if (state.user == null) {
 		stack = (
 			<>
-				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="Qr" component={QrScreen} />
 			</>
 		);
 	} else {
 		// TODO: Change this to be something the user can toggle
 		stack = state.user.isOrganizer ? (
 			<>
+				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
@@ -104,11 +105,11 @@ const Home = () => {
 					name="InventoryModification"
 					component={InventoryModification}
 				/>
-				<Stack.Screen name="AddItem" component={AddItem} />
 			</>
 		) : (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
 			</>

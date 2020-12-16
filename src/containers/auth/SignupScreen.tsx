@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
 	return (
-		<Form title="Sign up" navigation={navigation} backButton>
+		<Form bigTitle title="Sign up" navigation={navigation} backButton>
 			<Input
 				placeholder="Email"
 				errorMessage={formErrors.email}

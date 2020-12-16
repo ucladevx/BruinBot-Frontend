@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
-import {
-	ActivityIndicator,
-	Dimensions,
-	StyleSheet,
-	View,
-	Text,
-	Alert,
-} from 'react-native';
 import { Camera, PermissionResponse } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { Icon, Button, Input, Image } from 'react-native-elements';
+import React, { useEffect, useState } from 'react';
+import {
+	ActivityIndicator,
+	Alert,
+	Dimensions,
+	StyleSheet,
+	Text,
+	View,
+} from 'react-native';
+import { Button, Icon, Image, Input } from 'react-native-elements';
+import { RootStackParamList } from '../../App';
+import Form from './auth/Form';
+import { styles as formStyles } from './auth/FormStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -78,162 +80,137 @@ const AddItem = ({ navigation }: AddItemProps) => {
 	};
 
 	return (
-		<>
-			<View style={{ flex: 1 }}>
-				<Icon
-					name="arrow-left"
-					type="font-awesome"
-					color="black"
-					size={30}
-					containerStyle={{
-						position: 'absolute',
-						top: 40,
-						left: 15,
+		<Form navigation={navigation}>
+			<View style={{ flex: 1, marginBottom: 24 }}>
+				{photo === null ? (
+					<>
+						<Camera
+							style={styles.camera}
+							type={type}
+							ref={(ref) => {
+								setCamera(ref);
+							}}
+						/>
+						{/* The circle icon must be above the image picker icon so it doesn't block 
+							the image picker's click handler  */}
+						<Icon
+							name="ios-radio-button-on"
+							type="ionicon"
+							color="#fff"
+							size={50}
+							iconStyle={{
+								...styles.icon,
+							}}
+							containerStyle={{
+								...styles.iconContainer,
+								bottom: 0,
+								left: 0,
+								right: 0,
+								alignItems: 'center',
+							}}
+							onPress={() => {
+								takePhoto();
+							}}
+						/>
+						<Icon
+							name="ios-images"
+							type="ionicon"
+							color="#fff"
+							size={50}
+							iconStyle={styles.icon}
+							containerStyle={{
+								...styles.iconContainer,
+								bottom: 0,
+							}}
+							onPress={() => {
+								pickImage();
+							}}
+						/>
+					</>
+				) : (
+					<>
+						<Image
+							style={styles.camera}
+							source={{ uri: photo }}
+							PlaceholderContent={<ActivityIndicator />}
+						></Image>
+						<Icon
+							name="ios-close-circle"
+							type="ionicon"
+							color="#fff"
+							size={40}
+							iconStyle={styles.icon}
+							containerStyle={{
+								...styles.iconContainer,
+								top: 0,
+								right: 0,
+							}}
+							onPress={() => {
+								setPhoto(null);
+							}}
+						/>
+					</>
+				)}
+			</View>
+			<View style={{ marginBottom: 24, width: '100%' }}>
+				<Input
+					placeholder="Item Name"
+					onChangeText={(value) => setItemName(value)}
+					errorMessage={nameErrorMessage}
+				/>
+				<Input
+					placeholder="Price"
+					onChangeText={(value) => {
+						const regex: RegExp = /^\d+(?:\.?\d{0,2})$/;
+						if (regex.test(value)) {
+							setCost(Number(value));
+							setCostErrorMessage('');
+						} else {
+							setCostErrorMessage('Enter a Valid Cost');
+						}
 					}}
+					keyboardType="decimal-pad"
+					errorMessage={costErrorMessage}
+				></Input>
+				<Input
+					placeholder="Quantity"
+					onChangeText={(value) => {
+						if (Number.isInteger(+value)) {
+							setQuantity(+value);
+							setQuantityErrorMessage('');
+						} else {
+							setQuantityErrorMessage('Enter a Valid Quantity');
+						}
+					}}
+					keyboardType="number-pad"
+					errorMessage={quantityErrorMessage}
+				></Input>
+				<Button
+					title="Add Item"
+					buttonStyle={formStyles.formButton}
 					onPress={() => {
-						navigation.navigate('InventoryModification');
+						submitItem();
 					}}
 				/>
-				<Text style={styles.header}> Add an Item </Text>
-				<View style={styles.cameraContainer}>
-					{photo === null ? (
-						<>
-							<Camera
-								style={styles.camera}
-								type={type}
-								ref={(ref) => {
-									setCamera(ref);
-								}}
-							/>
-							<Icon
-								name="image"
-								type="font-awesome"
-								color="#fff"
-								size={50}
-								containerStyle={{
-									backgroundColor: 'transparent',
-									position: 'absolute',
-									bottom: 5,
-									left: screenWidth * 0.11,
-								}}
-								onPress={() => {
-									pickImage();
-								}}
-							/>
-							<Icon
-								name="circle"
-								type="font-awesome"
-								color="#fff"
-								size={50}
-								containerStyle={{
-									backgroundColor: 'transparent',
-									position: 'absolute',
-									bottom: 5,
-								}}
-								onPress={() => {
-									takePhoto();
-								}}
-							/>
-						</>
-					) : (
-						<>
-							<Image
-								style={styles.camera}
-								source={{ uri: photo }}
-								PlaceholderContent={<ActivityIndicator />}
-							></Image>
-							<Icon
-								name="times"
-								type="font-awesome"
-								color="#fff"
-								size={40}
-								containerStyle={{
-									backgroundColor: 'transparent',
-									position: 'absolute',
-									top: 5,
-									right: screenWidth * 0.09,
-								}}
-								onPress={() => {
-									setPhoto(null);
-								}}
-							/>
-						</>
-					)}
-				</View>
-				<View
-					style={{ flex: 9, width: screenWidth * 0.8, alignSelf: 'center' }}
-				>
-					<View style={styles.inputBlock}>
-						<Input
-							placeholder="Item Name"
-							onChangeText={(value) => setItemName(value)}
-							errorMessage={nameErrorMessage}
-						/>
-					</View>
-					<View style={styles.inputBlock}>
-						<Input
-							placeholder="Cost"
-							onChangeText={(value) => {
-								const regex: RegExp = /^\d+(?:\.?\d{0,2})$/;
-								if (regex.test(value)) {
-									setCost(Number(value));
-									setCostErrorMessage('');
-								} else {
-									setCostErrorMessage('Enter a Valid Cost');
-								}
-							}}
-							keyboardType="number-pad"
-							errorMessage={costErrorMessage}
-						></Input>
-					</View>
-					<View style={styles.inputBlock}>
-						<Input
-							placeholder="Quantity"
-							onChangeText={(value) => {
-								if (Number.isInteger(+value)) {
-									setQuantity(+value);
-									setQuantityErrorMessage('');
-								} else {
-									setQuantityErrorMessage('Enter a Valid Quantity');
-								}
-							}}
-							keyboardType="numeric"
-							errorMessage={quantityErrorMessage}
-						></Input>
-					</View>
-					<View style={styles.inputBlock}>
-						<Button
-							title="Add Item"
-							buttonStyle={styles.button}
-							containerStyle={styles.buttonContainer}
-							onPress={() => {
-								submitItem();
-							}}
-						/>
-					</View>
-				</View>
 			</View>
-		</>
+		</Form>
 	);
 };
 
 const styles = StyleSheet.create({
-	header: {
-		top: 45,
-		fontSize: 40,
-		fontWeight: 'bold',
-		flex: 3,
-		alignSelf: 'center',
+	icon: {
+		elevation: 5,
+		shadowOpacity: 0.25,
+		shadowRadius: 3,
+		shadowOffset: {
+			height: 2,
+			width: 0,
+		},
+		padding: 16,
 	},
-	cameraContainer: {
-		flex: 13,
-		alignItems: 'center',
-		marginVertical: 15,
-	},
-	inputBlock: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignSelf: 'center',
+	iconContainer: {
+		backgroundColor: 'transparent',
+		position: 'absolute',
 	},
 	input: {
 		borderColor: 'gray',
@@ -241,21 +218,10 @@ const styles = StyleSheet.create({
 		width: screenWidth * 0.85,
 		padding: 3,
 	},
-	button: {
-		height: 50,
-		alignSelf: 'center',
-		width: screenWidth * 0.5,
-		backgroundColor: '#3399ff',
-	},
-	buttonContainer: {
-		borderRadius: 30,
-		alignSelf: 'center',
-		fontSize: 20,
-	},
 	camera: {
-		width: screenWidth * 0.85,
-		alignSelf: 'center',
 		flex: 1,
+		width: screenWidth,
+		alignSelf: 'center',
 	},
 });
 
