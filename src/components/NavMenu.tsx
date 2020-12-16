@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 	nav: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginVertical: 10,
+		marginVertical: 5,
 	},
 	text: {
 		fontWeight: 'bold',
@@ -195,11 +195,8 @@ const styles = StyleSheet.create({
 
 const imageStyles = StyleSheet.create({
 	navImage: {
-		width: 30,
-		height: 30,
-		borderRadius: 10,
-		borderWidth: 2,
-		borderColor: '#ddd',
+		width: 40,
+		height: 40,
 		marginRight: 5,
 	},
 	headerImage: {
