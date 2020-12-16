@@ -15,23 +15,25 @@ import { BackButton } from './FormUtils';
 type Props = {
 	backButton?: boolean;
 	bigTitle?: boolean;
-	title: string;
+	title?: string;
 	children: React.ReactNode;
 	navigation: StackNavigationProp<RootStackParamList, keyof RootStackParamList>;
 };
 
 const Form = ({ backButton, bigTitle, title, children, navigation }: Props) => {
 	return (
-		<TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<KeyboardAvoidingView
 				behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
 				style={styles({ bigTitle }).container}
 			>
-				<View style={styles({ bigTitle }).logoContainer}>
-					<Text h1 style={{ fontWeight: 'bold' }}>
-						{title}
-					</Text>
-				</View>
+				{title && (
+					<View style={styles({ bigTitle }).logoContainer}>
+						<Text h1 style={{ fontWeight: 'bold' }}>
+							{title}
+						</Text>
+					</View>
+				)}
 				<View style={styles({ bigTitle }).formContainer}>{children}</View>
 				{/* This absolutely positioned icon must be at the bottom to be able to register press */}
 				{backButton && <BackButton onPress={() => navigation.goBack()} />}
