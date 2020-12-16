@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	StyleSheet,
-	Dimensions,
-	TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
@@ -30,12 +25,12 @@ const PaymentSuccess = ({ navigation, route }: PaymentSuccessProps) => {
 			<Text style={styles.header}>
 				An error has occurred. Please try again.
 			</Text>
-			<TouchableOpacity
+			<Button
 				onPress={() => navigation.goBack()}
-				style={styles.button}
-			>
-				<Text style={styles.buttonText}>Go Back</Text>
-			</TouchableOpacity>
+				buttonStyle={styles.button}
+				title="Go Back"
+				titleStyle={styles.buttonText}
+			/>
 		</View>
 	);
 };

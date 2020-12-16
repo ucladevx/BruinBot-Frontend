@@ -77,7 +77,7 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			console.log('Success');
 			// TODO: after implementing Stripe API, if success is false, make sure to enable button again
 			navigation.navigate('PaymentSuccess', {
-				success: false,
+				success: true,
 			});
 		}, 5000);
 	};
