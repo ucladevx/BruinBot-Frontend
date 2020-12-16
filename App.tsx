@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 import 'react-native-gesture-handler';
 
 import { Ctx, StateProvider } from './src/components/StateProvider';
@@ -118,6 +118,7 @@ const Home = () => {
 
 	return (
 		<>
+			<StatusBar barStyle="dark-content" />
 			<NavBar />
 			<Stack.Navigator headerMode="none">{stack}</Stack.Navigator>
 		</>
