@@ -5,12 +5,12 @@ import {
 	StyleSheet,
 	TextInput,
 	Dimensions,
-	TouchableOpacity,
 	TouchableWithoutFeedback,
 	Keyboard,
 	KeyboardAvoidingView,
 	Alert,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 
@@ -28,6 +28,7 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 	const [expiryDate, setExpiryDate] = useState('');
 	const [cvv, setCVV] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [submitDisabled, setSubmitDisabled] = useState(false);
 
 	const cleanupCardNumber = (number: string) => {
 		let cleanup = number
@@ -49,6 +50,7 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 	const processAndSubmitPayment = () => {
 		if (cardNumber.length !== 19) {
 			setLoading(false);
+			setSubmitDisabled(false);
 			Alert.alert('Invalid Card Number');
 			return;
 		}
@@ -58,11 +60,13 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			parseInt(expiryDate.substring(0, 2)) > 12
 		) {
 			setLoading(false);
+			setSubmitDisabled(false);
 			Alert.alert('Invalid Expiry Date');
 			return;
 		}
 		if (cvv.length !== 3) {
 			setLoading(false);
+			setSubmitDisabled(false);
 			Alert.alert('Invalid CVV');
 			return;
 		}
@@ -71,12 +75,13 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 		setTimeout(() => {
 			setLoading(false);
 			console.log('Success');
+			// TODO: after implementing Stripe API, if success is false, make sure to enable button again
 			navigation.navigate('PaymentSuccess', {
-				success: true,
+				success: false,
 			});
 		}, 5000);
 	};
-
+	// TODO: Use Edward's Form component instead of KeyboardAvoidingView
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<KeyboardAvoidingView behavior="position" style={styles.container}>
@@ -109,16 +114,18 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 						maxLength={3}
 					/>
 				</View>
-				<TouchableOpacity
+				<Button
 					onPress={() => {
 						Keyboard.dismiss();
 						setLoading(true);
+						setSubmitDisabled(true);
 						processAndSubmitPayment();
 					}}
-					style={styles.button}
-				>
-					<Text style={styles.buttonText}>Submit Payment</Text>
-				</TouchableOpacity>
+					buttonStyle={styles.button}
+					title="Submit Payment"
+					titleStyle={styles.buttonText}
+					disabled={submitDisabled}
+				/>
 				{loading ? (
 					<View style={{ alignItems: 'center' }}>
 						<Loading loadingText={'Processing'} />
