@@ -59,7 +59,7 @@ const NavMenuScreen = () => {
 		onToggleChange: (val: boolean) => setEnterpriseMode(val),
 	};
 
-	return <NavMenu menu={menuProps} title="BruinBot" imgSrc={Logo} />;
+	return <NavMenu menu={menuProps} title="" imgSrc={Logo} />;
 };
 
 export default NavMenuScreen;
