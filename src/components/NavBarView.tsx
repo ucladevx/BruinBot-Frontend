@@ -78,8 +78,8 @@ const Menu = ({
 		(open: boolean) => {
 			Animated.spring(translateX.current, {
 				toValue: open ? openOffset : closeOffset,
-				speed: 20,
 				useNativeDriver: true,
+				friction: 20,
 			}).start();
 
 			Animated.spring(opacity.current, {
