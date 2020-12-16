@@ -24,18 +24,25 @@ import Loading from '../components/Loading';
 const MILLISECONDS_IN_SECOND = 1000;
 
 const MapScreen = () => {
-	const [markers, setMarkers] = useState<MarkerData[] | null>(null);
-	const [info, setInfo] = useState<MapMenuProps['info'] | null>(null);
+	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
+		null
+	);
+	const [headerInfo, setHeaderInfo] = useState<MapMenuProps['info'] | null>(
+		null
+	);
 	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
 		null
 	);
 	const [selectedMarker, setSelected] = useState('');
 
-	/**
-	 * showMapNodes = true -> map nodes are on displayed on the map
-	 * showMapNodes = false -> bots are displayed on the map
-	 */
+	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(false);
+	// Bot that was selected to send to some map node
+	const [
+		selectedBotForOrder,
+		setSelectedBotForOrder,
+	] = useState<MarkerData | null>(null);
+
 	const [updateInterval, setUpdateInterval] = useState<ReturnType<
 		typeof setTimeout
 	> | null>(null);
@@ -46,22 +53,29 @@ const MapScreen = () => {
 			const OG_PROD_EVENT = '5fc90164d5869f00143e7fac';
 			const data = await BotService.getEventBots(OG_PROD_EVENT);
 
-			const { botArray, botInfo, botItems } = formatEventBotsData(data);
+			const { botArray, botHeaderInfo, botItems } = formatEventBotsData(data);
 			setMarkers(botArray);
-			setInfo(botInfo);
+			setHeaderInfo(botHeaderInfo);
 			setInventories(botItems);
 		} catch (err) {
 			Alert.alert('Could not retrieve bot information.');
 		}
 	}
 
-	async function setMapNodes() {
+	/**
+	 * Sets markers as map nodes, with each node's distance and eta from the given
+	 * location
+	 *
+	 * @param latitude Latitude of location
+	 * @param longitude Longitude of location
+	 */
+	async function setMapNodes(latitude: number, longitude: number) {
 		try {
-			const mapNodes = await MapService.getMapNodesSample();
-			const { mapNodeArray, mapNodeInfo } = formatMapNodesData(mapNodes);
+			const mapNodes = await MapService.getMapNodes(latitude, longitude);
+			const { mapNodeArray, mapNodeHeaderInfo } = formatMapNodesData(mapNodes);
 
 			setMarkers(mapNodeArray);
-			setInfo(mapNodeInfo);
+			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
 			Alert.alert('Could not retrieve map nodes.');
 		}
@@ -73,12 +87,11 @@ const MapScreen = () => {
 			setUpdateInterval(setInterval(runRequests, MILLISECONDS_IN_SECOND * 10));
 		} else {
 			clearInterval(updateInterval!!);
-			setMapNodes();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
-	if (!markers || !info) {
+	if (!markers || !headerInfo) {
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
@@ -86,27 +99,32 @@ const MapScreen = () => {
 		);
 	}
 
-	if (showMapNodes) {
+	if (showMapNodes && selectedBotForOrder) {
 		return (
 			<>
 				<View style={styles.container}>
 					<MapComponent
 						initRegion={CampusData.region}
-						markers={markers}
+						markers={Object.values(markers)}
 						markerImg={Marker}
 						polygonCoords={CampusData.polygon.map(([lat, lng]) => ({
 							latitude: lat,
 							longitude: lng,
 						}))}
-						refresh={setMapNodes}
+						refresh={() => {
+							setMapNodes(
+								selectedBotForOrder.location.latitude,
+								selectedBotForOrder.location.longitude
+							);
+						}}
 						selected={selectedMarker}
-						onSelect={(id) => {
+						onSelect={(id: string) => {
 							setSelected(id);
 						}}
 					/>
 				</View>
 				<MapMenuHeader
-					info={info[selectedMarker]}
+					info={headerInfo[selectedMarker]}
 					height={150}
 					standalone={true}
 				/>
@@ -126,7 +144,7 @@ const MapScreen = () => {
 				<View style={styles.container}>
 					<MapComponent
 						initRegion={CampusData.region}
-						markers={markers}
+						markers={Object.values(markers)}
 						markerImg={Marker}
 						polygonCoords={CampusData.polygon.map(([lat, lng]) => ({
 							latitude: lat,
@@ -134,14 +152,22 @@ const MapScreen = () => {
 						}))}
 						refresh={runRequests}
 						selected={selectedMarker}
-						onSelect={(id) => setSelected(id)}
+						onSelect={(id: string) => setSelected(id)}
 					/>
 				</View>
 				<MapMenu
 					id={selectedMarker}
-					info={info}
+					info={headerInfo}
 					items={inventories}
-					setMapProperty={setShowMapNodes}
+					setMapProperty={(id: string) => {
+						let selectedBot = markers[id];
+						setSelectedBotForOrder(selectedBot);
+						setMapNodes(
+							selectedBot.location.latitude,
+							selectedBot.location.longitude
+						);
+						setShowMapNodes(true);
+					}}
 				/>
 			</>
 		);
@@ -162,13 +188,13 @@ export default MapScreen;
 /** --------------------------- HELPER FUNCTIONS ---------------------------- */
 
 const formatEventBotsData = (apiData: EventBot[]) => {
-	const botArray: MarkerData[] = [];
-	const botInfo: MapMenuProps['info'] = {};
+	const botMarkers: { [key: string]: MarkerData } = {};
+	const botHeaderInfo: MapMenuProps['info'] = {};
 	const botItems: MapMenuProps['items'] = {};
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
-		botArray.push({ ...trimBot, location: { ...trimBot.location } }); // clone location
+		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location } }; // clone location
 
 		const items: ItemProps[] = [];
 		let itemCount = 0;
@@ -178,7 +204,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			itemCount += obj.quantity;
 		});
 
-		botInfo[bot._id] = {
+		botHeaderInfo[bot._id] = {
 			topLeft: bot.name + ' BruinBot',
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
@@ -188,27 +214,30 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		};
 		botItems[bot._id] = items;
 	});
-	return { botArray, botInfo, botItems };
+	return { botArray: botMarkers, botHeaderInfo, botItems };
 };
 
 const formatMapNodesData = (apiData: MapNode[]) => {
-	const mapNodeArray: MarkerData[] = [];
-	const mapNodeInfo: MapMenuProps['info'] = {};
-
+	const mapNodeMarkers: { [key: string]: MarkerData } = {};
+	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
+	console.log(apiData);
 	apiData.forEach((node, idx) => {
-		let name = node.name ? node.name : 'Intermediate checkpoint';
-		mapNodeArray.push({
+		let name = node.name
+			? node.name
+			: 'Checkpoint ' +
+			  String.fromCharCode(65 + Math.floor(Math.random() * 26));
+		mapNodeMarkers[node._id] = {
 			_id: node._id,
 			name: name,
 			location: node.location,
-		});
+		};
 
-		mapNodeInfo[node._id] = {
+		mapNodeHeaderInfo[node._id] = {
 			topLeft: name,
-			topRight: node.distance.toString() + 'm away',
-			bottomRight: (node.eta / 60).toFixed(1).toString() + ' minute(s)',
+			topRight: node.distance.toFixed(0).toString() + 'm away',
+			bottomRight: node.eta.toFixed(1).toString() + ' minute(s)',
 			imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
 		};
 	});
-	return { mapNodeArray, mapNodeInfo };
+	return { mapNodeArray: mapNodeMarkers, mapNodeHeaderInfo };
 };
