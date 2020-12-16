@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Ham from '../assets/greenHam.jpg';
 import Logo from '../assets/logo.png';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBarView';
 
 const userLinks = [
 	{
@@ -62,7 +62,7 @@ const NavBarScreen = () => {
 		onToggleChange: (val: boolean) => setEnterpriseMode(val),
 	};
 
-	return <NavBar menu={menuProps} title="BruinBot" logoSrc={Logo} />;
+	return <NavBar menu={menuProps} title="" logoSrc={Logo} />;
 };
 
 export default NavBarScreen;

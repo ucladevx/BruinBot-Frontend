@@ -269,11 +269,9 @@ const styles = StyleSheet.create({
 
 const imageStyles = StyleSheet.create({
 	navImage: {
-		width: 30,
-		height: 30,
+		width: 40,
+		height: 40,
 		borderRadius: 10,
-		borderWidth: 2,
-		borderColor: '#ddd',
 		marginRight: 5,
 	},
 	headerImage: {

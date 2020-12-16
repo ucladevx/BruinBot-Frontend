@@ -15,7 +15,7 @@ import MapScreen from './src/containers/MapScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
-import NavBar from './src/containers/NavBar';
+import NavBar from './src/containers/NavBarScreen';
 
 export type RootStackParamList = {
 	Login: undefined;
