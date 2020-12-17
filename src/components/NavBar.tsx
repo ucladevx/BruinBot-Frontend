@@ -58,7 +58,7 @@ interface MenuProps {
 	onOpenChange(val: boolean): void;
 }
 
-const Menu = ({
+export const Menu = ({
 	header,
 	links,
 	toggleState,
@@ -218,7 +218,7 @@ const NavBar = ({ menu, title, logoSrc }: NavProps) => {
 					<Text style={styles.headerText}>{title}</Text>
 				</View>
 			</SafeAreaView>
-			<Menu {...menu} openState={open} onOpenChange={(val) => setOpen(val)} />
+			{/* <Menu {...menu} openState={open} onOpenChange={(val) => setOpen(val)} /> */}
 		</>
 	);
 };

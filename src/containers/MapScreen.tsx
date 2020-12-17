@@ -5,7 +5,6 @@ import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
-import { withNavBar } from './NavBar';
 
 import { EventBot, MapNode } from '../types/apiTypes';
 import { MarkerData } from '../types/mapTypes';
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default withNavBar(MapScreen);
+export default MapScreen;
 
 /** --------------------------- HELPER FUNCTIONS ---------------------------- */
 

@@ -1,8 +1,10 @@
 import React, { useState, FC } from 'react';
+import { Image, StyleSheet } from 'react-native';
 
 import Ham from '../assets/greenHam.jpg';
 import Logo from '../assets/logo.png';
 import NavBar from '../components/NavBar';
+import Menu from '../components/HamMenu';
 
 const userLinks = [
 	{
@@ -79,3 +81,24 @@ export const withNavBar = (BaseComponent: FC<any>) => {
 };
 
 export default NavBarScreen;
+
+export const NavCenter = () => (
+	<Image style={imageStyles.navImage} source={Logo} />
+);
+
+const imageStyles = StyleSheet.create({
+	navImage: {
+		width: 30,
+		height: 30,
+		borderRadius: 10,
+		borderWidth: 2,
+		borderColor: '#ddd',
+		marginRight: 5,
+	},
+	headerImage: {
+		width: 100,
+		height: 100,
+		marginRight: 15,
+		borderRadius: 5,
+	},
+});

@@ -5,7 +5,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Ctx } from '../components/StateProvider';
 import QrComponent from '../components/QrView';
-import { withNavBar } from './NavBar';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;
@@ -53,4 +52,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default withNavBar(QrScreen);
+export default QrScreen;
