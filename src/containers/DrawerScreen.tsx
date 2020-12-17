@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { RootStackParamList } from '../../App';
-import DrawerMenu, { Link } from '../components/DrawerMenu';
+import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
 
 const userLinks: Link[] = [

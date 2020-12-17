@@ -14,7 +14,7 @@ import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
-import CustomDrawer from './src/containers/DrawerMenu';
+import CustomDrawer from './src/containers/DrawerScreen';
 import { NavCenter } from './src/containers/NavBar';
 
 import BotService from './src/services/BotService';
