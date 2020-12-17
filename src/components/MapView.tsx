@@ -22,27 +22,28 @@ const MapComponent = ({
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
 
+	const initCameraView = {
+		center: {
+			latitude: initRegion.latitude,
+			longitude: initRegion.longitude,
+		},
+		heading: 0,
+		pitch: 0,
+		zoom: 14.5,
+		altitude: 8000,
+	};
+
 	const centerCamera = () => {
 		if (mapRef && mapRef.current) {
-			mapRef.current.animateCamera(
-				{
-					center: {
-						latitude: initRegion.latitude,
-						longitude: initRegion.longitude,
-					},
-					zoom: 14.5,
-				},
-				{ duration: 300 }
-			);
+			mapRef.current.animateCamera(initCameraView, { duration: 300 });
 		}
 	};
 
 	return (
 		<>
 			<MapView
-				provider={'google'}
-				initialRegion={{ ...initRegion }}
-				onRegionChange={(coord) => {
+				initialCamera={initCameraView}
+				onRegionChangeComplete={(coord) => {
 					if (!coordInRegion(coord, initRegion)) {
 						centerCamera();
 					}
@@ -69,6 +70,7 @@ const MapComponent = ({
 				)}
 				{markers.map((marker) => (
 					<Marker
+						tracksViewChanges={false}
 						key={marker._id}
 						coordinate={{
 							latitude: marker.location.latitude,
@@ -78,10 +80,11 @@ const MapComponent = ({
 						onPress={() => onSelect(marker._id)}
 					>
 						<Icon
+							style={styles.marker}
 							name="ios-pin"
 							type="ionicon"
-							size={40}
-							color={marker._id === selected ? '#0288d1' : '#777'}
+							size={50}
+							color={marker._id === selected ? '#0288d1' : '#fff'}
 						/>
 					</Marker>
 				))}
@@ -108,23 +111,32 @@ const coordInRegion = (coord: LatLng, region: Region): boolean =>
 
 const styles = StyleSheet.create({
 	map: {
+		position: 'absolute',
+		top: 0,
 		width: Dimensions.get('window').width,
 		height: Dimensions.get('window').height,
 	},
 	button: {
 		position: 'absolute',
-		bottom: 160,
+		bottom: 30,
 		right: 8,
 		width: 50,
 		height: 50,
 		borderRadius: 60,
 		backgroundColor: '#fff',
-		shadowColor: '#00000070',
 		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.8,
 		shadowRadius: 1,
+		shadowColor: '#000',
+		shadowOpacity: 0.3,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	marker: {
+		width: 50,
+		shadowOffset: { width: 0, height: 3 },
+		shadowRadius: 2,
+		shadowColor: '#000',
+		shadowOpacity: 0.3,
 	},
 });
 

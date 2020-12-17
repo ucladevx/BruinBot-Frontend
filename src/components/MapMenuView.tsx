@@ -13,6 +13,12 @@ import {
 import { Icon } from 'react-native-elements';
 
 import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
+import { NAV_HEIGHT } from '../constants';
+
+const HEADER_HEIGHT = 150;
+const BUFFER_HEIGHT = 30;
+
+const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
 
 const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	return (
@@ -33,7 +39,6 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 };
 
 const MapMenuHeader = ({
-	height,
 	info,
 	onButton,
 	standalone,
@@ -45,7 +50,7 @@ const MapMenuHeader = ({
 	}
 
 	return (
-		<View style={{ ...styles.nav, height }} {...rest}>
+		<View style={{ ...styles.header }} {...rest}>
 			{!standalone ? (
 				<Icon
 					name="minus"
@@ -110,12 +115,11 @@ const MapMenu = ({
 	id,
 	info,
 	items,
-	collapsedHeight = 150,
 	collapsable = true,
 	setMapProperty,
 }: MapMenuProps) => {
-	const openOffset = 44; // ios statusbar
-	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
+	const openOffset = -inventoryHeight + HEADER_HEIGHT;
+	const collapsedOffset = 0;
 
 	const translateY: WrapValue = {
 		value: useRef(new Animated.Value(collapsedOffset)).current,
@@ -126,9 +130,18 @@ const MapMenu = ({
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderMove: (_, gesture) => {
-				translateY.value.setValue(
-					(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
-				);
+				// dy < 0 is upwards, dy > 0 is downwards
+				const opening = translateY.collapsed
+					? gesture.dy < 0 // opening inventory
+					: gesture.dy > -BUFFER_HEIGHT; // allow opening up to buffer
+				const closing = !translateY.collapsed
+					? gesture.dy > 0 // closing inventory
+					: gesture.dy < BUFFER_HEIGHT; // allow closing down to buffer
+				if (opening || closing) {
+					translateY.value.setValue(
+						(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
+					);
+				}
 			},
 			onPanResponderRelease: (_, gesture) => {
 				let collapse = gesture.vy > 0; // swiping down
@@ -160,19 +173,12 @@ const MapMenu = ({
 	}
 
 	if (!items) {
-		return (
-			<MapMenuHeader
-				info={info[id]}
-				height={collapsedHeight}
-				standalone={true}
-			/>
-		);
+		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
 					info={info[id]}
-					height={collapsedHeight}
 					onButton={
 						setMapProperty &&
 						(() => {
@@ -203,7 +209,8 @@ const MapMenu = ({
 };
 
 const styles = StyleSheet.create({
-	nav: {
+	header: {
+		height: HEADER_HEIGHT,
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
 		paddingHorizontal: 10,
@@ -216,8 +223,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height,
-		position: 'absolute',
+		height: inventoryHeight + BUFFER_HEIGHT,
+		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
 		overflow: 'scroll',
 	},
