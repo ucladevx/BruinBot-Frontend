@@ -14,7 +14,8 @@ export interface MarkerData {
 
 export interface PropTypes {
 	initRegion: Region;
-	markers: MarkerData[];
+	centralMarker?: MarkerData; // User's location, selected bot's location in order mode, etc.
+	markers: MarkerData[]; // Rest of the markers, such as all bots or all map nodes
 	markerImg?: ImageSourcePropType;
 	polygonCoords?: LatLng[];
 	lineCoords?: LatLng[];

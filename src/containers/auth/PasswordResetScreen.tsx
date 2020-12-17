@@ -51,7 +51,7 @@ const PasswordResetScreen = ({ navigation }: Props) => {
 	}
 
 	return (
-		<Form title={'Reset Password'} navigation={navigation} backButton>
+		<Form bigTitle title={'Reset Password'} navigation={navigation} backButton>
 			{currentForm}
 		</Form>
 	);

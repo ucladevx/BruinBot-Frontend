@@ -24,6 +24,7 @@ import Loading from '../components/Loading';
 const MILLISECONDS_IN_SECOND = 1000;
 
 const MapScreen = () => {
+	// const [centralMarker, setCentralMarker] = useState<MarkerData | null>(null);
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
 	);
