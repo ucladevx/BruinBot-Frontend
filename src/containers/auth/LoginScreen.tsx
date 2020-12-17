@@ -19,7 +19,7 @@ const LoginScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
 	return (
-		<Form title="BruinBot" navigation={navigation}>
+		<Form bigTitle title="BruinBot" navigation={navigation}>
 			<Input
 				placeholder="Email"
 				errorMessage={formErrors.email}

@@ -106,13 +106,13 @@ const Home = () => {
 		stack = state.user.isOrganizer ? (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
 				<Stack.Screen
 					name="InventoryModification"
 					component={InventoryModification}
 				/>
-				<Stack.Screen name="AddItem" component={AddItem} />
 			</>
 		) : (
 			<>
