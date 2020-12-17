@@ -80,10 +80,11 @@ const MapComponent = ({
 						onPress={() => onSelect(marker._id)}
 					>
 						<Icon
+							style={styles.marker}
 							name="ios-pin"
 							type="ionicon"
 							size={50}
-							color={marker._id === selected ? '#0288d1' : '#777'}
+							color={marker._id === selected ? '#0288d1' : '#fff'}
 						/>
 					</Marker>
 				))}
@@ -123,12 +124,19 @@ const styles = StyleSheet.create({
 		height: 50,
 		borderRadius: 60,
 		backgroundColor: '#fff',
-		shadowColor: '#00000070',
 		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.8,
 		shadowRadius: 1,
+		shadowColor: '#000',
+		shadowOpacity: 0.3,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	marker: {
+		width: 50,
+		shadowOffset: { width: 0, height: 3 },
+		shadowRadius: 2,
+		shadowColor: '#000',
+		shadowOpacity: 0.3,
 	},
 });
 
