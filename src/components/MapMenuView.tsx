@@ -13,8 +13,8 @@ import {
 import { Icon } from 'react-native-elements';
 
 import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
+import { NAV_HEIGHT } from '../constants';
 
-const NAV_HEIGHT = 90;
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
 
@@ -179,7 +179,12 @@ const MapMenu = ({
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
 					info={info[id]}
-					onButton={setMapProperty}
+					onButton={
+						setMapProperty &&
+						(() => {
+							setMapProperty(id);
+						})
+					}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>

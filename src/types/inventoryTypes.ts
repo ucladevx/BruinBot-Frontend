@@ -31,9 +31,9 @@ export interface HeaderProps {
 	/**
 	 * Callback for the button on the header. Could be used for anything
 	 *
-	 * @param bool Boolean for whether to show
+	 * @param val Boolean for whether to show
 	 */
-	onButton?(bool: boolean): any;
+	onButton?(val: any): any;
 }
 
 export interface MapMenuProps {
@@ -44,8 +44,7 @@ export interface MapMenuProps {
 	collapsable?: boolean;
 
 	/**
-	 * Function to change some map property, e.g. setVar of useState(), currently
-	 * used to pass along MapScreen's setShowMap() hook to MapMenuHeader's onButton()
+	 * Function to change some map property, e.g. setVar of useState()
 	 *
 	 * @param val Value to be passed into the function
 	 */
