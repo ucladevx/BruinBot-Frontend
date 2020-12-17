@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Ctx } from '../components/StateProvider';
 import QrComponent from '../components/QrView';
+import ScanGif from '../assets/scan.gif';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;
@@ -20,7 +21,8 @@ const QrScreen = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<Text style={styles.title}>Scan a BruinBot</Text>
+			<Image source={ScanGif} style={styles.gif} />
+			<Text style={styles.title}>Scan QR code on the BruinBot to continue</Text>
 
 			<QrComponent navigateForward={navigateForward} />
 
@@ -48,9 +50,16 @@ const QrScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+	gif: {
+		marginLeft: 'auto',
+		marginRight: 'auto',
+		margin: 15,
+		height: 75,
+		resizeMode: 'contain',
+	},
 	title: {
-		margin: 50,
-		fontSize: 30,
+		marginBottom: 25,
+		fontSize: 15,
 		textAlign: 'center',
 	},
 	login: {

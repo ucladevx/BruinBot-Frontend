@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: SCREEN_WIDTH - 30,
-		borderRadius: 15,
+		borderRadius: 10,
 		overflow: 'hidden',
 	},
 	qr: {
