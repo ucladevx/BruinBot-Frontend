@@ -14,9 +14,10 @@ import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
-import BotService from './src/services/BotService';
-import Drawer from './src/containers/DrawerMenu';
+import CustomDrawer from './src/containers/DrawerMenu';
 import { NavCenter } from './src/containers/NavBar';
+
+import BotService from './src/services/BotService';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -120,7 +121,7 @@ const Home = () => {
 	return (
 		// TODO: fix `any`
 		<Stack.Navigator
-			drawerContent={(props: any) => <Drawer {...props} />}
+			drawerContent={(props: any) => <CustomDrawer {...props} />}
 			screenOptions={{
 				headerShown: true,
 				headerTitle: NavCenter,
