@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 
 import Ham from '../assets/greenHam.jpg';
 import Logo from '../assets/logo.png';
@@ -7,12 +7,12 @@ import NavBar from '../components/NavBar';
 const userLinks = [
 	{
 		text: 'Scan a bot',
-		route: 'scan',
+		route: 'Qr',
 		iconName: 'md-qr-scanner',
 	},
 	{
 		text: 'Settings',
-		route: 'settings',
+		route: 'Map',
 		iconName: 'md-settings',
 	},
 ];
@@ -20,17 +20,17 @@ const userLinks = [
 const enterpriseLinks = [
 	{
 		text: 'Scan a bot',
-		route: 'scan',
+		route: 'Qr',
 		iconName: 'md-qr-scanner',
 	},
 	{
 		text: 'Event Statistics',
-		route: 'stats',
+		route: 'Dashboard',
 		iconName: 'md-stats',
 	},
 	{
 		text: 'Event Settings',
-		route: 'settings',
+		route: 'Map',
 		iconName: 'md-settings',
 	},
 ];
@@ -63,6 +63,19 @@ const NavBarScreen = () => {
 	};
 
 	return <NavBar menu={menuProps} title="BruinBot" logoSrc={Logo} />;
+};
+
+// TODO: fix `any` types
+export const withNavBar = (BaseComponent: FC<any>) => {
+	const wrappedComponent = (baseProps: any) => {
+		return (
+			<>
+				<NavBarScreen />
+				<BaseComponent {...baseProps} />
+			</>
+		);
+	};
+	return wrappedComponent;
 };
 
 export default NavBarScreen;

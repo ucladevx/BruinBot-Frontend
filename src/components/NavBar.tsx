@@ -13,6 +13,7 @@ import {
 	ImageSourcePropType,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 import Toggle from './Toggle';
 
@@ -65,6 +66,8 @@ const Menu = ({
 	openState,
 	onOpenChange,
 }: MenuProps) => {
+	const navigation = useNavigation();
+
 	// Translations are offset by a buffer to make swiping feel more natural
 	// and allow for a `Animated.spring` bounce animation.
 	const width = Dimensions.get('window').width * SIDEBAR_WIDTH_PERCENT;
@@ -95,23 +98,23 @@ const Menu = ({
 		animateSidemenu(openState);
 	}, [openState, animateSidemenu]);
 
-	const panResponder = useRef(
-		PanResponder.create({
-			onMoveShouldSetPanResponder: () => true,
-			onPanResponderMove: (_, gesture) => {
-				if (gesture.dx < BUFFER_WIDTH) {
-					translateX.current.setValue(openOffset + gesture.dx);
-				}
-			},
-			onPanResponderRelease: (_, gesture) => {
-				const collapse = gesture.vx < 0; // swiping left
-				onOpenChange(!collapse);
-				if (!collapse) {
-					animateSidemenu(true);
-				}
-			},
-		})
-	).current;
+	// const panResponder = useRef(
+	// 	PanResponder.create({
+	// 		onMoveShouldSetPanResponder: () => true,
+	// 		onPanResponderMove: (_, gesture) => {
+	// 			if (gesture.dx < BUFFER_WIDTH) {
+	// 				translateX.current.setValue(openOffset + gesture.dx);
+	// 			}
+	// 		},
+	// 		onPanResponderRelease: (_, gesture) => {
+	// 			const collapse = gesture.vx < 0; // swiping left
+	// 			onOpenChange(!collapse);
+	// 			if (!collapse) {
+	// 				animateSidemenu(true);
+	// 			}
+	// 		},
+	// 	})
+	// ).current;
 
 	const overlay = (
 		<Animated.View
@@ -141,6 +144,10 @@ const Menu = ({
 						flexDirection: 'row',
 						alignItems: 'center',
 					}}
+					onPress={() => {
+						onOpenChange(false); // close menu
+						navigation.navigate(item.route);
+					}}
 				>
 					<Icon
 						containerStyle={{ width: 50, paddingLeft: 20 }}
@@ -164,7 +171,7 @@ const Menu = ({
 					...styles.menu,
 					transform: [{ translateX: translateX.current }],
 				}}
-				{...panResponder.panHandlers}
+				// {...panResponder.panHandlers}
 			>
 				<MenuHeader {...header} />
 				{linkList}

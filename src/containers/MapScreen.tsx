@@ -5,6 +5,7 @@ import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
+import { withNavBar } from './NavBar';
 
 import { EventBot, MapNode } from '../types/apiTypes';
 import { MarkerData } from '../types/mapTypes';
@@ -88,6 +89,7 @@ const MapScreen = () => {
 		} else {
 			clearInterval(updateInterval!!);
 		}
+		return () => clearInterval(updateInterval!!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default MapScreen;
+export default withNavBar(MapScreen);
 
 /** --------------------------- HELPER FUNCTIONS ---------------------------- */
 

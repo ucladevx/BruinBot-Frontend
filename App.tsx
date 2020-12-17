@@ -15,7 +15,6 @@ import MapScreen from './src/containers/MapScreen';
 import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
-import NavBar from './src/containers/NavBar';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -116,10 +115,5 @@ const Home = () => {
 		);
 	}
 
-	return (
-		<>
-			<NavBar />
-			<Stack.Navigator headerMode="none">{stack}</Stack.Navigator>
-		</>
-	);
+	return <Stack.Navigator headerMode="none">{stack}</Stack.Navigator>;
 };
