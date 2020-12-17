@@ -1,41 +1,46 @@
 import React, { useState } from 'react';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
+import { RootStackParamList } from '../../App';
+import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
-import Logo from '../assets/logo.png';
-import NavMenu from '../components/NavMenu';
 
-const userLinks = [
+const userLinks: Link[] = [
 	{
 		text: 'Scan a bot',
-		route: 'scan',
+		route: 'Qr',
 		iconName: 'md-qr-scanner',
 	},
 	{
 		text: 'Settings',
-		route: 'settings',
+		route: 'Map',
 		iconName: 'md-settings',
 	},
 ];
 
-const enterpriseLinks = [
+const enterpriseLinks: Link[] = [
 	{
 		text: 'Scan a bot',
-		route: 'scan',
+		route: 'Qr',
 		iconName: 'md-qr-scanner',
 	},
 	{
 		text: 'Event Statistics',
-		route: 'stats',
+		route: 'Dashboard',
 		iconName: 'md-stats',
 	},
 	{
 		text: 'Event Settings',
-		route: 'settings',
+		route: 'Map',
 		iconName: 'md-settings',
 	},
 ];
 
-const NavMenuScreen = () => {
+interface Props {
+	navigation: DrawerNavigationProp<RootStackParamList>;
+}
+
+const Drawer = ({ navigation }: Props) => {
 	const [enterpriseMode, setEnterpriseMode] = useState(true);
 
 	const userHeader = {
@@ -52,14 +57,18 @@ const NavMenuScreen = () => {
 		imgSrc: Ham,
 	};
 
+	// TODO: This should check whether the user has organizer privileges and also should set some
+	// context field so that the rest of our app knows which mode our user is in.
+
 	const menuProps = {
-		header: enterpriseMode ? enterpriseHeader : userHeader,
+		headerProps: enterpriseMode ? enterpriseHeader : userHeader,
 		links: enterpriseMode ? enterpriseLinks : userLinks,
 		toggleState: enterpriseMode,
 		onToggleChange: (val: boolean) => setEnterpriseMode(val),
+		navigation,
 	};
 
-	return <NavMenu menu={menuProps} title="" imgSrc={Logo} />;
+	return <DrawerMenu {...menuProps} />;
 };
 
-export default NavMenuScreen;
+export default Drawer;

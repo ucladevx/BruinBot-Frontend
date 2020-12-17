@@ -89,6 +89,7 @@ const MapScreen = () => {
 		} else {
 			clearInterval(updateInterval!!);
 		}
+		return () => clearInterval(updateInterval!!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
