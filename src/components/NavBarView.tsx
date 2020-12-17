@@ -78,8 +78,8 @@ const Menu = ({
 		(open: boolean) => {
 			Animated.spring(translateX.current, {
 				toValue: open ? openOffset : closeOffset,
-				speed: 20,
 				useNativeDriver: true,
+				friction: 20,
 			}).start();
 
 			Animated.spring(opacity.current, {
@@ -193,6 +193,7 @@ const NavBar = ({ menu, title, logoSrc }: NavProps) => {
 			<SafeAreaView style={styles.nav}>
 				<Icon
 					containerStyle={{ width: 50 }}
+					color="gray"
 					name="md-menu"
 					type="ionicon"
 					size={30}
@@ -255,6 +256,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		zIndex: 1,
+		borderBottomColor: '#dedcd8',
+		borderBottomWidth: 1,
 	},
 	headerText: {
 		fontWeight: 'bold',
@@ -269,11 +272,9 @@ const styles = StyleSheet.create({
 
 const imageStyles = StyleSheet.create({
 	navImage: {
-		width: 30,
-		height: 30,
+		width: 35,
+		height: 35,
 		borderRadius: 10,
-		borderWidth: 2,
-		borderColor: '#ddd',
 		marginRight: 5,
 	},
 	headerImage: {

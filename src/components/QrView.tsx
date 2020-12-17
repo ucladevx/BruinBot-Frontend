@@ -10,8 +10,8 @@ import Border from '../assets/qr2_from_pngtree.png';
 import { Ctx } from './StateProvider';
 import BotService from '../services/BotService';
 
-const { width } = Dimensions.get('window');
-const qrSize = width * 0.7;
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const QR_SIZE = SCREEN_WIDTH * 0.5;
 
 interface Props {
 	navigateForward: () => void;
@@ -102,15 +102,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: Dimensions.get('window').width - 20,
-		borderRadius: 25,
+		width: SCREEN_WIDTH - 30,
+		borderRadius: 15,
 		overflow: 'hidden',
 	},
 	qr: {
 		marginTop: '20%',
 		marginBottom: '20%',
-		width: qrSize,
-		height: qrSize,
+		width: QR_SIZE,
+		height: QR_SIZE,
 	},
 });
 
