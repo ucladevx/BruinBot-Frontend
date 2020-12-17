@@ -1,21 +1,20 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import 'react-native-gesture-handler';
-
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import AddItem from './src/containers/AddItemScreen';
 import LoginScreen from './src/containers/auth/LoginScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
+import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification';
 import MapScreen from './src/containers/MapScreen';
-import QrScreen from './src/containers/QrScreen';
-import DashboardScreen from './src/containers/DashboardScreen';
-import BotService from './src/services/BotService';
 import NavBar from './src/containers/NavBarScreen';
+import QrScreen from './src/containers/QrScreen';
+import BotService from './src/services/BotService';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -33,6 +32,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const prefix = Linking.makeUrl('/');
 
+const theme = {
+	...DefaultTheme,
+	colors: {
+		...DefaultTheme.colors,
+		background: 'rgb(250, 250, 250)',
+	},
+};
+
 export default function App() {
 	const linking = {
 		prefixes: [prefix],
@@ -40,7 +47,7 @@ export default function App() {
 
 	return (
 		<StateProvider>
-			<NavigationContainer linking={linking}>
+			<NavigationContainer linking={linking} theme={theme}>
 				<Home />
 			</NavigationContainer>
 		</StateProvider>
