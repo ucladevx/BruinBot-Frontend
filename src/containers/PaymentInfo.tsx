@@ -79,7 +79,6 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			});
 		}, 5000);
 	};
-	// TODO: Use Edward's Form component instead of KeyboardAvoidingView
 	return (
 		<View style={styles.container}>
 			<Form title="Enter Payment Info" navigation={navigation}>
