@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import {
 	View,
-	Text,
 	StyleSheet,
 	TextInput,
 	Dimensions,
-	TouchableWithoutFeedback,
 	Keyboard,
-	KeyboardAvoidingView,
 	Alert,
 } from 'react-native';
 import { Button } from 'react-native-elements';
