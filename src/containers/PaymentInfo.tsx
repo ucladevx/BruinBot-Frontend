@@ -13,6 +13,7 @@ import {
 import { Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import Form from './auth/Form';
 
 import Loading from '../components/Loading';
 
@@ -83,9 +84,8 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 	};
 	// TODO: Use Edward's Form component instead of KeyboardAvoidingView
 	return (
-		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-			<KeyboardAvoidingView behavior="position" style={styles.container}>
-				<Text style={styles.header}>Enter Payment Info</Text>
+		<View style={styles.container}>
+			<Form title="Enter Payment Info" navigation={navigation}>
 				<TextInput
 					style={[styles.input, { width: screenWidth * 0.9 }]}
 					placeholder="0000 0000 0000 0000"
@@ -126,15 +126,15 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 					titleStyle={styles.buttonText}
 					disabled={submitDisabled}
 				/>
-				{loading ? (
-					<View style={{ alignItems: 'center' }}>
-						<Loading loadingText={'Processing'} />
-					</View>
-				) : (
-					<View></View>
-				)}
-			</KeyboardAvoidingView>
-		</TouchableWithoutFeedback>
+			</Form>
+			{loading ? (
+				<View style={{ alignItems: 'center', flex: 1 }}>
+					<Loading loadingText={'Processing'} />
+				</View>
+			) : (
+				<View></View>
+			)}
+		</View>
 	);
 };
 
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginTop: screenHeight * 0.01,
+		width: '100%',
 	},
 	input: {
 		backgroundColor: '#ddd',
