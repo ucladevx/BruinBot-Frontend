@@ -1,10 +1,16 @@
 import { ImageSourcePropType } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../App';
 
 export interface ItemProps {
 	_id: string;
 	name: string;
 	price: number;
 	imgSrc: string;
+}
+
+export interface InventoryItemProps extends ItemProps {
+	clickable?: boolean;
 }
 
 /**
@@ -40,9 +46,10 @@ export interface HeaderProps {
 export interface MapMenuProps {
 	id: string;
 	info: { [key: string]: HeaderInfo };
-	items?: { [key: string]: ItemProps[] };
+	items?: { [key: string]: InventoryItemProps[] };
 	collapsedHeight?: number;
 	collapsable?: boolean;
+	clickable?: boolean;
 
 	/**
 	 * Function to change some map property, e.g. setVar of useState()

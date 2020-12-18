@@ -16,6 +16,7 @@ import QrScreen from './src/containers/QrScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import BotService from './src/services/BotService';
 import NavBar from './src/containers/NavBar';
+import ItemCatalogue from './src/containers/ItemCatalogue';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -27,6 +28,7 @@ export type RootStackParamList = {
 	AddItem: undefined;
 	Qr: undefined;
 	Dashboard: undefined;
+	ItemCatalogue: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -92,6 +94,7 @@ const Home = () => {
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 			</>
 		);
 	} else {
@@ -112,6 +115,7 @@ const Home = () => {
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 			</>
 		);
 	}

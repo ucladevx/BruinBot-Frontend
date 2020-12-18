@@ -11,10 +11,41 @@ import {
 	Pressable,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
+import {
+	InventoryItemProps,
+	HeaderProps,
+	MapMenuProps,
+} from '../types/inventoryTypes';
 
-const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
+const Item = ({ _id, name, price, imgSrc, clickable }: InventoryItemProps) => {
+	if (clickable) {
+		return (
+			// TODO: Navigate to payment screen
+			<TouchableOpacity onPress={() => console.log('Here')} key={_id}>
+				<View
+					style={[
+						styles.item,
+						{ width: Dimensions.get('window').width * 0.44 },
+					]}
+					key={_id}
+				>
+					<Image
+						style={{
+							width: '100%',
+							height: 150,
+							borderRadius: 10,
+							resizeMode: 'contain',
+						}}
+						source={{ uri: imgSrc }}
+					/>
+					<Text style={{ marginTop: 10 }}>{name}</Text>
+					<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+				</View>
+			</TouchableOpacity>
+		);
+	}
 	return (
 		<View style={styles.item} key={_id}>
 			<Image
@@ -112,6 +143,7 @@ const MapMenu = ({
 	items,
 	collapsedHeight = 150,
 	collapsable = true,
+	clickable = false,
 	setMapProperty,
 }: MapMenuProps) => {
 	const openOffset = 44; // ios statusbar
@@ -191,6 +223,7 @@ const MapMenu = ({
 							name={item.name}
 							price={item.price}
 							imgSrc={item.imgSrc}
+							clickable={clickable}
 						/>
 					)}
 					keyExtractor={(item) => item._id}
