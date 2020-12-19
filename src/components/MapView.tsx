@@ -1,15 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import MapView, {
 	Polygon,
 	Polyline,
-	Marker,
 	LatLng,
 	Region,
+	AnimatedRegion,
+	MarkerAnimated,
 } from 'react-native-maps';
 import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-import { PropTypes } from '../types/mapTypes';
+import { PropTypes, MarkerData } from '../types/mapTypes';
 
 const MapComponent = ({
 	initRegion,
@@ -21,6 +22,17 @@ const MapComponent = ({
 	onSelect,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
+	const [animatedLocations, setAnimatedLocations] = useState(
+		markers.reduce(function (obj, m) {
+			obj[m._id] = new AnimatedRegion({
+				latitude: m.location.latitude,
+				longitude: m.location.longitude,
+				latitudeDelta: 0,
+				longitudeDelta: 0,
+			});
+			return obj;
+		}, Object.create(null))
+	);
 
 	const initCameraView = {
 		center: {
@@ -38,6 +50,57 @@ const MapComponent = ({
 			mapRef.current.animateCamera(initCameraView, { duration: 300 });
 		}
 	};
+
+	// animates markers from original location to new location
+	useEffect(() => {
+		let newMarkers: MarkerData[] = [];
+		for (const m of markers) {
+			if (m._id in animatedLocations) {
+				const coordinateConfig = {
+					latitude: m.location.latitude,
+					longitude: m.location.longitude,
+					latitudeDelta: 0,
+					longitudeDelta: 0,
+					useNativeDriver: false,
+				};
+				animatedLocations[m._id].timing(coordinateConfig).start();
+			} else {
+				newMarkers.push(m);
+			}
+		}
+		if (newMarkers.length > 0) {
+			let animatedLocationsCopy = { ...animatedLocations };
+			for (const m of newMarkers) {
+				const animatedM = new AnimatedRegion({
+					latitude: m.location.latitude,
+					longitude: m.location.longitude,
+					latitudeDelta: 0,
+					longitudeDelta: 0,
+				});
+				animatedLocationsCopy[m._id] = animatedM;
+			}
+			setAnimatedLocations(animatedLocationsCopy);
+		}
+		return function cleanup() {
+			let markersIdsToRemove: string[] = [];
+			for (const id in animatedLocations) {
+				if (
+					markers.find((obj) => {
+						return obj._id === id;
+					}) == undefined
+				) {
+					markersIdsToRemove.push(id);
+				}
+			}
+			if (markersIdsToRemove.length > 0) {
+				let animatedLocationsCopy = { ...animatedLocations };
+				for (const id of markersIdsToRemove) {
+					delete animatedLocationsCopy[id];
+				}
+				setAnimatedLocations(animatedLocationsCopy);
+			}
+		};
+	}, [markers, animatedLocations]);
 
 	return (
 		<>
@@ -69,13 +132,10 @@ const MapComponent = ({
 					/>
 				)}
 				{markers.map((marker) => (
-					<Marker
+					<MarkerAnimated
 						tracksViewChanges={false}
 						key={marker._id}
-						coordinate={{
-							latitude: marker.location.latitude,
-							longitude: marker.location.longitude,
-						}}
+						coordinate={animatedLocations[marker._id]}
 						title={marker.name}
 						onPress={() => onSelect(marker._id)}
 					>
@@ -86,7 +146,7 @@ const MapComponent = ({
 							size={50}
 							color={marker._id === selected ? '#0288d1' : '#fff'}
 						/>
-					</Marker>
+					</MarkerAnimated>
 				))}
 			</MapView>
 			<TouchableOpacity
