@@ -45,10 +45,6 @@ const addItem = async (
 		data,
 		headers: { 'Content-Type': 'multipart/form-data' },
 	});
-	// const botUpdate = new FormData();
-	// botUpdate.append('botId', botId);
-	// botUpdate.append('itemId', res.data._id);
-	// botUpdate.append('quantity', `${quantity}`);
 	await axios.post('/bots/addItem', { botId, itemId: res.data._id, quantity });
 };
 
