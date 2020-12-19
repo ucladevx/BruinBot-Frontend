@@ -27,7 +27,8 @@ const MapComponent = ({
 	// AnimatedRegion objects to be used to locate markers on the map
 	const [animatedLocations, setAnimatedLocations] = useState(
 		// "obj" will be the initial object holding each of the AnimatedRegion
-		// objects, "m" is one marker for each of the markers in the markers array
+		// objects, "m" is one marker for each of the markers in the markers
+		// array
 
 		// For each marker, add a new AnimatedRegion variable with that
 		// marker's coordinates to the state object animatedLocations
@@ -89,7 +90,7 @@ const MapComponent = ({
 		// If a new marker was added to the marker array in props
 		if (newMarkers.length > 0) {
 			// Create a copy of the animatedLocations array from the component
-			// state, add all new markers's AnimatedRegion object to this copy,
+			// state, add all new markers' AnimatedRegion object to this copy,
 			// and set animatedLocations state to this copy
 			let animatedLocationsCopy = { ...animatedLocations };
 			for (const m of newMarkers) {
