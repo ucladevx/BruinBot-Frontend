@@ -24,8 +24,6 @@ import Loading from '../components/Loading';
 const MILLISECONDS_IN_SECOND = 1000;
 
 const MapScreen = () => {
-	// const [centralMarker, setCentralMarker] = useState<MarkerData | null>(null);
-
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -44,7 +42,7 @@ const MapScreen = () => {
 	} | null>(null);
 
 	// Id of the marker that is currently selected
-	const [selectedMarker, setSelected] = useState('');
+	const [selectedMarker, setSelected] = useState<MarkerData | null>(null);
 
 	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(false);
@@ -127,6 +125,7 @@ const MapScreen = () => {
 					<MapComponent
 						initRegion={CampusData.region}
 						markers={Object.values(markers)}
+						centralMarker={selectedBotForOrder}
 						markerImg={Marker}
 						polygonCoords={CampusData.polygon.map(([lat, lng]) => ({
 							latitude: lat,
@@ -138,14 +137,14 @@ const MapScreen = () => {
 								selectedBotForOrder.location.longitude
 							);
 						}}
-						selected={selectedMarker}
-						onSelect={(id: string) => {
-							setSelected(id);
+						selected={selectedMarker ? selectedMarker : undefined}
+						onSelect={(marker: MarkerData) => {
+							setSelected(marker);
 						}}
 					/>
 				</View>
 				<MapMenuHeader
-					info={headerInfo[selectedMarker]}
+					info={headerInfo[selectedMarker ? selectedMarker._id : '']}
 					standalone={true}
 					onButton={() => {
 						// for now, go back to map with btos
@@ -176,12 +175,12 @@ const MapScreen = () => {
 						}))}
 						lineCoords={botPaths ? Object.values(botPaths) : []}
 						refresh={runRequests}
-						selected={selectedMarker}
-						onSelect={(id: string) => setSelected(id)}
+						selected={selectedMarker ? selectedMarker : undefined}
+						onSelect={(marker: MarkerData) => setSelected(marker)}
 					/>
 				</View>
 				<MapMenu
-					id={selectedMarker}
+					id={selectedMarker ? selectedMarker._id : ''}
 					info={headerInfo}
 					items={inventories}
 					setMapProperty={(id: string) => {
@@ -278,7 +277,6 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeMarkers: { [key: string]: MarkerData } = {};
 	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
-	console.log(apiData);
 	apiData.forEach((node, idx) => {
 		// TODO: figure out what to name intermediate checkpoints
 		let name = node.name
