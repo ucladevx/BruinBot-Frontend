@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 import Axios from 'axios';
 
-import { baseUrl } from '../config';
+import { BASE_URL } from '../config';
 import { Platform } from 'react-native';
 
 const axios = Axios.create({
-	baseURL: baseUrl,
+	baseURL: BASE_URL,
 	withCredentials: true,
 });
 
