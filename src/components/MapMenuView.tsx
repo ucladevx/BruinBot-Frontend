@@ -18,12 +18,35 @@ import {
 	HeaderProps,
 	MapMenuProps,
 } from '../types/inventoryTypes';
+import { NAV_HEIGHT } from '../constants';
 
-const Item = ({ _id, name, price, imgSrc, clickable }: InventoryItemProps) => {
+const HEADER_HEIGHT = 150;
+const BUFFER_HEIGHT = 30;
+
+const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
+
+const Item = ({
+	_id,
+	name,
+	price,
+	imgSrc,
+	quantity,
+	clickable = false,
+	navigation = undefined,
+}: InventoryItemProps) => {
 	if (clickable) {
 		return (
 			// TODO: Navigate to payment screen
-			<TouchableOpacity onPress={() => console.log('Here')} key={_id}>
+			<TouchableOpacity
+				onPress={() =>
+					navigation?.navigate('PaymentInfo', {
+						amount: price,
+						itemId: _id,
+						quantity: -1,
+					})
+				}
+				key={_id}
+			>
 				<View
 					style={[
 						styles.item,
@@ -40,7 +63,32 @@ const Item = ({ _id, name, price, imgSrc, clickable }: InventoryItemProps) => {
 						}}
 						source={{ uri: imgSrc }}
 					/>
-					<Text style={{ marginTop: 10 }}>{name}</Text>
+					<View
+						style={{
+							marginTop: 10,
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<Text style={{ fontSize: 16 }}>{name}</Text>
+						{quantity !== 0 ? (
+							<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
+						) : (
+							<View
+								style={{
+									borderColor: 'red',
+									borderRadius: 5,
+									borderWidth: 1,
+									padding: 3,
+								}}
+							>
+								<Text style={{ fontWeight: 'bold', color: 'red' }}>
+									{quantity} left
+								</Text>
+							</View>
+						)}
+					</View>
 					<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
 				</View>
 			</TouchableOpacity>
@@ -64,7 +112,6 @@ const Item = ({ _id, name, price, imgSrc, clickable }: InventoryItemProps) => {
 };
 
 const MapMenuHeader = ({
-	height,
 	info,
 	onButton,
 	standalone,
@@ -76,7 +123,7 @@ const MapMenuHeader = ({
 	}
 
 	return (
-		<View style={{ ...styles.nav, height }} {...rest}>
+		<View style={{ ...styles.header }} {...rest}>
 			{!standalone ? (
 				<Icon
 					name="minus"
@@ -141,13 +188,13 @@ const MapMenu = ({
 	id,
 	info,
 	items,
-	collapsedHeight = 150,
 	collapsable = true,
 	clickable = false,
+	navigation = undefined,
 	setMapProperty,
 }: MapMenuProps) => {
-	const openOffset = 44; // ios statusbar
-	const collapsedOffset = Dimensions.get('window').height - collapsedHeight;
+	const openOffset = -inventoryHeight + HEADER_HEIGHT;
+	const collapsedOffset = 0;
 
 	const translateY: WrapValue = {
 		value: useRef(new Animated.Value(collapsedOffset)).current,
@@ -158,9 +205,18 @@ const MapMenu = ({
 		PanResponder.create({
 			onMoveShouldSetPanResponder: () => true,
 			onPanResponderMove: (_, gesture) => {
-				translateY.value.setValue(
-					(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
-				);
+				// dy < 0 is upwards, dy > 0 is downwards
+				const opening = translateY.collapsed
+					? gesture.dy < 0 // opening inventory
+					: gesture.dy > -BUFFER_HEIGHT; // allow opening up to buffer
+				const closing = !translateY.collapsed
+					? gesture.dy > 0 // closing inventory
+					: gesture.dy < BUFFER_HEIGHT; // allow closing down to buffer
+				if (opening || closing) {
+					translateY.value.setValue(
+						(translateY.collapsed ? collapsedOffset : openOffset) + gesture.dy
+					);
+				}
 			},
 			onPanResponderRelease: (_, gesture) => {
 				let collapse = gesture.vy > 0; // swiping down
@@ -192,19 +248,12 @@ const MapMenu = ({
 	}
 
 	if (!items) {
-		return (
-			<MapMenuHeader
-				info={info[id]}
-				height={collapsedHeight}
-				standalone={true}
-			/>
-		);
+		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
 					info={info[id]}
-					height={collapsedHeight}
 					onButton={
 						setMapProperty &&
 						(() => {
@@ -222,8 +271,11 @@ const MapMenu = ({
 							_id={item._id}
 							name={item.name}
 							price={item.price}
+							quantity={item.quantity}
 							imgSrc={item.imgSrc}
 							clickable={clickable}
+							navigation={navigation}
+							botId={id}
 						/>
 					)}
 					keyExtractor={(item) => item._id}
@@ -236,7 +288,8 @@ const MapMenu = ({
 };
 
 const styles = StyleSheet.create({
-	nav: {
+	header: {
+		height: HEADER_HEIGHT,
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
 		paddingHorizontal: 10,
@@ -249,8 +302,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height,
-		position: 'absolute',
+		height: inventoryHeight + BUFFER_HEIGHT,
+		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
 		overflow: 'scroll',
 	},

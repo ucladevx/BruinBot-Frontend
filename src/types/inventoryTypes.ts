@@ -7,10 +7,12 @@ export interface ItemProps {
 	name: string;
 	price: number;
 	imgSrc: string;
+	quantity?: number;
 }
 
 export interface InventoryItemProps extends ItemProps {
 	clickable?: boolean;
+	navigation?: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
 }
 
 /**
@@ -25,7 +27,6 @@ export interface HeaderInfo {
 }
 
 export interface HeaderProps {
-	height: number;
 	info: HeaderInfo;
 
 	/**
@@ -50,6 +51,7 @@ export interface MapMenuProps {
 	collapsedHeight?: number;
 	collapsable?: boolean;
 	clickable?: boolean;
+	navigation?: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
 
 	/**
 	 * Function to change some map property, e.g. setVar of useState()
