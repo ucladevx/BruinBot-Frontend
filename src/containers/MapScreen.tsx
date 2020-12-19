@@ -3,11 +3,12 @@ import { Alert, StyleSheet, View } from 'react-native';
 
 import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
+import Loading from '../components/Loading';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
 import { EventBot, MapNode } from '../types/apiTypes';
-import { MarkerData } from '../types/mapTypes';
+import { MarkerData, Location } from '../types/mapTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 
 import CampusData from '../assets/campusCoords.json';
@@ -18,32 +19,41 @@ import LocationImgA from '../assets/sampleImageLocation1.png';
 import LocationImgB from '../assets/sampleImageLocation2.png';
 import LocationImgC from '../assets/sampleImageLocation3.png';
 import Marker from '../assets/marker.png';
-
-import Loading from '../components/Loading';
-
-const MILLISECONDS_IN_SECOND = 1000;
+import { MAP_REFRESH_RATE } from '../config';
 
 const MapScreen = () => {
 	// const [centralMarker, setCentralMarker] = useState<MarkerData | null>(null);
+
+	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
 	);
+	// For displaying the header at the bottom of the screen associated with each marker
 	const [headerInfo, setHeaderInfo] = useState<MapMenuProps['info'] | null>(
 		null
 	);
+	// If markers are bots, these contain the inventories of each bot
 	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
 		null
 	);
+	// If markers are bots, these these contain the path of each bot, if it exists
+	const [botPaths, setBotPaths] = useState<{
+		[key: string]: Location[];
+	} | null>(null);
+
+	// Id of the marker that is currently selected
 	const [selectedMarker, setSelected] = useState('');
 
 	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(false);
-	// Bot that was selected to send to some map node
+
+	// Bot that was selected to send to some map node, used when showing map nodes
 	const [
 		selectedBotForOrder,
 		setSelectedBotForOrder,
 	] = useState<MarkerData | null>(null);
 
+	// Holds the timeout object that runs requests periodically
 	const [updateInterval, setUpdateInterval] = useState<ReturnType<
 		typeof setTimeout
 	> | null>(null);
@@ -54,10 +64,17 @@ const MapScreen = () => {
 			const OG_PROD_EVENT = '5fc90164d5869f00143e7fac';
 			const data = await BotService.getEventBots(OG_PROD_EVENT);
 
-			const { botArray, botHeaderInfo, botItems } = formatEventBotsData(data);
+			const {
+				botArray,
+				botHeaderInfo,
+				botItems,
+				botPaths,
+			} = formatEventBotsData(data);
+
 			setMarkers(botArray);
 			setHeaderInfo(botHeaderInfo);
 			setInventories(botItems);
+			setBotPaths(botPaths);
 		} catch (err) {
 			Alert.alert('Could not retrieve bot information.');
 		}
@@ -85,7 +102,7 @@ const MapScreen = () => {
 	useEffect(() => {
 		if (!showMapNodes) {
 			runRequests();
-			setUpdateInterval(setInterval(runRequests, MILLISECONDS_IN_SECOND * 10));
+			setUpdateInterval(setInterval(runRequests, MAP_REFRESH_RATE));
 		} else {
 			clearInterval(updateInterval!!);
 		}
@@ -155,6 +172,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
+						lineCoords={botPaths ? Object.values(botPaths) : []}
 						refresh={runRequests}
 						selected={selectedMarker}
 						onSelect={(id: string) => setSelected(id)}
@@ -195,7 +213,37 @@ export default MapScreen;
 const formatEventBotsData = (apiData: EventBot[]) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: MapMenuProps['info'] = {};
+	const botPaths: { [key: string]: Location[] } = {};
 	const botItems: MapMenuProps['items'] = {};
+	const examplePaths: Location[][] = [
+		[
+			{ latitude: 34.0714, longitude: -118.4439 },
+			{ latitude: 34.07138006587105, longitude: -118.44391899674218 },
+			{ latitude: 34.07139475587356, longitude: -118.44363170169143 },
+			{ latitude: 34.07124197972276, longitude: -118.44363170169143 },
+			{ latitude: 34.07095699270514, longitude: -118.44363170169143 },
+			{ latitude: 34.07095699270514, longitude: -118.44381259116781 },
+			{ latitude: 34.07095699270514, longitude: -118.44423111976027 },
+			{ latitude: 34.070971682781035, longitude: -118.44455033648336 },
+			{ latitude: 34.07097755881067, longitude: -118.44476669448456 },
+			{ latitude: 34.070983434839924, longitude: -118.44496177137086 },
+			{ latitude: 34.071034093188324, longitude: -118.44503599424084 },
+		],
+		[
+			{ latitude: 34.073, longitude: -118.4432 },
+			{ latitude: 34.0725, longitude: -118.4432 },
+			{ latitude: 34.072, longitude: -118.4432 },
+			{ latitude: 34.0715, longitude: -118.4432 },
+			{ latitude: 34.071, longitude: -118.4432 },
+			{ latitude: 34.0705, longitude: -118.4432 },
+			{ latitude: 34.07, longitude: -118.4431 },
+			{ latitude: 34.0695, longitude: -118.4431 },
+			{ latitude: 34.069, longitude: -118.4431 },
+			{ latitude: 34.0685, longitude: -118.4431 },
+			{ latitude: 34.068, longitude: -118.4431 },
+			{ latitude: 34.0675, longitude: -118.4431 },
+		],
+	];
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
@@ -217,9 +265,12 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			bottomRight: '0' + ' items sold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
+
+		botPaths[bot._id] = examplePaths[idx];
+
 		botItems[bot._id] = items;
 	});
-	return { botArray: botMarkers, botHeaderInfo, botItems };
+	return { botArray: botMarkers, botHeaderInfo, botItems, botPaths };
 };
 
 const formatMapNodesData = (apiData: MapNode[]) => {

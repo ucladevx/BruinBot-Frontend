@@ -18,6 +18,8 @@ import CustomDrawer from './src/containers/DrawerScreen';
 import { NavCenter } from './src/containers/NavBarScreen';
 
 import BotService from './src/services/BotService';
+import PaymentInfo from './src/containers/PaymentInfo';
+import PaymentSuccess from './src/containers/PaymentSuccessScreen';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -29,6 +31,8 @@ export type RootStackParamList = {
 	AddItem: undefined;
 	Qr: undefined;
 	Dashboard: undefined;
+	PaymentInfo: undefined;
+	PaymentSuccess: { success: boolean };
 };
 
 const Stack = createDrawerNavigator<RootStackParamList>();
@@ -102,6 +106,8 @@ const Home = () => {
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
+				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
 		);
 	} else {
@@ -122,6 +128,8 @@ const Home = () => {
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
+				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
 		);
 	}

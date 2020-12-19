@@ -40,6 +40,7 @@ export interface UserData extends ApiResponse {
 
 export interface EventBot extends Bot {
 	inventory: BotItem[];
+	path: Location[];
 }
 
 // TODO: add distance info
