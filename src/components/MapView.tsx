@@ -22,7 +22,15 @@ const MapComponent = ({
 	onSelect,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
+
+	// Adds a new object to the MapComponent's state that keeps track of
+	// AnimatedRegion objects to be used to locate markers on the map
 	const [animatedLocations, setAnimatedLocations] = useState(
+		// "obj" will be the initial object holding each of the AnimatedRegion
+		// objects, "m" is one marker for each of the markers in the markers array
+
+		// For each marker, add a new AnimatedRegion variable with that
+		// marker's coordinates to the state object animatedLocations
 		markers.reduce(function (obj, m) {
 			obj[m._id] = new AnimatedRegion({
 				latitude: m.location.latitude,
@@ -31,7 +39,7 @@ const MapComponent = ({
 				longitudeDelta: 0,
 			});
 			return obj;
-		}, Object.create(null))
+		}, Object.create(null)) // This Object.create() is the base empty object
 	);
 
 	const initCameraView = {
@@ -51,11 +59,19 @@ const MapComponent = ({
 		}
 	};
 
-	// animates markers from original location to new location
+	/**
+	 * Animates markers from their original locations to their new locations
+	 * upon markers' location change
+	 */
 	useEffect(() => {
+		// Create array to hold any new markers added
 		let newMarkers: MarkerData[] = [];
+
+		// For each marker in the main marker array in props
 		for (const m of markers) {
 			if (m._id in animatedLocations) {
+				// Animate coordinates from current location in AnimatedRegion
+				// object to new location updated in the marker array's object
 				const coordinateConfig = {
 					latitude: m.location.latitude,
 					longitude: m.location.longitude,
@@ -63,12 +79,18 @@ const MapComponent = ({
 					longitudeDelta: 0,
 					useNativeDriver: false,
 				};
+				// Start the animation
 				animatedLocations[m._id].timing(coordinateConfig).start();
 			} else {
+				// This is a new marker; add it to the new marker array
 				newMarkers.push(m);
 			}
 		}
+		// If a new marker was added to the marker array in props
 		if (newMarkers.length > 0) {
+			// Create a copy of the animatedLocations array from the component
+			// state, add all new markers's AnimatedRegion object to this copy,
+			// and set animatedLocations state to this copy
 			let animatedLocationsCopy = { ...animatedLocations };
 			for (const m of newMarkers) {
 				const animatedM = new AnimatedRegion({
@@ -81,8 +103,13 @@ const MapComponent = ({
 			}
 			setAnimatedLocations(animatedLocationsCopy);
 		}
+		// Remove AnimatedRegions whose markers have been removed
 		return function cleanup() {
+			// Create array holding ids of markers that have been removed
 			let markersIdsToRemove: string[] = [];
+			// Add all ids that are a key to an AnimatedRegion object in
+			// animatedLocations and whose associated markers have been
+			// removed to the markersIdsToRemove array
 			for (const id in animatedLocations) {
 				if (
 					markers.find((obj) => {
@@ -92,7 +119,15 @@ const MapComponent = ({
 					markersIdsToRemove.push(id);
 				}
 			}
+			// For all in animatedLocations, if a key for an animatedRegion
+			// object value in the animatedLocations object is an id that
+			// doesn't correspond to a marker in the marker array in props,
+			// remove that value
 			if (markersIdsToRemove.length > 0) {
+				// Create a copy of the animatedLocations array from the
+				// component state, remove all AnimatedRegion objects without
+				// markers from this copy, and set animatedLocations state to
+				// this copy
 				let animatedLocationsCopy = { ...animatedLocations };
 				for (const id of markersIdsToRemove) {
 					delete animatedLocationsCopy[id];
