@@ -1,46 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
-
-const userLinks: Link[] = [
-	{
-		text: 'Scan a bot',
-		route: 'Qr',
-		iconName: 'md-qr-scanner',
-	},
-	{
-		text: 'Settings',
-		route: 'Map',
-		iconName: 'md-settings',
-	},
-];
-
-const enterpriseLinks: Link[] = [
-	{
-		text: 'Scan a bot',
-		route: 'Qr',
-		iconName: 'md-qr-scanner',
-	},
-	{
-		text: 'Event Statistics',
-		route: 'Dashboard',
-		iconName: 'md-stats',
-	},
-	{
-		text: 'Event Settings',
-		route: 'Map',
-		iconName: 'md-settings',
-	},
-];
+import { Ctx } from '../components/StateProvider';
 
 interface Props {
 	navigation: DrawerNavigationProp<RootStackParamList>;
 }
 
 const Drawer = ({ navigation }: Props) => {
+	const { dispatch } = useContext(Ctx);
 	const [enterpriseMode, setEnterpriseMode] = useState(true);
 
 	const userHeader = {
@@ -57,6 +28,54 @@ const Drawer = ({ navigation }: Props) => {
 		imgSrc: Ham,
 	};
 
+	const userLinks: Link[] = [
+		{
+			text: 'Scan a bot',
+			route: 'Qr',
+			iconName: 'md-qr-scanner',
+			onPress: () => {
+				dispatch({ type: 'SET_BOT', bot: null });
+				navigation.navigate('Qr');
+			},
+		},
+		{
+			text: 'Settings',
+			route: 'Map',
+			iconName: 'md-settings',
+			onPress: () => {
+				navigation.navigate('Map');
+			},
+		},
+	];
+
+	const enterpriseLinks: Link[] = [
+		{
+			text: 'Scan a bot',
+			route: 'Qr',
+			iconName: 'md-qr-scanner',
+			onPress: () => {
+				dispatch({ type: 'SET_BOT', bot: null });
+				navigation.navigate('Qr');
+			},
+		},
+		{
+			text: 'Event Statistics',
+			route: 'Dashboard',
+			iconName: 'md-stats',
+			onPress: () => {
+				navigation.navigate('Dashboard');
+			},
+		},
+		{
+			text: 'Event Settings',
+			route: 'Map',
+			iconName: 'md-settings',
+			onPress: () => {
+				navigation.navigate('Map');
+			},
+		},
+	];
+
 	// TODO: This should check whether the user has organizer privileges and also should set some
 	// context field so that the rest of our app knows which mode our user is in.
 
@@ -65,7 +84,6 @@ const Drawer = ({ navigation }: Props) => {
 		links: enterpriseMode ? enterpriseLinks : userLinks,
 		toggleState: enterpriseMode,
 		onToggleChange: (val: boolean) => setEnterpriseMode(val),
-		navigation,
 	};
 
 	return <DrawerMenu {...menuProps} />;

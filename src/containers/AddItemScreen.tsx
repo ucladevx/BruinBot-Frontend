@@ -13,6 +13,7 @@ import {
 import { Button, Icon, Image, Input } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
 import Form from './auth/Form';
+import ItemService from '../services/ItemService';
 import { styles as formStyles } from './auth/FormStyles';
 
 const screenWidth = Dimensions.get('window').width;
@@ -73,9 +74,18 @@ const AddItem = ({ navigation }: AddItemProps) => {
 		) {
 			Alert.alert('Please fix errors before submitting');
 		} else {
-			//DO REQUEST
-			Alert.alert('Added Item succesfully');
-			navigation.navigate('InventoryModification');
+			try {
+				await ItemService.addItem(
+					itemName,
+					cost,
+					'5fc90164d5869f00143e7fac',
+					photo
+				);
+				Alert.alert('Added Item succesfully');
+				navigation.navigate('InventoryModification');
+			} catch (err) {
+				Alert.alert('Something went wrong when submitting...');
+			}
 		}
 	};
 
