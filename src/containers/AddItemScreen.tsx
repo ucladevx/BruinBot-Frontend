@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Camera, PermissionResponse } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
 	ActivityIndicator,
 	Alert,
@@ -14,6 +14,7 @@ import { Button, Icon, Image, Input } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
+import { Ctx } from '../components/StateProvider';
 import { styles as formStyles } from './auth/FormStyles';
 
 const screenWidth = Dimensions.get('window').width;
@@ -24,6 +25,7 @@ interface AddItemProps {
 }
 
 const AddItem = ({ navigation }: AddItemProps) => {
+	const { state } = useContext(Ctx);
 	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
 	const [quantityErrorMessage, setQuantityErrorMessage] = useState('');
@@ -73,13 +75,17 @@ const AddItem = ({ navigation }: AddItemProps) => {
 			costErrorMessage !== ''
 		) {
 			Alert.alert('Please fix errors before submitting');
+		} else if (!state.bot) {
+			Alert.alert('Please scan a bot first');
 		} else {
 			try {
 				await ItemService.addItem(
 					itemName,
 					cost,
 					'5fc90164d5869f00143e7fac',
-					photo
+					photo,
+					state.bot._id,
+					quantity
 				);
 				Alert.alert('Added Item succesfully');
 				navigation.navigate('InventoryModification');
