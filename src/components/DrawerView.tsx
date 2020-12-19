@@ -9,7 +9,6 @@ import {
 	ImageSourcePropType,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { RootStackParamList } from '../../App';
 import Toggle from './Toggle';
@@ -40,12 +39,12 @@ export interface Link {
 	text: string;
 	route: keyof RootStackParamList;
 	iconName: string;
+	onPress: () => void;
 }
 
 interface DrawerProps {
 	headerProps: HeaderProps;
 	links: Link[];
-	navigation: DrawerNavigationProp<RootStackParamList>;
 	toggleState: boolean;
 	onToggleChange(val: boolean): void;
 }
@@ -53,7 +52,6 @@ interface DrawerProps {
 const Drawer = ({
 	headerProps,
 	links,
-	navigation,
 	toggleState,
 	onToggleChange,
 }: DrawerProps) => {
@@ -68,7 +66,7 @@ const Drawer = ({
 						flexDirection: 'row',
 						alignItems: 'center',
 					}}
-					onPress={() => navigation.navigate(item.route)}
+					onPress={item.onPress}
 				>
 					<Icon
 						containerStyle={{ width: 50, paddingLeft: 20 }}

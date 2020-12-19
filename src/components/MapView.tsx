@@ -5,12 +5,17 @@ import MapView, {
 	LatLng,
 	Region,
 	AnimatedRegion,
+	Marker,
 	MarkerAnimated,
 } from 'react-native-maps';
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { PropTypes, MarkerData } from '../types/mapTypes';
+import { MAP_MARKER_SIZE } from '../constants';
+import mapDest from '../assets/mapDest.png';
+import mapPinPrimary from '../assets/mapPin1.gif';
+import mapPinSecondary from '../assets/mapPin3.gif';
 
 const MapComponent = ({
 	initRegion,
@@ -79,6 +84,7 @@ const MapComponent = ({
 					latitudeDelta: 0,
 					longitudeDelta: 0,
 					useNativeDriver: false,
+					duration: 10000,
 				};
 				// Start the animation
 				animatedLocations[m._id].timing(coordinateConfig).start();
@@ -159,29 +165,57 @@ const MapComponent = ({
 						fillColor="rgba(2, 136, 209, 0.2)"
 					/>
 				)}
-				{lineCoords && (
-					<Polyline
-						coordinates={lineCoords}
-						strokeColor="#0288d1"
-						strokeWidth={1.5}
-						lineDashPattern={[40, 20]}
-					/>
-				)}
+				{lineCoords &&
+					lineCoords.map((path, idx) => {
+						return (
+							<Polyline
+								key={'Path' + idx}
+								coordinates={path}
+								strokeColor="white"
+								strokeWidth={4}
+								lineJoin="bevel"
+							/>
+						);
+					})}
+				{lineCoords &&
+					lineCoords.map((path, idx) => {
+						return (
+							<Marker
+								key={idx}
+								tracksViewChanges={false}
+								coordinate={path[path.length - 1]}
+								centerOffset={{ x: 0, y: 0 }}
+							>
+								<Image
+									source={mapDest}
+									style={{ height: MAP_MARKER_SIZE * 0.7 }}
+									resizeMode="contain"
+								/>
+							</Marker>
+						);
+					})}
 				{markers.map((marker) => (
 					<MarkerAnimated
 						tracksViewChanges={false}
 						key={marker._id}
 						coordinate={animatedLocations[marker._id]}
+						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
 						title={marker.name}
 						onPress={() => onSelect(marker._id)}
 					>
-						<Icon
-							style={styles.marker}
-							name="ios-pin"
-							type="ionicon"
-							size={50}
-							color={marker._id === selected ? '#0288d1' : '#fff'}
-						/>
+						{marker._id === selected ? (
+							<Image
+								source={mapPinSecondary}
+								style={styles.pin}
+								resizeMode="contain"
+							/>
+						) : (
+							<Image
+								source={mapPinPrimary}
+								style={styles.pin}
+								resizeMode="contain"
+							/>
+						)}
 					</MarkerAnimated>
 				))}
 			</MapView>
@@ -228,11 +262,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	marker: {
-		width: 50,
+		height: MAP_MARKER_SIZE,
 		shadowOffset: { width: 0, height: 3 },
 		shadowRadius: 2,
 		shadowColor: '#000',
 		shadowOpacity: 0.3,
+	},
+	pin: {
+		height: MAP_MARKER_SIZE,
 	},
 });
 
