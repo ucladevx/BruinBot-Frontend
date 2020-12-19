@@ -3,6 +3,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 
 import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
+import Loading from '../components/Loading';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
@@ -18,10 +19,7 @@ import LocationImgA from '../assets/sampleImageLocation1.png';
 import LocationImgB from '../assets/sampleImageLocation2.png';
 import LocationImgC from '../assets/sampleImageLocation3.png';
 import Marker from '../assets/marker.png';
-
-import Loading from '../components/Loading';
-
-const MILLISECONDS_IN_SECOND = 1000;
+import { MAP_REFRESH_RATE } from '../config';
 
 const MapScreen = () => {
 	// For displaying the markers on the map
@@ -102,7 +100,7 @@ const MapScreen = () => {
 	useEffect(() => {
 		if (!showMapNodes) {
 			runRequests();
-			setUpdateInterval(setInterval(runRequests, MILLISECONDS_IN_SECOND * 10));
+			setUpdateInterval(setInterval(runRequests, MAP_REFRESH_RATE));
 		} else {
 			clearInterval(updateInterval!!);
 		}
