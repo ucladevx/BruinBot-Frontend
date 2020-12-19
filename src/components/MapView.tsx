@@ -14,10 +14,12 @@ import { MAP_MARKER_SIZE } from '../constants';
 import mapDest from '../assets/mapDest.png';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
+import mapPinTertiary from '../assets/mapPin2.gif';
 
 const MapComponent = ({
 	initRegion,
 	markers,
+	centralMarker,
 	polygonCoords,
 	lineCoords,
 	refresh,
@@ -93,6 +95,15 @@ const MapComponent = ({
 							</Marker>
 						);
 					})}
+				{selected && centralMarker && (
+					<Polyline
+						coordinates={[selected.location, centralMarker.location]}
+						strokeColor="white"
+						strokeWidth={4}
+						lineJoin="bevel"
+						lineDashPattern={[10]}
+					/>
+				)}
 				{markers.map((marker) => (
 					<Marker
 						tracksViewChanges={false}
@@ -103,9 +114,9 @@ const MapComponent = ({
 						}}
 						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
 						title={marker.name}
-						onPress={() => onSelect(marker._id)}
+						onPress={() => onSelect(marker)}
 					>
-						{marker._id === selected ? (
+						{selected && marker._id === selected._id ? (
 							<Image
 								source={mapPinSecondary}
 								style={styles.pin}
@@ -120,6 +131,20 @@ const MapComponent = ({
 						)}
 					</Marker>
 				))}
+				{centralMarker && (
+					<Marker
+						tracksViewChanges={false}
+						coordinate={centralMarker.location}
+						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
+						title={centralMarker.name}
+					>
+						<Image
+							source={mapPinTertiary}
+							style={styles.pin}
+							resizeMode="contain"
+						/>
+					</Marker>
+				)}
 			</MapView>
 			<TouchableOpacity
 				style={{ ...styles.button, marginBottom: 60 }}
