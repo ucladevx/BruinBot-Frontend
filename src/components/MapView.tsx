@@ -32,7 +32,7 @@ const MapComponent = ({
 
 		// For each marker, add a new AnimatedRegion variable with that
 		// marker's coordinates to the state object animatedLocations
-		markers.reduce(function (obj, m) {
+		markers.reduce((obj, m) => {
 			obj[m._id] = new AnimatedRegion({
 				latitude: m.location.latitude,
 				longitude: m.location.longitude,
@@ -104,38 +104,35 @@ const MapComponent = ({
 			}
 			setAnimatedLocations(animatedLocationsCopy);
 		}
-		// Remove AnimatedRegions whose markers have been removed
-		return function cleanup() {
-			// Create array holding ids of markers that have been removed
-			let markersIdsToRemove: string[] = [];
-			// Add all ids that are a key to an AnimatedRegion object in
-			// animatedLocations and whose associated markers have been
-			// removed to the markersIdsToRemove array
-			for (const id in animatedLocations) {
-				if (
-					markers.find((obj) => {
-						return obj._id === id;
-					}) == undefined
-				) {
-					markersIdsToRemove.push(id);
-				}
+
+		let markersIdsToRemove: string[] = [];
+		// Add all ids that are a key to an AnimatedRegion object in
+		// animatedLocations and whose associated markers have been
+		// removed to the markersIdsToRemove array
+		for (const id in animatedLocations) {
+			if (
+				markers.find((obj) => {
+					return obj._id === id;
+				}) == undefined
+			) {
+				markersIdsToRemove.push(id);
 			}
-			// For all in animatedLocations, if a key for an animatedRegion
-			// object value in the animatedLocations object is an id that
-			// doesn't correspond to a marker in the marker array in props,
-			// remove that value
-			if (markersIdsToRemove.length > 0) {
-				// Create a copy of the animatedLocations array from the
-				// component state, remove all AnimatedRegion objects without
-				// markers from this copy, and set animatedLocations state to
-				// this copy
-				let animatedLocationsCopy = { ...animatedLocations };
-				for (const id of markersIdsToRemove) {
-					delete animatedLocationsCopy[id];
-				}
-				setAnimatedLocations(animatedLocationsCopy);
+		}
+		// For all in animatedLocations, if a key for an animatedRegion
+		// object value in the animatedLocations object is an id that
+		// doesn't correspond to a marker in the marker array in props,
+		// remove that value
+		if (markersIdsToRemove.length > 0) {
+			// Create a copy of the animatedLocations array from the
+			// component state, remove all AnimatedRegion objects without
+			// markers from this copy, and set animatedLocations state to
+			// this copy
+			let animatedLocationsCopy = { ...animatedLocations };
+			for (const id of markersIdsToRemove) {
+				delete animatedLocationsCopy[id];
 			}
-		};
+			setAnimatedLocations(animatedLocationsCopy);
+		}
 	}, [markers, animatedLocations]);
 
 	return (
