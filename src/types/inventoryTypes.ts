@@ -1,5 +1,5 @@
-import { ImageSourcePropType } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { ImageSourcePropType } from 'react-native';
 import { RootStackParamList } from '../../App';
 
 export interface ItemProps {
