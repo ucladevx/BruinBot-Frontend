@@ -18,6 +18,8 @@ export interface Bot extends ApiResponse {
 	_id: string;
 	name: string;
 	location: Location;
+	// TODO: resolve this `any` type
+	inventory: Array<any>;
 }
 
 export interface Item extends ApiResponse {

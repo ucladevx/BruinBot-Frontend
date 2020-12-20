@@ -1,14 +1,14 @@
 /* eslint-disable no-undef */
 import Axios from 'axios';
-
-import { BASE_URL } from '../config';
 import { Platform } from 'react-native';
+import { BASE_URL } from '../config';
 
 const axios = Axios.create({
 	baseURL: BASE_URL,
 	withCredentials: true,
 });
 
+// Returns the item id
 const addItem = async (
 	name: string,
 	price: number,
@@ -46,6 +46,7 @@ const addItem = async (
 		headers: { 'Content-Type': 'multipart/form-data' },
 	});
 	await axios.post('/bots/addItem', { botId, itemId: res.data._id, quantity });
+	return res.data._id;
 };
 
 export default { addItem };
