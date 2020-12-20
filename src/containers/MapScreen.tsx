@@ -40,7 +40,7 @@ const MapScreen = () => {
 	} | null>(null);
 
 	// Id of the marker that is currently selected
-	const [selectedMarker, setSelected] = useState<MarkerData | null>(null);
+	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
 
 	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(false);
@@ -137,16 +137,19 @@ const MapScreen = () => {
 						}}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
-							setSelected(marker);
+							setSelectedMarker(marker);
 						}}
 					/>
 				</View>
 				<MapMenuHeader
 					info={headerInfo[selectedMarker ? selectedMarker._id : '']}
 					standalone={true}
-					onButton={() => {
-						// for now, go back to map with btos
-						setShowMapNodes(false);
+					button={{
+						title: 'Send',
+						onButton: () => {
+							// for now, go back to map with btos
+							setShowMapNodes(false);
+						},
 					}}
 				/>
 			</>
@@ -174,23 +177,27 @@ const MapScreen = () => {
 						lineCoords={botPaths ? Object.values(botPaths) : []}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
-						onSelect={(marker: MarkerData) => setSelected(marker)}
+						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
 					/>
 				</View>
-				<MapMenu
-					id={selectedMarker ? selectedMarker._id : ''}
-					info={headerInfo}
-					items={inventories}
-					setMapProperty={(id: string) => {
-						let selectedBot = markers[id];
-						setSelectedBotForOrder(selectedBot);
-						setMapNodes(
-							selectedBot.location.latitude,
-							selectedBot.location.longitude
-						);
-						setShowMapNodes(true);
-					}}
-				/>
+				{selectedMarker && (
+					<MapMenu
+						id={selectedMarker ? selectedMarker._id : ''}
+						info={headerInfo}
+						items={inventories}
+						button={{
+							title: 'Order',
+							onButton: () => {
+								setSelectedBotForOrder(selectedMarker);
+								setMapNodes(
+									selectedMarker.location.latitude,
+									selectedMarker.location.longitude
+								);
+								setShowMapNodes(true);
+							},
+						}}
+					/>
+				)}
 			</>
 		);
 	}
