@@ -214,35 +214,6 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 	const botHeaderInfo: MapMenuProps['info'] = {};
 	const botPaths: { [key: string]: Location[] } = {};
 	const botItems: MapMenuProps['items'] = {};
-	const examplePaths: Location[][] = [
-		[
-			{ latitude: 34.0714, longitude: -118.4439 },
-			{ latitude: 34.07138006587105, longitude: -118.44391899674218 },
-			{ latitude: 34.07139475587356, longitude: -118.44363170169143 },
-			{ latitude: 34.07124197972276, longitude: -118.44363170169143 },
-			{ latitude: 34.07095699270514, longitude: -118.44363170169143 },
-			{ latitude: 34.07095699270514, longitude: -118.44381259116781 },
-			{ latitude: 34.07095699270514, longitude: -118.44423111976027 },
-			{ latitude: 34.070971682781035, longitude: -118.44455033648336 },
-			{ latitude: 34.07097755881067, longitude: -118.44476669448456 },
-			{ latitude: 34.070983434839924, longitude: -118.44496177137086 },
-			{ latitude: 34.071034093188324, longitude: -118.44503599424084 },
-		],
-		[
-			{ latitude: 34.073, longitude: -118.4432 },
-			{ latitude: 34.0725, longitude: -118.4432 },
-			{ latitude: 34.072, longitude: -118.4432 },
-			{ latitude: 34.0715, longitude: -118.4432 },
-			{ latitude: 34.071, longitude: -118.4432 },
-			{ latitude: 34.0705, longitude: -118.4432 },
-			{ latitude: 34.07, longitude: -118.4431 },
-			{ latitude: 34.0695, longitude: -118.4431 },
-			{ latitude: 34.069, longitude: -118.4431 },
-			{ latitude: 34.0685, longitude: -118.4431 },
-			{ latitude: 34.068, longitude: -118.4431 },
-			{ latitude: 34.0675, longitude: -118.4431 },
-		],
-	];
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
@@ -265,7 +236,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
-		botPaths[bot._id] = examplePaths[idx];
+		botPaths[bot._id] = bot.path;
 
 		botItems[bot._id] = items;
 	});
