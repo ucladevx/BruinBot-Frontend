@@ -1,26 +1,98 @@
 import React, { useRef } from 'react';
 import {
-	View,
+	Animated,
+	Dimensions,
 	FlatList,
 	Image,
-	Text,
-	Dimensions,
-	Animated,
 	PanResponder,
-	StyleSheet,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-
-import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NAV_HEIGHT } from '../constants';
+import {
+	HeaderProps,
+	InventoryItemProps,
+	MapMenuProps,
+} from '../types/inventoryTypes';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
 
 const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
 
-const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
+const Item = ({
+	_id,
+	name,
+	price,
+	imgSrc,
+	quantity,
+	clickable = false,
+	navigation = undefined,
+}: InventoryItemProps) => {
+	if (clickable) {
+		return (
+			// TODO: Navigate to payment screen
+			<TouchableOpacity
+				onPress={() =>
+					navigation?.navigate('PaymentInfo', {
+						amount: price,
+						itemId: _id,
+						quantity: -1,
+					})
+				}
+				key={_id}
+			>
+				<View
+					style={[
+						styles.item,
+						{ width: Dimensions.get('window').width * 0.44 },
+					]}
+					key={_id}
+				>
+					<Image
+						style={{
+							width: '100%',
+							height: 150,
+							borderRadius: 10,
+							resizeMode: 'contain',
+						}}
+						source={{ uri: imgSrc }}
+					/>
+					<View
+						style={{
+							marginTop: 10,
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<Text style={{ fontSize: 16 }}>{name}</Text>
+						{quantity !== 0 ? (
+							<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
+						) : (
+							<View
+								style={{
+									borderColor: 'red',
+									borderRadius: 5,
+									borderWidth: 1,
+									padding: 3,
+								}}
+							>
+								<Text style={{ fontWeight: 'bold', color: 'red' }}>
+									{quantity} left
+								</Text>
+							</View>
+						)}
+					</View>
+					<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+				</View>
+			</TouchableOpacity>
+		);
+	}
 	return (
 		<View style={styles.item} key={_id}>
 			<Image
@@ -38,12 +110,7 @@ const Item = ({ _id, name, price, imgSrc }: ItemProps) => {
 	);
 };
 
-const MapMenuHeader = ({
-	info,
-	onButton,
-	standalone,
-	...rest
-}: HeaderProps) => {
+const MapMenuHeader = ({ info, button, standalone, ...rest }: HeaderProps) => {
 	if (!info) {
 		// No info, return empty view
 		return <View />;
@@ -85,10 +152,10 @@ const MapMenuHeader = ({
 				<Text>{info.bottomLeft}</Text>
 				<Text>{info.bottomRight}</Text>
 			</View>
-			{onButton && (
+			{button && (
 				<Pressable
 					onPressOut={() => {
-						onButton(true);
+						button.onButton(true);
 					}}
 					style={({ pressed }) => [
 						{
@@ -99,7 +166,7 @@ const MapMenuHeader = ({
 						styles.orderButton,
 					]}
 				>
-					<Text>Order</Text>
+					<Text>{button.title}</Text>
 				</Pressable>
 			)}
 		</View>
@@ -116,7 +183,9 @@ const MapMenu = ({
 	info,
 	items,
 	collapsable = true,
-	setMapProperty,
+	clickable = false,
+	navigation = undefined,
+	button,
 }: MapMenuProps) => {
 	const openOffset = -inventoryHeight + HEADER_HEIGHT;
 	const collapsedOffset = 0;
@@ -179,12 +248,7 @@ const MapMenu = ({
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
 					info={info[id]}
-					onButton={
-						setMapProperty &&
-						(() => {
-							setMapProperty(id);
-						})
-					}
+					button={button}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>
@@ -196,7 +260,10 @@ const MapMenu = ({
 							_id={item._id}
 							name={item.name}
 							price={item.price}
+							quantity={item.quantity}
 							imgSrc={item.imgSrc}
+							clickable={clickable}
+							navigation={navigation}
 						/>
 					)}
 					keyExtractor={(item) => item._id}

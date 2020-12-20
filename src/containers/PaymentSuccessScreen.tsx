@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
 
 interface PaymentSuccessProps {
@@ -19,6 +19,12 @@ const PaymentSuccess = ({ navigation, route }: PaymentSuccessProps) => {
 			<Text style={styles.header}>
 				Thank you for your purchase! Please take your item from the BruinBot.
 			</Text>
+			<Button
+				onPress={() => navigation.navigate('Qr')}
+				buttonStyle={styles.button}
+				title="Done"
+				titleStyle={styles.buttonText}
+			/>
 		</View>
 	) : (
 		<View style={styles.container}>

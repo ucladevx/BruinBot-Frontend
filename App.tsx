@@ -12,6 +12,7 @@ import SignupScreen from './src/containers/auth/SignupScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import CustomDrawer from './src/containers/DrawerScreen';
 import InventoryModification from './src/containers/InventoryModification';
+import ItemCatalogue from './src/containers/ItemCatalogue';
 import ItemWeight from './src/containers/ItemWeightScreen';
 import MapScreen from './src/containers/MapScreen';
 import { NavCenter } from './src/containers/NavBarScreen';
@@ -31,7 +32,12 @@ export type RootStackParamList = {
 	ItemWeight: { itemId: string };
 	Qr: undefined;
 	Dashboard: undefined;
-	PaymentInfo: undefined;
+	ItemCatalogue: undefined;
+	PaymentInfo: {
+		itemId: string;
+		quantity: number;
+		amount: number;
+	};
 	PaymentSuccess: { success: boolean };
 };
 
@@ -106,6 +112,7 @@ const Home = () => {
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
@@ -116,6 +123,7 @@ const Home = () => {
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="ItemWeight" component={ItemWeight} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
@@ -123,12 +131,15 @@ const Home = () => {
 					name="InventoryModification"
 					component={InventoryModification}
 				/>
+				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
+				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
 		) : (
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
