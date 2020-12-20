@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Camera, PermissionResponse } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
 	ActivityIndicator,
 	Alert,
@@ -12,16 +12,15 @@ import {
 } from 'react-native';
 import { Button, Icon, Image, Input } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
-import Form from './auth/Form';
-import ItemService from '../services/ItemService';
 import { Ctx } from '../components/StateProvider';
+import ItemService from '../services/ItemService';
+import Form from './auth/Form';
 import { styles as formStyles } from './auth/FormStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
 interface AddItemProps {
 	navigation: StackNavigationProp<RootStackParamList, 'AddItem'>;
-	botId: string;
 }
 
 const AddItem = ({ navigation }: AddItemProps) => {
@@ -79,7 +78,7 @@ const AddItem = ({ navigation }: AddItemProps) => {
 			Alert.alert('Please scan a bot first');
 		} else {
 			try {
-				await ItemService.addItem(
+				const itemId = await ItemService.addItem(
 					itemName,
 					cost,
 					'5fc90164d5869f00143e7fac',
@@ -88,8 +87,9 @@ const AddItem = ({ navigation }: AddItemProps) => {
 					quantity
 				);
 				Alert.alert('Added Item succesfully');
-				navigation.navigate('InventoryModification');
+				navigation.navigate('ItemWeight', { itemId });
 			} catch (err) {
+				console.log(err);
 				Alert.alert('Something went wrong when submitting...');
 			}
 		}
