@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useContext } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
+import infoImage from '../assets/info.png';
+import messageImage from '../assets/message.png';
+import settingImage from '../assets/setting.png';
+import shopImage from '../assets/shop.png';
 import { Ctx } from '../components/StateProvider';
 
-import shopImage from '../assets/shop.png';
-import messageImage from '../assets/message.png';
-import infoImage from '../assets/info.png';
-import settingImage from '../assets/setting.png';
 // Icons from <a target="_blank" href="https://icons8.com/icons/set/shop--v2">Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> used
 
 type Props = {
@@ -23,12 +23,15 @@ const DashboardScreen = ({ navigation }: Props) => {
 				<View style={styles.secondLevelFlexTop}>
 					<TouchableOpacity
 						style={styles.icon}
-						onPress={() => navigation.navigate('Map')}
+						onPress={() => navigation.navigate('ItemCatalogue')}
 					>
 						<Image source={shopImage} />
 						<Text style={styles.text}>Purchase items</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.icon}>
+					<TouchableOpacity
+						style={styles.icon}
+						onPress={() => navigation.navigate('InventoryModification')}
+					>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>
 					</TouchableOpacity>

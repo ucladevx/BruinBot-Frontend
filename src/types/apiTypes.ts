@@ -18,6 +18,8 @@ export interface Bot extends ApiResponse {
 	_id: string;
 	name: string;
 	location: Location;
+	// TODO: resolve this `any` type
+	inventory: Array<any>;
 }
 
 export interface Item extends ApiResponse {
@@ -40,6 +42,7 @@ export interface UserData extends ApiResponse {
 
 export interface EventBot extends Bot {
 	inventory: BotItem[];
+	path: Location[];
 }
 
 // TODO: add distance info

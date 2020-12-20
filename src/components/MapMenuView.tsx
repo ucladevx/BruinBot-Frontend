@@ -1,24 +1,23 @@
 import React, { useRef } from 'react';
 import {
-	View,
+	Animated,
+	Dimensions,
 	FlatList,
 	Image,
-	Text,
-	Dimensions,
-	Animated,
 	PanResponder,
-	StyleSheet,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { NAV_HEIGHT } from '../constants';
 import {
-	InventoryItemProps,
 	HeaderProps,
+	InventoryItemProps,
 	MapMenuProps,
 } from '../types/inventoryTypes';
-import { NAV_HEIGHT } from '../constants';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
@@ -275,7 +274,6 @@ const MapMenu = ({
 							imgSrc={item.imgSrc}
 							clickable={clickable}
 							navigation={navigation}
-							botId={id}
 						/>
 					)}
 					keyExtractor={(item) => item._id}

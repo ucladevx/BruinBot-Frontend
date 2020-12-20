@@ -1,21 +1,18 @@
-import React, { useState, useContext } from 'react';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
 import {
-	View,
-	StyleSheet,
-	TextInput,
+	Alert,
 	Dimensions,
 	Keyboard,
-	Alert,
+	StyleSheet,
+	TextInput,
+	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { RouteProp } from '@react-navigation/native';
-import Form from './auth/Form';
-import ItemCatalogueService from '../services/ItemCatalogueService';
-import { Ctx } from '../components/StateProvider';
-
 import Loading from '../components/Loading';
+import Form from './auth/Form';
 
 interface PaymentInfoProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentInfo'>;
@@ -25,13 +22,7 @@ interface PaymentInfoProps {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
-	const { state } = useContext(Ctx);
-	/* OG Bot is BruinBear with id 5fc8e9d411fb0d00125750d3 for demo purposes,
-			but if you come from QR view, botId will be set from global state */
-	const [botId] = useState<string>(
-		state.bot?._id ? state.bot._id : '5fc8e9d411fb0d00125750d3'
-	);
+const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');
 	const [cvv, setCVV] = useState('');
@@ -47,7 +38,6 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			cleanup = cleanup.substring(0, cleanup.length - 1);
 		setCardNumber(cleanup);
 	};
-
 	const cleanupExpiryDate = (number: string) => {
 		if (number.slice(-1) === '.')
 			number = number.substring(0, number.length - 1);
@@ -56,20 +46,6 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			number = number.substring(0, number.length - 1);
 		setExpiryDate(number);
 	};
-
-	const updateInventory = async () => {
-		try {
-			let data = await ItemCatalogueService.updateInventory(
-				botId,
-				route.params.itemId,
-				route.params.quantity
-			);
-			console.log(data);
-		} catch (err) {
-			Alert.alert('Could not update inventory.');
-		}
-	};
-
 	const processAndSubmitPayment = () => {
 		if (cardNumber.length !== 19) {
 			setLoading(false);
@@ -95,10 +71,6 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 		}
 
 		// TODO: Stripe API Payment Processing
-		/* route is unused for now, but for the Stripe API needs an amount parameter in the request
-		and amount is passed in through navigation and can be accessed as route.params.amount */
-		console.log(route.params);
-		updateInventory();
 		setTimeout(() => {
 			setLoading(false);
 			console.log('Success');
@@ -108,49 +80,50 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			});
 		}, 5000);
 	};
-
 	return (
-		<Form title="Enter Payment Info" navigation={navigation}>
-			<TextInput
-				style={[styles.input, { width: screenWidth * 0.9 }]}
-				placeholder="0000 0000 0000 0000"
-				keyboardType={'numeric'}
-				value={cardNumber}
-				onChangeText={(text) => cleanupCardNumber(text)}
-				maxLength={19}
-			/>
-			<View style={styles.inputContainer}>
+		<View style={styles.container}>
+			<Form title="Enter Payment Info" navigation={navigation}>
 				<TextInput
-					style={[styles.input, { width: screenWidth * 0.435 }]}
-					placeholder="MM/YY"
+					style={[styles.input, { width: screenWidth * 0.9 }]}
+					placeholder="0000 0000 0000 0000"
 					keyboardType={'numeric'}
-					value={expiryDate}
-					onChangeText={(text) => cleanupExpiryDate(text)}
-					maxLength={5}
+					value={cardNumber}
+					onChangeText={(text) => cleanupCardNumber(text)}
+					maxLength={19}
 				/>
-				<TextInput
-					style={[styles.input, { width: screenWidth * 0.435 }]}
-					placeholder="000"
-					keyboardType={'numeric'}
-					value={cvv}
-					onChangeText={(text) => {
-						if (text.slice(-1) !== '.') setCVV(text);
+				<View style={styles.inputContainer}>
+					<TextInput
+						style={[styles.input, { width: screenWidth * 0.43 }]}
+						placeholder="MM/YY"
+						keyboardType={'numeric'}
+						value={expiryDate}
+						onChangeText={(text) => cleanupExpiryDate(text)}
+						maxLength={5}
+					/>
+					<TextInput
+						style={[styles.input, { width: screenWidth * 0.43 }]}
+						placeholder="000"
+						keyboardType={'numeric'}
+						value={cvv}
+						onChangeText={(text) => {
+							if (text.slice(-1) !== '.') setCVV(text);
+						}}
+						maxLength={3}
+					/>
+				</View>
+				<Button
+					onPress={() => {
+						Keyboard.dismiss();
+						setLoading(true);
+						setSubmitDisabled(true);
+						processAndSubmitPayment();
 					}}
-					maxLength={3}
+					buttonStyle={styles.button}
+					title="Submit Payment"
+					titleStyle={styles.buttonText}
+					disabled={submitDisabled}
 				/>
-			</View>
-			<Button
-				onPress={() => {
-					Keyboard.dismiss();
-					setLoading(true);
-					setSubmitDisabled(true);
-					processAndSubmitPayment();
-				}}
-				buttonStyle={styles.button}
-				title="Submit Payment"
-				titleStyle={styles.buttonText}
-				disabled={submitDisabled}
-			/>
+			</Form>
 			{loading ? (
 				<View style={{ alignItems: 'center', flex: 1 }}>
 					<Loading loadingText={'Processing'} />
@@ -158,16 +131,14 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			) : (
 				<View></View>
 			)}
-		</Form>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		justifyContent: 'flex-end',
+		justifyContent: 'center',
 		alignItems: 'center',
-		alignContent: 'center',
-		marginTop: 30,
 		flex: 1,
 		marginLeft: screenWidth * 0.05,
 		marginRight: screenWidth * 0.05,
@@ -182,7 +153,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginTop: screenHeight * 0.01,
-		width: screenWidth * 0.9,
+		width: '100%',
 	},
 	input: {
 		backgroundColor: '#ddd',

@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import Loading from '../components/Loading';
-import ItemCatalogueService from '../services/ItemCatalogueService';
-import MapMenu from '../components/MapMenuView';
-import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import { Bot } from '../types/apiTypes';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useContext, useEffect, useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
+import { RootStackParamList } from '../../App';
+import Crane from '../assets/crane.png';
 import Robot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
-import Crane from '../assets/crane.png';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
+import Loading from '../components/Loading';
+import MapMenu from '../components/MapMenuView';
 import { Ctx } from '../components/StateProvider';
+import ItemCatalogueService from '../services/ItemCatalogueService';
+import { Bot } from '../types/apiTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 
 interface ItemCatalogueProps {
 	navigation: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
@@ -20,9 +20,7 @@ const ItemCatalogue = ({ navigation }: ItemCatalogueProps) => {
 	const { state } = useContext(Ctx);
 	/* OG Bot is BruinBear with id 5fc8e9d411fb0d00125750d3 for demo purposes,
 			but if you come from QR view, botId will be set from global state */
-	const [botId] = useState<string>(
-		state.bot?._id ? state.bot._id : '5fc8e9d411fb0d00125750d3'
-	);
+	const botId = '5fc8e9d411fb0d00125750d3';
 	const [botInfo, setBotInfo] = useState<MapMenuProps['info']>({});
 	const [botItems, setBotItems] = useState<MapMenuProps['items']>({});
 	const [loading, setLoading] = useState(true);

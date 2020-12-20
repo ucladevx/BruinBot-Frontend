@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import Ham from '../assets/greenHam.jpg';
+import { RootStackParamList } from '../../App';
 import Crane from '../assets/crane.png';
 import MapMenu from '../components/MapMenuView';
+import { Ctx } from '../components/StateProvider';
+import BotService from '../services/BotService';
+import { Bot } from '../types/apiTypes';
+import { MapMenuProps } from '../types/inventoryTypes';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -15,76 +17,57 @@ interface InventoryModificationProps {
 	botId: string;
 }
 const InventoryModification = ({ navigation }: InventoryModificationProps) => {
-	//GET PROPER PROPS
+	const {
+		state: { bot },
+	} = useContext(Ctx);
+	const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
 
-	const botInfo: MapMenuProps['info'] = {};
-	const botItems: MapMenuProps['items'] = {};
+	useEffect(() => {
+		if (bot != null) {
+			BotService.getOneBot(bot._id).then((bot) => {
+				console.log(bot.inventory);
+				setSelectedBot(bot);
+			});
+		}
+	}, [bot, selectedBot?.name]);
 
-	const item: ItemProps[] = [
-		{
-			_id: '1',
-			name: 'Ham 1',
-			price: 10,
-			imgSrc: Ham,
-		},
-		{
-			_id: '2',
-			name: 'Ham 2',
-			price: 15,
-			imgSrc: Ham,
-		},
-		{
-			_id: '3',
-			name: 'Ham 3',
-			price: 20,
-			imgSrc: Ham,
-		},
-		{
-			_id: '4',
-			name: 'Ham 4',
-			price: 10,
-			imgSrc: Ham,
-		},
-		{
-			_id: '5',
-			name: 'Ham 5',
-			price: 15,
-			imgSrc: Ham,
-		},
-		{
-			_id: '6',
-			name: 'Ham 6',
-			price: 20,
-			imgSrc: Ham,
-		},
-	];
+	if (!selectedBot) return <ActivityIndicator />;
 
-	botInfo['123'] = {
-		topLeft: 'Random Bear',
-		topRight: '10 items',
-		bottomLeft: '0 m away',
-		bottomRight: '5 items sold',
-		imgSrc: Crane,
+	const botInfo: MapMenuProps['info'] = {
+		[selectedBot._id]: {
+			topLeft: selectedBot?.name,
+			topRight: '10 items',
+			bottomLeft: '0 m away',
+			bottomRight: '5 items sold',
+			imgSrc: Crane,
+		},
 	};
-	botItems['123'] = item;
-
-	const [info] = useState(botInfo);
-	const [items] = useState(botItems);
+	const botItems: MapMenuProps['items'] = {
+		[selectedBot._id]: selectedBot.inventory.map(({ _id, item }) => ({
+			_id: _id,
+			name: item.name,
+			price: item.price,
+			imgSrc: item.imgSrc,
+		})),
+	};
 
 	return (
-		<>
-			<View style={{ flex: 1 }}>
-				<MapMenu id="123" info={info} items={items} collapsable={false} />
-				<Button
-					title="Add Item"
-					buttonStyle={styles.button}
-					containerStyle={styles.buttonContainer}
-					onPress={() => {
-						navigation.navigate('AddItem');
-					}}
-				/>
-			</View>
-		</>
+		<View style={{ flex: 1 }}>
+			<MapMenu
+				id={selectedBot._id}
+				info={botInfo}
+				items={botItems}
+				collapsable={false}
+			/>
+			<Button
+				title="Add Item"
+				buttonStyle={styles.button}
+				containerStyle={styles.buttonContainer}
+				onPress={() => {
+					navigation.navigate('AddItem');
+				}}
+			/>
+		</View>
 	);
 };
 
