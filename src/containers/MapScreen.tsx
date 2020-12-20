@@ -40,7 +40,7 @@ const MapScreen = () => {
 	} | null>(null);
 
 	// Id of the marker that is currently selected
-	const [selectedMarker, setSelected] = useState<MarkerData | null>(null);
+	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
 
 	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(false);
@@ -55,6 +55,8 @@ const MapScreen = () => {
 	const [updateInterval, setUpdateInterval] = useState<ReturnType<
 		typeof setTimeout
 	> | null>(null);
+
+	const [loading, setLoading] = useState<boolean>(false);
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
@@ -108,7 +110,7 @@ const MapScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
-	if (!markers || !headerInfo) {
+	if (loading || !markers || !headerInfo) {
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
@@ -137,22 +139,33 @@ const MapScreen = () => {
 						}}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
-							setSelected(marker);
+							setSelectedMarker(marker);
 						}}
 					/>
 				</View>
-				<MapMenuHeader
-					info={headerInfo[selectedMarker ? selectedMarker._id : '']}
-					standalone={true}
-					onButton={() => {
-						// for now, go back to map with btos
-						setShowMapNodes(false);
-					}}
-				/>
+				{selectedMarker && (
+					<MapMenuHeader
+						info={headerInfo[selectedMarker ? selectedMarker._id : '']}
+						standalone={true}
+						button={{
+							title: 'Send',
+							onButton: () => {
+								BotService.sendBot(selectedBotForOrder._id, selectedMarker._id);
+
+								setLoading(true);
+								setTimeout(() => {
+									setLoading(false);
+									console.log('Success');
+									setShowMapNodes(false);
+								}, 1000);
+							},
+						}}
+					/>
+				)}
 			</>
 		);
 	} else {
-		if (!inventories) {
+		if (loading || !inventories) {
 			return (
 				<View style={styles.container}>
 					<Loading loadingText={'Loading'} />
@@ -174,23 +187,27 @@ const MapScreen = () => {
 						lineCoords={botPaths ? Object.values(botPaths) : []}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
-						onSelect={(marker: MarkerData) => setSelected(marker)}
+						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
 					/>
 				</View>
-				<MapMenu
-					id={selectedMarker ? selectedMarker._id : ''}
-					info={headerInfo}
-					items={inventories}
-					setMapProperty={(id: string) => {
-						let selectedBot = markers[id];
-						setSelectedBotForOrder(selectedBot);
-						setMapNodes(
-							selectedBot.location.latitude,
-							selectedBot.location.longitude
-						);
-						setShowMapNodes(true);
-					}}
-				/>
+				{selectedMarker && (
+					<MapMenu
+						id={selectedMarker ? selectedMarker._id : ''}
+						info={headerInfo}
+						items={inventories}
+						button={{
+							title: 'Order',
+							onButton: () => {
+								setSelectedBotForOrder(selectedMarker);
+								setMapNodes(
+									selectedMarker.location.latitude,
+									selectedMarker.location.longitude
+								);
+								setShowMapNodes(true);
+							},
+						}}
+					/>
+				)}
 			</>
 		);
 	}

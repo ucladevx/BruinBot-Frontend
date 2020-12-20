@@ -28,12 +28,16 @@ export interface HeaderProps {
 	 */
 	standalone: boolean;
 
-	/**
-	 * Callback for the button on the header. Could be used for anything
-	 *
-	 * @param val Boolean for whether to show
-	 */
-	onButton?(val: any): any;
+	// Configuration for button on the menu header
+	button?: {
+		title: string;
+		/**
+		 * Callback for the button on the header. Could be used for anything
+		 *
+		 * @param val Boolean for whether to show
+		 */
+		onButton(val: any): any;
+	};
 }
 
 export interface MapMenuProps {
@@ -43,10 +47,15 @@ export interface MapMenuProps {
 	collapsedHeight?: number;
 	collapsable?: boolean;
 
-	/**
-	 * Function to change some map property, e.g. setVar of useState()
-	 *
-	 * @param val Value to be passed into the function
-	 */
-	setMapProperty?(val: any): any;
+	// TODO: This needs a refactor, since we are just passing button through to the header
+	// Configuration for button on the menu header
+	button?: {
+		title: string;
+		/**
+		 * Callback for the button on the header. Could be used for anything
+		 *
+		 * @param val Boolean for whether to show
+		 */
+		onButton(val: any): any;
+	};
 }
