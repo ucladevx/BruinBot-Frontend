@@ -56,6 +56,8 @@ const MapScreen = () => {
 		typeof setTimeout
 	> | null>(null);
 
+	const [loading, setLoading] = useState<boolean>(false);
+
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
@@ -108,7 +110,7 @@ const MapScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
-	if (!markers || !headerInfo) {
+	if (loading || !markers || !headerInfo) {
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
@@ -141,21 +143,29 @@ const MapScreen = () => {
 						}}
 					/>
 				</View>
-				<MapMenuHeader
-					info={headerInfo[selectedMarker ? selectedMarker._id : '']}
-					standalone={true}
-					button={{
-						title: 'Send',
-						onButton: () => {
-							// for now, go back to map with btos
-							setShowMapNodes(false);
-						},
-					}}
-				/>
+				{selectedMarker && (
+					<MapMenuHeader
+						info={headerInfo[selectedMarker ? selectedMarker._id : '']}
+						standalone={true}
+						button={{
+							title: 'Send',
+							onButton: () => {
+								BotService.sendBot(selectedBotForOrder._id, selectedMarker._id);
+
+								setLoading(true);
+								setTimeout(() => {
+									setLoading(false);
+									console.log('Success');
+									setShowMapNodes(false);
+								}, 1000);
+							},
+						}}
+					/>
+				)}
 			</>
 		);
 	} else {
-		if (!inventories) {
+		if (loading || !inventories) {
 			return (
 				<View style={styles.container}>
 					<Loading loadingText={'Loading'} />
