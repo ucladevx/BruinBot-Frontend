@@ -110,12 +110,7 @@ const Item = ({
 	);
 };
 
-const MapMenuHeader = ({
-	info,
-	onButton,
-	standalone,
-	...rest
-}: HeaderProps) => {
+const MapMenuHeader = ({ info, button, standalone, ...rest }: HeaderProps) => {
 	if (!info) {
 		// No info, return empty view
 		return <View />;
@@ -157,10 +152,10 @@ const MapMenuHeader = ({
 				<Text>{info.bottomLeft}</Text>
 				<Text>{info.bottomRight}</Text>
 			</View>
-			{onButton && (
+			{button && (
 				<Pressable
 					onPressOut={() => {
-						onButton(true);
+						button.onButton(true);
 					}}
 					style={({ pressed }) => [
 						{
@@ -171,7 +166,7 @@ const MapMenuHeader = ({
 						styles.orderButton,
 					]}
 				>
-					<Text>Order</Text>
+					<Text>{button.title}</Text>
 				</Pressable>
 			)}
 		</View>
@@ -190,7 +185,7 @@ const MapMenu = ({
 	collapsable = true,
 	clickable = false,
 	navigation = undefined,
-	setMapProperty,
+	button,
 }: MapMenuProps) => {
 	const openOffset = -inventoryHeight + HEADER_HEIGHT;
 	const collapsedOffset = 0;
@@ -253,12 +248,7 @@ const MapMenu = ({
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
 					info={info[id]}
-					onButton={
-						setMapProperty &&
-						(() => {
-							setMapProperty(id);
-						})
-					}
+					button={button}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>

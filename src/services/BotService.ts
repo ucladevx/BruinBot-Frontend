@@ -48,4 +48,20 @@ async function getOneBot(botId: string) {
 	}
 }
 
-export default { getEventBots, getAllBots, getOneBot };
+async function sendBot(botId: string, nodeId: string) {
+	try {
+		let data: Bot = (
+			await axios.post('/bots/toNode', {
+				nodeId: nodeId,
+				botId: botId,
+			})
+		).data;
+		console.log(data);
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export default { getEventBots, getAllBots, getOneBot, sendBot };
