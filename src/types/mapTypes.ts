@@ -20,14 +20,14 @@ export interface PropTypes {
 	lineCoords?: LatLng[][];
 	mapNodes?: MarkerData[];
 	refresh(): any;
-	selected: string;
+	selected?: MarkerData;
 
 	/**
-	 * Function for when a bot is selected
+	 * Function for when a marker is selected
 	 *
 	 * @param id Id of bot
 	 * @param lat Latitude of bot
 	 * @param lon Longitude of bot
 	 */
-	onSelect(id: string, lat?: number, lon?: number): any;
+	onSelect(marker: MarkerData): any;
 }

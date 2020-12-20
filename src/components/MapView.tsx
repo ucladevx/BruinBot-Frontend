@@ -1,23 +1,27 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import MapView, {
 	Polygon,
 	Polyline,
-	Marker,
 	LatLng,
 	Region,
+	AnimatedRegion,
+	Marker,
+	MarkerAnimated,
 } from 'react-native-maps';
 import { TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-import { PropTypes } from '../types/mapTypes';
+import { PropTypes, MarkerData } from '../types/mapTypes';
 import { MAP_MARKER_SIZE } from '../constants';
 import mapDest from '../assets/mapDest.png';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
+import mapPinTertiary from '../assets/mapPin2.gif';
 
 const MapComponent = ({
 	initRegion,
 	markers,
+	centralMarker,
 	polygonCoords,
 	lineCoords,
 	refresh,
@@ -25,6 +29,26 @@ const MapComponent = ({
 	onSelect,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
+
+	// Adds a new object to the MapComponent's state that keeps track of
+	// AnimatedRegion objects to be used to locate markers on the map
+	const [animatedLocations, setAnimatedLocations] = useState(
+		// "obj" will be the initial object holding each of the AnimatedRegion
+		// objects, "m" is one marker for each of the markers in the markers
+		// array
+
+		// For each marker, add a new AnimatedRegion variable with that
+		// marker's coordinates to the state object animatedLocations
+		markers.reduce((obj, m) => {
+			obj[m._id] = new AnimatedRegion({
+				latitude: m.location.latitude,
+				longitude: m.location.longitude,
+				latitudeDelta: 0,
+				longitudeDelta: 0,
+			});
+			return obj;
+		}, Object.create(null)) // This Object.create() is the base empty object
+	);
 
 	const initCameraView = {
 		center: {
@@ -42,6 +66,82 @@ const MapComponent = ({
 			mapRef.current.animateCamera(initCameraView, { duration: 300 });
 		}
 	};
+
+	/**
+	 * Animates markers from their original locations to their new locations
+	 * upon markers' location change
+	 */
+	useEffect(() => {
+		// Create array to hold any new markers added
+		let newMarkers: MarkerData[] = [];
+
+		// For each marker in the main marker array in props
+		for (const m of markers) {
+			if (m._id in animatedLocations) {
+				// Animate coordinates from current location in AnimatedRegion
+				// object to new location updated in the marker array's object
+				const coordinateConfig = {
+					latitude: m.location.latitude,
+					longitude: m.location.longitude,
+					latitudeDelta: 0,
+					longitudeDelta: 0,
+					useNativeDriver: false,
+					duration: 10000,
+				};
+				// Start the animation
+				animatedLocations[m._id].timing(coordinateConfig).start();
+			} else {
+				// This is a new marker; add it to the new marker array
+				newMarkers.push(m);
+			}
+		}
+		// If a new marker was added to the marker array in props
+		if (newMarkers.length > 0) {
+			// Create a copy of the animatedLocations array from the component
+			// state, add all new markers' AnimatedRegion object to this copy,
+			// and set animatedLocations state to this copy
+			let animatedLocationsCopy = { ...animatedLocations };
+			for (const m of newMarkers) {
+				const animatedM = new AnimatedRegion({
+					latitude: m.location.latitude,
+					longitude: m.location.longitude,
+					latitudeDelta: 0,
+					longitudeDelta: 0,
+				});
+				animatedLocationsCopy[m._id] = animatedM;
+			}
+			setAnimatedLocations(animatedLocationsCopy);
+		}
+
+		let markersIdsToRemove: string[] = [];
+		// Add all ids that are a key to an AnimatedRegion object in
+		// animatedLocations and whose associated markers have been
+		// removed to the markersIdsToRemove array
+		for (const id in animatedLocations) {
+			if (
+				markers.find((obj) => {
+					return obj._id === id;
+				}) == undefined
+			) {
+				markersIdsToRemove.push(id);
+			}
+		}
+		// For all in animatedLocations, if a key for an animatedRegion
+		// object value in the animatedLocations object is an id that
+		// doesn't correspond to a marker in the marker array in props,
+		// remove that value
+		if (markersIdsToRemove.length > 0) {
+			// Create a copy of the animatedLocations array from the
+			// component state, remove all AnimatedRegion objects without
+			// markers from this copy, and set animatedLocations state to
+			// this copy
+			let animatedLocationsCopy = { ...animatedLocations };
+			for (const id of markersIdsToRemove) {
+				delete animatedLocationsCopy[id];
+			}
+			setAnimatedLocations(animatedLocationsCopy);
+		}
+	}, [markers, animatedLocations]);
 
 	return (
 		<>
@@ -93,19 +193,25 @@ const MapComponent = ({
 							</Marker>
 						);
 					})}
+				{selected && centralMarker && (
+					<Polyline
+						coordinates={[selected.location, centralMarker.location]}
+						strokeColor="white"
+						strokeWidth={4}
+						lineJoin="bevel"
+						lineDashPattern={[10]}
+					/>
+				)}
 				{markers.map((marker) => (
-					<Marker
+					<MarkerAnimated
 						tracksViewChanges={false}
 						key={marker._id}
-						coordinate={{
-							latitude: marker.location.latitude,
-							longitude: marker.location.longitude,
-						}}
+						coordinate={animatedLocations[marker._id]}
 						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
 						title={marker.name}
-						onPress={() => onSelect(marker._id)}
+						onPress={() => onSelect(marker)}
 					>
-						{marker._id === selected ? (
+						{selected && marker._id === selected._id ? (
 							<Image
 								source={mapPinSecondary}
 								style={styles.pin}
@@ -118,8 +224,22 @@ const MapComponent = ({
 								resizeMode="contain"
 							/>
 						)}
-					</Marker>
+					</MarkerAnimated>
 				))}
+				{centralMarker && (
+					<Marker
+						tracksViewChanges={false}
+						coordinate={centralMarker.location}
+						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
+						title={centralMarker.name}
+					>
+						<Image
+							source={mapPinTertiary}
+							style={styles.pin}
+							resizeMode="contain"
+						/>
+					</Marker>
+				)}
 			</MapView>
 			<TouchableOpacity
 				style={{ ...styles.button, marginBottom: 60 }}
