@@ -19,7 +19,7 @@ import LocationImgA from '../assets/sampleImageLocation1.png';
 import LocationImgB from '../assets/sampleImageLocation2.png';
 import LocationImgC from '../assets/sampleImageLocation3.png';
 import Marker from '../assets/marker.png';
-import { MAP_REFRESH_RATE } from '../config';
+import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
 
 const MapScreen = () => {
 	// For displaying the markers on the map
@@ -61,8 +61,7 @@ const MapScreen = () => {
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const OG_PROD_EVENT = '5fc90164d5869f00143e7fac';
-			const data = await BotService.getEventBots(OG_PROD_EVENT);
+			const data = await BotService.getEventBots(HARDCODED_EVENT_ID);
 
 			const {
 				botArray,
@@ -155,7 +154,6 @@ const MapScreen = () => {
 								setLoading(true);
 								setTimeout(() => {
 									setLoading(false);
-									console.log('Success');
 									setShowMapNodes(false);
 								}, 1000);
 							},

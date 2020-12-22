@@ -1,7 +1,4 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Camera, PermissionResponse } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
 	ActivityIndicator,
 	Alert,
@@ -10,12 +7,18 @@ import {
 	Text,
 	View,
 } from 'react-native';
+
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Camera, PermissionResponse } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { Button, Icon, Image, Input } from 'react-native-elements';
+
 import { RootStackParamList } from '../../App';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
 import { Ctx } from '../components/StateProvider';
 import { styles as formStyles } from './auth/FormStyles';
+import { HARDCODED_EVENT_ID } from '../config';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -82,7 +85,7 @@ const AddItem = ({ navigation }: AddItemProps) => {
 				await ItemService.addItem(
 					itemName,
 					cost,
-					'5fc90164d5869f00143e7fac',
+					HARDCODED_EVENT_ID,
 					photo,
 					state.bot._id,
 					quantity
