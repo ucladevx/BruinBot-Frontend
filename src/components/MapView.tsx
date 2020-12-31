@@ -13,7 +13,7 @@ import { Icon } from 'react-native-elements';
 
 import { PropTypes, MarkerData } from '../types/mapTypes';
 import { MAP_MARKER_SIZE } from '../constants';
-import mapDest from '../assets/mapDest.png';
+// import mapDest from '../assets/mapDest.png';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';
@@ -56,7 +56,7 @@ const MapComponent = ({
 			longitude: initRegion.longitude,
 		},
 		heading: 0,
-		pitch: 0,
+		pitch: 30,
 		zoom: 14.5,
 		altitude: 8000,
 	};
@@ -152,6 +152,7 @@ const MapComponent = ({
 						centerCamera();
 					}
 				}}
+				loadingEnabled={true}
 				showsUserLocation={true}
 				showsMyLocationButton={false}
 				style={styles.map}
@@ -176,6 +177,8 @@ const MapComponent = ({
 							/>
 						);
 					})}
+				{/* TODO: after splitting bot mode and map node mode into different 
+						  -screen.tsx files, add this to bot mode screen
 				{lineCoords &&
 					lineCoords.map((path, idx) => {
 						return (
@@ -192,7 +195,7 @@ const MapComponent = ({
 								/>
 							</Marker>
 						);
-					})}
+					})} */}
 				{selected && centralMarker && (
 					<Polyline
 						coordinates={[selected.location, centralMarker.location]}
