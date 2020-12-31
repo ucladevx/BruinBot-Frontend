@@ -152,6 +152,7 @@ const MapComponent = ({
 						centerCamera();
 					}
 				}}
+				loadingEnabled={true}
 				showsUserLocation={true}
 				showsMyLocationButton={false}
 				style={styles.map}

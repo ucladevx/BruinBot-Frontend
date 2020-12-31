@@ -7,7 +7,7 @@ import Loading from '../components/Loading';
 import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
-import { EventBot, MapNode } from '../types/apiTypes';
+import { EventBot, MapNode, Path } from '../types/apiTypes';
 import { MarkerData, Location } from '../types/mapTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 
@@ -34,10 +34,9 @@ const MapScreen = () => {
 	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
 		null
 	);
-	// If markers are bots, these these contain the path of each bot, if it exists
-	const [botPaths, setBotPaths] = useState<{
-		[key: string]: Location[];
-	} | null>(null);
+	// If markers are bots, these these contain the paths of each non-idle bot
+	// else, if markers are map ndoes, contains all of the possible paths
+	const [botPaths, setBotPaths] = useState<Location[][] | null>(null);
 
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
@@ -62,7 +61,6 @@ const MapScreen = () => {
 		// TODO: use actual API given event id from logged in user
 		try {
 			const data = await BotService.getEventBots(HARDCODED_EVENT_ID);
-
 			const {
 				botArray,
 				botHeaderInfo,
@@ -90,8 +88,10 @@ const MapScreen = () => {
 		try {
 			const mapNodes = await MapService.getMapNodes(latitude, longitude);
 			const { mapNodeArray, mapNodeHeaderInfo } = formatMapNodesData(mapNodes);
+			const { mapPaths } = formatMapPathsData(await MapService.getMapPaths());
 
 			setMarkers(mapNodeArray);
+			setBotPaths(mapPaths);
 			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
 			Alert.alert('Could not retrieve map nodes.');
@@ -130,6 +130,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={() => {
 							setMapNodes(
 								selectedBotForOrder.location.latitude,
@@ -182,7 +183,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={botPaths ? Object.values(botPaths) : []}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
@@ -196,6 +197,7 @@ const MapScreen = () => {
 						button={{
 							title: 'Order',
 							onButton: () => {
+								// TODO: add check for if bot is "InTransit"
 								setSelectedBotForOrder(selectedMarker);
 								setMapNodes(
 									selectedMarker.location.latitude,
@@ -227,7 +229,7 @@ export default MapScreen;
 const formatEventBotsData = (apiData: EventBot[]) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: MapMenuProps['info'] = {};
-	const botPaths: { [key: string]: Location[] } = {};
+	const botPaths: Location[][] = [];
 	const botItems: MapMenuProps['items'] = {};
 
 	apiData.forEach((bot, idx) => {
@@ -243,7 +245,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		});
 
 		botHeaderInfo[bot._id] = {
-			topLeft: bot.name + ' BruinBot',
+			topLeft: bot.name,
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0' + 'm away',
@@ -251,7 +253,9 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
-		botPaths[bot._id] = bot.path;
+		if (bot.status == 'InTransit') {
+			botPaths.push(bot.path);
+		}
 
 		botItems[bot._id] = items;
 	});
@@ -261,6 +265,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeMarkers: { [key: string]: MarkerData } = {};
 	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
+
 	apiData.forEach((node, idx) => {
 		// TODO: figure out what to name intermediate checkpoints
 		let name = node.name
@@ -281,4 +286,17 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 		};
 	});
 	return { mapNodeArray: mapNodeMarkers, mapNodeHeaderInfo };
+};
+
+const formatMapPathsData = (apiData: Path[]) => {
+	const mapPaths: Location[][] = [];
+
+	apiData.forEach((path) => {
+		let formattedPath = path.points;
+		formattedPath.unshift(path.nodeA.location);
+		formattedPath.push(path.nodeB.location);
+		mapPaths.push(formattedPath);
+	});
+
+	return { mapPaths };
 };
