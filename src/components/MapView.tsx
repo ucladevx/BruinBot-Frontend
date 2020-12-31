@@ -177,7 +177,9 @@ const MapComponent = ({
 							/>
 						);
 					})}
-				{/* {lineCoords &&
+				{/* TODO: after splitting bot mode and map node mode into different 
+						  -screen.tsx files, add this to bot mode screen
+				{lineCoords &&
 					lineCoords.map((path, idx) => {
 						return (
 							<Marker
