@@ -13,7 +13,7 @@ import { Icon } from 'react-native-elements';
 
 import { PropTypes, MarkerData } from '../types/mapTypes';
 import { MAP_MARKER_SIZE } from '../constants';
-import mapDest from '../assets/mapDest.png';
+// import mapDest from '../assets/mapDest.png';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';
@@ -176,7 +176,7 @@ const MapComponent = ({
 							/>
 						);
 					})}
-				{lineCoords &&
+				{/* {lineCoords &&
 					lineCoords.map((path, idx) => {
 						return (
 							<Marker
@@ -192,7 +192,7 @@ const MapComponent = ({
 								/>
 							</Marker>
 						);
-					})}
+					})} */}
 				{selected && centralMarker && (
 					<Polyline
 						coordinates={[selected.location, centralMarker.location]}
