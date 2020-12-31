@@ -56,7 +56,7 @@ const MapComponent = ({
 			longitude: initRegion.longitude,
 		},
 		heading: 0,
-		pitch: 0,
+		pitch: 30,
 		zoom: 14.5,
 		altitude: 8000,
 	};
