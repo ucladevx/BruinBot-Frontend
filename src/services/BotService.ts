@@ -1,5 +1,4 @@
 import Axios from 'axios';
-
 import { BASE_URL } from '../config';
 import { Bot, EventBot } from '../types/apiTypes';
 

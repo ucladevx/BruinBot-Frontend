@@ -1,13 +1,11 @@
 import * as Permissions from 'expo-permissions';
 import * as URL from 'url';
 import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import React, { useContext, useEffect, useState } from 'react';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>
-import Border from '../assets/qr2_from_pngtree.png';
-
 import { Ctx } from './StateProvider';
+import Border from '../assets/qr2_from_pngtree.png';
 import BotService from '../services/BotService';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;

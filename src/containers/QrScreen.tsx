@@ -1,11 +1,10 @@
 import { Button } from 'react-native-elements';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useContext } from 'react';
-
 import { Ctx } from '../components/StateProvider';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import QrComponent from '../components/QrView';
+import React, { useContext } from 'react';
 import ScanGif from '../assets/scan.gif';
 
 type Props = {

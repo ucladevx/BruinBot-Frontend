@@ -9,11 +9,10 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import { Icon } from 'react-native-elements';
-import React, { useRef } from 'react';
-
 import { HeaderProps, ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { Icon } from 'react-native-elements';
 import { NAV_HEIGHT } from '../constants';
+import React, { useRef } from 'react';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;

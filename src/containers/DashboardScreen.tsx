@@ -4,7 +4,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-
 import infoImage from '../assets/info.png';
 import messageImage from '../assets/message.png';
 import settingImage from '../assets/setting.png';
