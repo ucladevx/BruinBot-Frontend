@@ -3,7 +3,8 @@
 	"plugins": [
 		"@typescript-eslint",
 		"react-hooks",
-		"prettier"
+		"prettier",
+		"sort-imports-es6-autofix"
 	],
 	"extends": [
 		"eslint:recommended",
@@ -16,8 +17,16 @@
 		}
 	},
 	"rules": {
+		"sort-imports-es6-autofix/sort-imports-es6": [
+			2,
+			{
+				"ignoreCase": false,
+				"ignoreMemberSort": false,
+				"memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+			}
+		],
 		"no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars":[
+		"@typescript-eslint/no-unused-vars": [
 			"warn",
 			{
 				"argsIgnorePattern": "^_"
@@ -27,9 +36,9 @@
 		"react-hooks/exhaustive-deps": "warn"
 	},
 	"globals": {
-		"setInterval": "readable",
-		"setTimeout": "readable",
-		"clearInterval": "readable",
-		"console": "readable"
+		"setInterval": "readonly",
+		"setTimeout": "readonly",
+		"clearInterval": "readonly",
+		"console": "readonly"
 	}
 }

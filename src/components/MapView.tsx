@@ -1,19 +1,18 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import MapView, {
-	Polygon,
-	Polyline,
-	LatLng,
-	Region,
 	AnimatedRegion,
+	LatLng,
 	Marker,
 	MarkerAnimated,
+	Polygon,
+	Polyline,
+	Region,
 } from 'react-native-maps';
-import { TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
-
-import { PropTypes, MarkerData } from '../types/mapTypes';
-import { MAP_MARKER_SIZE } from '../constants';
+import React, { useEffect, useRef, useState } from 'react';
 // import mapDest from '../assets/mapDest.png';
+import { MAP_MARKER_SIZE } from '../constants';
+import { MarkerData, PropTypes } from '../types/mapTypes';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';

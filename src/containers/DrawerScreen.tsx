@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import { Ctx } from '../components/StateProvider';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
-import { Ctx } from '../components/StateProvider';
+import React, { useContext, useState } from 'react';
 
 interface Props {
 	navigation: DrawerNavigationProp<RootStackParamList>;

@@ -1,5 +1,4 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import { BackButton } from './FormUtils';
 import {
 	Keyboard,
 	KeyboardAvoidingView,
@@ -8,9 +7,10 @@ import {
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
-import { Text } from 'react-native-elements';
 import { RootStackParamList } from '../../../App';
-import { BackButton } from './FormUtils';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Text } from 'react-native-elements';
+import React from 'react';
 
 type Props = {
 	backButton?: boolean;

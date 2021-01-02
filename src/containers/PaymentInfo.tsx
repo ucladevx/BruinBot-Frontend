@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
 import {
-	View,
-	StyleSheet,
-	TextInput,
+	Alert,
 	Dimensions,
 	Keyboard,
-	Alert,
+	StyleSheet,
+	TextInput,
+	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Form from './auth/Form';
-
 import Loading from '../components/Loading';
+import React, { useState } from 'react';
 
 interface PaymentInfoProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentInfo'>;
