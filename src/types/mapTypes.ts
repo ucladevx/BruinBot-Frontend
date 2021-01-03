@@ -11,7 +11,7 @@ export interface MarkerData {
 	name: string;
 	location: Location;
 }
-export interface PropTypes {
+export interface MapComponentProps {
 	initRegion: Region;
 	centralMarker?: MarkerData; // User's location, selected bot's location in order mode, etc.
 	markers: MarkerData[]; // Rest of the markers, such as all bots or all map nodes
