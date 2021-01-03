@@ -5,11 +5,7 @@
  *
  * ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
  */
-<<<<<<< HEAD
-const BASE_URL = `http://192.168.0.105:8080/`;
-=======
 const BASE_URL = `http://localhost:8080/`;
->>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 const HARDCODED_EVENT_ID = '5fd80707f3df17df0d703a5d';
 
 const MAP_REFRESH_RATE = 10000; // ms

@@ -13,24 +13,15 @@ import {
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-<<<<<<< HEAD
 import {
 	InventoryItemProps,
 	HeaderProps,
 	MapMenuProps,
 } from '../types/inventoryTypes';
-=======
-import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
->>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 import { NAV_HEIGHT } from '../constants';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
-<<<<<<< HEAD
-=======
-
-const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
->>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 
 const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
 
