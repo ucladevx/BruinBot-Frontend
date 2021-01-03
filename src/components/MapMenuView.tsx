@@ -111,11 +111,7 @@ const Item = ({
 	);
 };
 
-<<<<<<< HEAD
 const MapMenuHeader = ({ info, standalone, button, ...rest }: HeaderProps) => {
-=======
-const MapMenuHeader = ({ info, button, standalone, ...rest }: HeaderProps) => {
->>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 	if (!info) {
 		// No info, return empty view
 		return <View />;
@@ -188,11 +184,8 @@ const MapMenu = ({
 	info,
 	items,
 	collapsable = true,
-<<<<<<< HEAD
 	clickable = false,
 	navigation = undefined,
-=======
->>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 	button,
 }: MapMenuProps) => {
 	const openOffset = -inventoryHeight + HEADER_HEIGHT;
