@@ -1,10 +1,10 @@
 import Axios from 'axios';
 
-import { baseUrl } from '../config';
+import { BASE_URL } from '../config';
 import { EventBot, Bot } from '../types/apiTypes';
 
 const axios = Axios.create({
-	baseURL: baseUrl,
+	baseURL: BASE_URL,
 	withCredentials: true,
 });
 
@@ -48,4 +48,20 @@ async function getOneBot(botId: string) {
 	}
 }
 
-export default { getEventBots, getAllBots, getOneBot };
+async function sendBot(botId: string, nodeId: string) {
+	try {
+		let data: Bot = (
+			await axios.post('/bots/toNode', {
+				nodeId: nodeId,
+				botId: botId,
+			})
+		).data;
+		console.log(data);
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export default { getEventBots, getAllBots, getOneBot, sendBot };

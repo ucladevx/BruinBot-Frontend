@@ -47,7 +47,6 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			cleanup = cleanup.substring(0, cleanup.length - 1);
 		setCardNumber(cleanup);
 	};
-
 	const cleanupExpiryDate = (number: string) => {
 		if (number.slice(-1) === '.')
 			number = number.substring(0, number.length - 1);

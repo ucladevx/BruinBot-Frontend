@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import Loading from '../components/Loading';
-import ItemCatalogueService from '../services/ItemCatalogueService';
 import MapMenu from '../components/MapMenuView';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Bot } from '../types/apiTypes';
@@ -11,6 +10,7 @@ import Crane from '../assets/crane.png';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Ctx } from '../components/StateProvider';
+import BotService from '../services/BotService';
 
 interface ItemCatalogueProps {
 	navigation: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
@@ -21,7 +21,7 @@ const ItemCatalogue = ({ navigation }: ItemCatalogueProps) => {
 	/* OG Bot is BruinBear with id 5fc8e9d411fb0d00125750d3 for demo purposes,
 			but if you come from QR view, botId will be set from global state */
 	const [botId] = useState<string>(
-		state.bot?._id ? state.bot._id : '5fc8e9d411fb0d00125750d3'
+		state.bot?._id ? state.bot._id : '5ff10d90af6f951a7719ca94'
 	);
 	const [botInfo, setBotInfo] = useState<MapMenuProps['info']>({});
 	const [botItems, setBotItems] = useState<MapMenuProps['items']>({});
@@ -30,7 +30,7 @@ const ItemCatalogue = ({ navigation }: ItemCatalogueProps) => {
 	const runRequests = async () => {
 		try {
 			console.log(botId);
-			let data = await ItemCatalogueService.getBot(botId);
+			let data = await BotService.getOneBot(botId);
 			const { botHeaderInfo, botItems } = cleanUpData(data);
 			setBotInfo(botHeaderInfo);
 			setBotItems(botItems);
@@ -42,6 +42,7 @@ const ItemCatalogue = ({ navigation }: ItemCatalogueProps) => {
 
 	useEffect(() => {
 		if (loading) runRequests();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading]);
 
 	if (loading) {
@@ -67,8 +68,6 @@ const ItemCatalogue = ({ navigation }: ItemCatalogueProps) => {
 		</>
 	);
 };
-
-const styles = StyleSheet.create({});
 
 export default ItemCatalogue;
 

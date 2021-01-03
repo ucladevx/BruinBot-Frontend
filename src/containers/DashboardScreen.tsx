@@ -28,7 +28,10 @@ const DashboardScreen = ({ navigation }: Props) => {
 						<Image source={shopImage} />
 						<Text style={styles.text}>Purchase items</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.icon}>
+					<TouchableOpacity
+						style={styles.icon}
+						onPress={() => navigation.navigate('ItemCatalogue')}
+					>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>
 					</TouchableOpacity>

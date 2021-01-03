@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseError } from 'firebase';
 import Axios from 'axios';
 
-import { baseUrl } from '../../config';
+import { BASE_URL } from '../../config';
 import { RootStackParamList } from '../../../App';
 import { Ctx } from '../../components/StateProvider';
 import Form from './Form';
@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
 	return (
-		<Form title="Sign up" navigation={navigation} backButton>
+		<Form bigTitle title="Sign up" navigation={navigation} backButton>
 			<Input
 				placeholder="Email"
 				errorMessage={formErrors.email}
@@ -58,7 +58,7 @@ const SignupScreen = ({ navigation }: Props) => {
 							console.log(idToken);
 							//Works up to here. Just learn how to use axios
 							try {
-								const response = await Axios.post(baseUrl + '/users/add', {
+								const response = await Axios.post(BASE_URL + '/users/add', {
 									username: email,
 									firebase_id_token: idToken,
 								});

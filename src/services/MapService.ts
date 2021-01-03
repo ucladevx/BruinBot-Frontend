@@ -1,10 +1,10 @@
 import Axios from 'axios';
 
-import { baseUrl } from '../config';
-import { MapNode } from '../types/apiTypes';
+import { BASE_URL } from '../config';
+import { MapNode, Path } from '../types/apiTypes';
 
 const axios = Axios.create({
-	baseURL: baseUrl,
+	baseURL: BASE_URL,
 	withCredentials: true,
 });
 
@@ -25,4 +25,14 @@ async function getMapNodes(latitude: number, longitude: number) {
 	}
 }
 
-export default { getMapNodes };
+async function getMapPaths() {
+	try {
+		const data: Path[] = (await axios.get('/paths')).data;
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export default { getMapNodes, getMapPaths };
