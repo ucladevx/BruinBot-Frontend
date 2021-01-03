@@ -12,7 +12,7 @@ import MapView, {
 import React, { useEffect, useRef, useState } from 'react';
 // import mapDest from '../assets/mapDest.png';
 import { MAP_MARKER_SIZE } from '../constants';
-import { MarkerData, PropTypes } from '../types/mapTypes';
+import { MapComponentProps, MarkerData } from '../types/mapTypes';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';
@@ -26,7 +26,7 @@ const MapComponent = ({
 	refresh,
 	selected,
 	onSelect,
-}: PropTypes) => {
+}: MapComponentProps) => {
 	const mapRef = useRef<MapView>(null);
 
 	// Adds a new object to the MapComponent's state that keeps track of
