@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, Image, Alert } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as URL from 'url';
+import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>

@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
+import BotService from '../services/BotService';
+import Loading from '../components/Loading';
 import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
-import Loading from '../components/Loading';
-import BotService from '../services/BotService';
 import MapService from '../services/MapService';
 
 import { EventBot, MapNode, Path } from '../types/apiTypes';
-import { MarkerData, Location } from '../types/mapTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { Location, MarkerData } from '../types/mapTypes';
 
-import CampusData from '../assets/campusCoords.json';
+import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
 import Bot from '../assets/robot.png';
-import Tank from '../assets/tank.png';
+import CampusData from '../assets/campusCoords.json';
 import Crane from '../assets/crane.png';
 import LocationImgA from '../assets/sampleImageLocation1.png';
 import LocationImgB from '../assets/sampleImageLocation2.png';
 import LocationImgC from '../assets/sampleImageLocation3.png';
 import Marker from '../assets/marker.png';
-import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
+import Tank from '../assets/tank.png';
 
 const MapScreen = () => {
 	// For displaying the markers on the map

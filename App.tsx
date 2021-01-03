@@ -1,21 +1,21 @@
+import 'react-native-gesture-handler';
+import * as Linking from 'expo-linking';
+import { Alert, StatusBar } from 'react-native';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import * as Linking from 'expo-linking';
 import React, { useCallback, useContext, useEffect } from 'react';
-import { Alert, StatusBar } from 'react-native';
-import 'react-native-gesture-handler';
 
 import { Ctx, StateProvider } from './src/components/StateProvider';
+import { NavCenter } from './src/containers/NavBarScreen';
 import AddItem from './src/containers/AddItemScreen';
-import LoginScreen from './src/containers/auth/LoginScreen';
-import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
-import SignupScreen from './src/containers/auth/SignupScreen';
+import CustomDrawer from './src/containers/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification';
+import LoginScreen from './src/containers/auth/LoginScreen';
 import MapScreen from './src/containers/MapScreen';
+import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import QrScreen from './src/containers/QrScreen';
-import CustomDrawer from './src/containers/DrawerScreen';
-import { NavCenter } from './src/containers/NavBarScreen';
+import SignupScreen from './src/containers/auth/SignupScreen';
 
 import BotService from './src/services/BotService';
 import PaymentInfo from './src/containers/PaymentInfo';

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Switch } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { Switch, View } from 'react-native';
+import React from 'react';
 
 interface Props {
 	state: boolean;
