@@ -20,7 +20,10 @@ import { NavCenter } from './src/containers/NavBarScreen';
 import BotService from './src/services/BotService';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
+<<<<<<< HEAD
 import ItemCatalogue from './src/containers/ItemCatalogue';
+=======
+>>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -32,12 +35,16 @@ export type RootStackParamList = {
 	AddItem: undefined;
 	Qr: undefined;
 	Dashboard: undefined;
+<<<<<<< HEAD
 	ItemCatalogue: undefined;
 	PaymentInfo: {
 		itemId: string;
 		quantity: number;
 		amount: number;
 	};
+=======
+	PaymentInfo: undefined;
+>>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 	PaymentSuccess: { success: boolean };
 };
 
@@ -112,7 +119,10 @@ const Home = () => {
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+<<<<<<< HEAD
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
+=======
+>>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
@@ -136,7 +146,10 @@ const Home = () => {
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+<<<<<<< HEAD
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
+=======
+>>>>>>> aae32444d942c27ec90d8261fe0ba53fbfe7124f
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
