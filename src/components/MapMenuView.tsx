@@ -105,13 +105,7 @@ interface WrapValue {
 	collapsed: boolean;
 }
 
-const MapMenu = ({
-	id,
-	info,
-	items,
-	collapsable = true,
-	button,
-}: MapMenuProps) => {
+const MapMenu = ({ info, items, collapsable = true, button }: MapMenuProps) => {
 	const openOffset = -inventoryHeight + HEADER_HEIGHT;
 	const collapsedOffset = 0;
 
@@ -161,25 +155,25 @@ const MapMenu = ({
 		  }
 		: { ...styles.container };
 
-	if (!id.length || !info[id]) {
+	if (!info) {
 		// invalid id, return empty view
 		return <View />;
 	}
 
 	if (!items) {
-		return <MapMenuHeader info={info[id]} standalone={true} />;
+		return <MapMenuHeader info={info} standalone={true} />;
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
-					info={info[id]}
+					info={info}
 					button={button}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>
 				<FlatList
 					contentContainerStyle={styles.list}
-					data={items[id]}
+					data={items}
 					renderItem={({ item }) => (
 						<Item
 							_id={item._id}
