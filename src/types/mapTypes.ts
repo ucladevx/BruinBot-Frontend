@@ -1,5 +1,5 @@
-import { LatLng, Region } from 'react-native-maps';
 import { ImageSourcePropType } from 'react-native';
+import { LatLng, Region } from 'react-native-maps';
 
 export interface Location {
 	latitude: number;

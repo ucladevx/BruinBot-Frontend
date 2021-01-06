@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
-import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import Ham from '../assets/greenHam.jpg';
+import { RootStackParamList } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Crane from '../assets/crane.png';
+import Ham from '../assets/greenHam.jpg';
 import MapMenu from '../components/MapMenuView';
+import React, { useState } from 'react';
 
 const screenWidth = Dimensions.get('window').width;
 

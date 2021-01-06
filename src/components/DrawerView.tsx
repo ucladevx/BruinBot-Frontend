@@ -1,14 +1,14 @@
-import React from 'react';
 import {
-	View,
-	Text,
-	Image,
-	TouchableOpacity,
 	FlatList,
-	StyleSheet,
+	Image,
 	ImageSourcePropType,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import React from 'react';
 
 import { RootStackParamList } from '../../App';
 import Toggle from './Toggle';

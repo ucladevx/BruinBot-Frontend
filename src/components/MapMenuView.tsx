@@ -1,18 +1,18 @@
-import React, { useRef } from 'react';
 import {
-	View,
+	Animated,
+	Dimensions,
 	FlatList,
 	Image,
-	Text,
-	Dimensions,
-	Animated,
 	PanResponder,
-	StyleSheet,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import React, { useRef } from 'react';
 
-import { ItemProps, HeaderProps, MapMenuProps } from '../types/inventoryTypes';
+import { HeaderProps, ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { NAV_HEIGHT } from '../constants';
 
 const HEADER_HEIGHT = 150;

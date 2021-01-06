@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState } from 'react';
 import {
 	ActivityIndicator,
 	Alert,
@@ -7,18 +6,19 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Camera, PermissionResponse } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Icon, Image, Input } from 'react-native-elements';
+import { Camera, PermissionResponse } from 'expo-camera';
+import { StackNavigationProp } from '@react-navigation/stack';
 
+import { Ctx } from '../components/StateProvider';
+import { HARDCODED_EVENT_ID } from '../config';
 import { RootStackParamList } from '../../App';
+import { styles as formStyles } from './auth/FormStyles';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
-import { Ctx } from '../components/StateProvider';
-import { styles as formStyles } from './auth/FormStyles';
-import { HARDCODED_EVENT_ID } from '../config';
 
 const screenWidth = Dimensions.get('window').width;
 

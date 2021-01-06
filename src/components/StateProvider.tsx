@@ -1,5 +1,3 @@
-import firebase from 'firebase';
-import React, { useEffect, useReducer } from 'react';
 import {
 	Action,
 	SetBotAction,
@@ -7,6 +5,8 @@ import {
 	State,
 	StateAndDispatch,
 } from '../types/StateProviderTypes';
+import React, { useEffect, useReducer } from 'react';
+import firebase from 'firebase';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyAcnkdEHyVz37TMFt7tj-_6KnOL3f7l9Bw',
