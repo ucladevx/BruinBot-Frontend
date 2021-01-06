@@ -2,9 +2,9 @@ import * as Permissions from 'expo-permissions';
 import * as URL from 'url';
 import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Ctx } from './StateProvider';
 import React, { useContext, useEffect, useState } from 'react';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>
-import { Ctx } from './StateProvider';
 import Border from '../assets/qr2_from_pngtree.png';
 import BotService from '../services/BotService';
 

@@ -4,12 +4,11 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
+// Icons from <a target="_blank" href="https://icons8.com/icons/set/shop--v2">Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> used
 import infoImage from '../assets/info.png';
 import messageImage from '../assets/message.png';
 import settingImage from '../assets/setting.png';
 import shopImage from '../assets/shop.png';
-
-// Icons from <a target="_blank" href="https://icons8.com/icons/set/shop--v2">Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> used
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;
