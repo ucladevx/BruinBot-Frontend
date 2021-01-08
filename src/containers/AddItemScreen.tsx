@@ -78,8 +78,6 @@ const AddItem = ({ navigation }: AddItemProps) => {
 			costErrorMessage !== ''
 		) {
 			Alert.alert('Please fix errors before submitting');
-		} else if (!state.bot) {
-			Alert.alert('Please scan a bot first');
 		} else {
 			try {
 				await ItemService.addItem(
@@ -87,7 +85,8 @@ const AddItem = ({ navigation }: AddItemProps) => {
 					cost,
 					HARDCODED_EVENT_ID,
 					photo,
-					state.bot._id,
+					// TO DO: get botId from navigation param
+					'bot id here',
 					quantity
 				);
 				Alert.alert('Added Item succesfully');
