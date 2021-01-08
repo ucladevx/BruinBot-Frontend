@@ -106,7 +106,7 @@ const Home = () => {
 	if (state.user == null) {
 		stack = (
 			<>
-				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen name="Qr" component={ItemCatalogue} />
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />

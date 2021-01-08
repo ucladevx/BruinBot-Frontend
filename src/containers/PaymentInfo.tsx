@@ -27,10 +27,10 @@ const screenHeight = Dimensions.get('window').height;
 
 const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 	const { state } = useContext(Ctx);
-	/* OG Bot is BruinBear with id 5fc8e9d411fb0d00125750d3 for demo purposes,
+	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes,
 			but if you come from QR view, botId will be set from global state */
 	const [botId] = useState<string>(
-		state.bot?._id ? state.bot._id : '5fc8e9d411fb0d00125750d3'
+		state.bot?._id ? state.bot._id : '5ff798be0390ab19822d21db'
 	);
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');

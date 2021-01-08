@@ -1,10 +1,10 @@
 import Axios from 'axios';
 
-import { baseUrl } from '../config';
+import { BASE_URL } from '../config';
 import { Bot } from '../types/apiTypes';
 
 const axios = Axios.create({
-	baseURL: baseUrl,
+	baseURL: BASE_URL,
 	withCredentials: true,
 });
 
