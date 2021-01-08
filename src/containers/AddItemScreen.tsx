@@ -6,14 +6,13 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Icon, Image, Input } from 'react-native-elements';
 import { Camera, PermissionResponse } from 'expo-camera';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { Ctx } from '../components/StateProvider';
 import { HARDCODED_EVENT_ID } from '../config';
 import { RootStackParamList } from '../../App';
 import { styles as formStyles } from './auth/FormStyles';
@@ -28,7 +27,6 @@ interface AddItemProps {
 }
 
 const AddItem = ({ navigation }: AddItemProps) => {
-	const { state } = useContext(Ctx);
 	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
 	const [quantityErrorMessage, setQuantityErrorMessage] = useState('');
