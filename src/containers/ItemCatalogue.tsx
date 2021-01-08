@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { View, Alert } from 'react-native';
+import { Alert, View } from 'react-native';
+import { Bot } from '../types/apiTypes';
+import { Ctx } from '../components/StateProvider';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { RootStackParamList } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
+import BotService from '../services/BotService';
+import Crane from '../assets/crane.png';
 import Loading from '../components/Loading';
 import MapMenu from '../components/MapMenuView';
-import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import { Bot } from '../types/apiTypes';
+import React, { useContext, useEffect, useState } from 'react';
 import Robot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
-import Crane from '../assets/crane.png';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
-import { Ctx } from '../components/StateProvider';
-import BotService from '../services/BotService';
 
 interface ItemCatalogueProps {
 	navigation: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;

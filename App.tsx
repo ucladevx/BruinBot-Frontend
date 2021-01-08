@@ -18,9 +18,9 @@ import QrScreen from './src/containers/QrScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 
 import BotService from './src/services/BotService';
+import ItemCatalogue from './src/containers/ItemCatalogue';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
-import ItemCatalogue from './src/containers/ItemCatalogue';
 
 export type RootStackParamList = {
 	Login: undefined;

@@ -1,4 +1,3 @@
-import React, { useRef } from 'react';
 import {
 	Animated,
 	Dimensions,
@@ -12,10 +11,11 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useRef } from 'react';
 
 import {
-	InventoryItemProps,
 	HeaderProps,
+	InventoryItemProps,
 	MapMenuProps,
 } from '../types/inventoryTypes';
 import { NAV_HEIGHT } from '../constants';
