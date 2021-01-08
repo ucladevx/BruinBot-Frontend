@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../App';
 import { Ctx } from '../components/StateProvider';
+import { Icon } from 'react-native-elements';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RootStackParamList } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useContext } from 'react';
 
-import shopImage from '../assets/shop.png';
-import messageImage from '../assets/message.png';
 import infoImage from '../assets/info.png';
+import messageImage from '../assets/message.png';
 import settingImage from '../assets/setting.png';
+import shopImage from '../assets/shop.png';
 // Icons from <a target="_blank" href="https://icons8.com/icons/set/shop--v2">Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> used
 
 type Props = {

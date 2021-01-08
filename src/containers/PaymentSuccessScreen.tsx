@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React from 'react';
 
 interface PaymentSuccessProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentSuccess'>;

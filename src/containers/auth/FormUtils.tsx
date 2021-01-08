@@ -1,7 +1,7 @@
 import { FirebaseError } from 'firebase';
-import React, { useState } from 'react';
 import { GestureResponderEvent, View } from 'react-native';
 import { Icon, Input } from 'react-native-elements';
+import React, { useState } from 'react';
 
 // Handles error codes that may be returned from Firebase Auth calls
 function handleAuthErrors(error: FirebaseError) {

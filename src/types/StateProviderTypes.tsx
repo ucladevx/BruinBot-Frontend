@@ -1,6 +1,6 @@
-import firebase from 'firebase';
 import { Dispatch } from 'react';
 import { UserData } from './apiTypes';
+import firebase from 'firebase';
 
 interface SetUserAction {
 	type: string;

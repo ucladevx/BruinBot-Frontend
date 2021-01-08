@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
 import Loading from '../components/Loading';
+import React, { useEffect, useState } from 'react';
 
 interface ItemWeightProps {
 	id: string;

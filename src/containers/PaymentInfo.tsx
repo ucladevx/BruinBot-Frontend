@@ -1,19 +1,19 @@
 import React, { useState, useContext } from 'react';
 import {
-	View,
-	StyleSheet,
-	TextInput,
+	Alert,
 	Dimensions,
 	Keyboard,
-	Alert,
+	StyleSheet,
+	TextInput,
+	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import Form from './auth/Form';
 import ItemCatalogueService from '../services/ItemCatalogueService';
 import { Ctx } from '../components/StateProvider';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import Loading from '../components/Loading';
 

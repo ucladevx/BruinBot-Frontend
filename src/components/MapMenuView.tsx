@@ -1,14 +1,14 @@
 import React, { useRef } from 'react';
 import {
-	View,
+	Animated,
+	Dimensions,
 	FlatList,
 	Image,
-	Text,
-	Dimensions,
-	Animated,
 	PanResponder,
-	StyleSheet,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
