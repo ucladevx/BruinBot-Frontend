@@ -1,9 +1,9 @@
-import { Ctx } from '../components/StateProvider';
 import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React from 'react';
 
 import infoImage from '../assets/info.png';
 import messageImage from '../assets/message.png';
@@ -12,11 +12,15 @@ import shopImage from '../assets/shop.png';
 // Icons from <a target="_blank" href="https://icons8.com/icons/set/shop--v2">Shop icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> used
 
 type Props = {
-	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;
+	navigation: StackNavigationProp<RootStackParamList, 'Dashboard'>;
+	route: RouteProp<RootStackParamList, 'Dashboard'>;
 };
 
-const DashboardScreen = ({ navigation }: Props) => {
-	const { dispatch } = useContext(Ctx);
+const DashboardScreen = ({ route, navigation }: Props) => {
+	// Pass this bot onto the next screen that needs it
+	// It's currently unused
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { bot } = route.params;
 	return (
 		<>
 			<View style={styles.firstLevelFlex}>
@@ -50,7 +54,6 @@ const DashboardScreen = ({ navigation }: Props) => {
 				size={40}
 				style={styles.back}
 				onPress={() => {
-					dispatch({ type: 'SET_BOT', bot: null });
 					navigation.navigate('Qr');
 				}}
 			/>
