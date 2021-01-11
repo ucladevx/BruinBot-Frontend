@@ -1,6 +1,7 @@
 import { Image, StyleSheet } from 'react-native';
-import Logo from '../assets/logo.png';
 import React from 'react';
+
+import Logo from '../assets/logo.png';
 
 export const NavCenter = () => <Image style={styles.logo} source={Logo} />;
 

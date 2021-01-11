@@ -1,5 +1,7 @@
 import { Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { MAP_MARKER_SIZE } from '../constants';
+import { MapComponentProps, MarkerData } from '../types/mapTypes';
 import MapView, {
 	AnimatedRegion,
 	LatLng,
@@ -10,9 +12,6 @@ import MapView, {
 	Region,
 } from 'react-native-maps';
 import React, { useEffect, useRef, useState } from 'react';
-// import mapDest from '../assets/mapDest.png';
-import { MAP_MARKER_SIZE } from '../constants';
-import { MapComponentProps, MarkerData } from '../types/mapTypes';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';
