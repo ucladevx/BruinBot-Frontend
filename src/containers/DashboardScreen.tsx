@@ -34,7 +34,11 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={styles.icon}
-						onPress={() => navigation.navigate('ItemCatalogue')}
+						onPress={() =>
+							navigation.navigate('ItemCatalogue', {
+								botId: bot._id,
+							})
+						}
 					>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>

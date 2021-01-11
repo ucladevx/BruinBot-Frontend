@@ -33,6 +33,7 @@ const Item = ({
 	quantity,
 	clickable = false,
 	navigation = undefined,
+	botId,
 }: InventoryItemProps) => {
 	if (clickable) {
 		return (
@@ -43,6 +44,7 @@ const Item = ({
 						amount: price,
 						itemId: _id,
 						quantity: -1,
+						botId: botId,
 					})
 				}
 				key={_id}
@@ -265,6 +267,7 @@ const MapMenu = ({
 							imgSrc={item.imgSrc}
 							clickable={clickable}
 							navigation={navigation}
+							botId={item.botId}
 						/>
 					)}
 					keyExtractor={(item) => item._id}

@@ -30,8 +30,9 @@ export type RootStackParamList = {
 	InventoryModification: undefined;
 	AddItem: undefined;
 	Qr: undefined;
-	ItemCatalogue: undefined;
+	ItemCatalogue: { botId: string };
 	PaymentInfo: {
+		botId: string;
 		itemId: string;
 		quantity: number;
 		amount: number;

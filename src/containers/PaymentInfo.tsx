@@ -7,13 +7,12 @@ import {
 	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Ctx } from '../components/StateProvider';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from './auth/Form';
 import ItemCatalogueService from '../services/ItemCatalogueService';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import Loading from '../components/Loading';
 
@@ -26,11 +25,10 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
-	const { state } = useContext(Ctx);
-	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes,
-			but if you come from QR view, botId will be set from global state */
+	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
+			but if you come from QR view, botId will be set from navigation params */
 	const [botId] = useState<string>(
-		state.bot?._id ? state.bot._id : '5ff798be0390ab19822d21db'
+		route.params.botId ? route.params.botId : '5ff798be0390ab19822d21db'
 	);
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');

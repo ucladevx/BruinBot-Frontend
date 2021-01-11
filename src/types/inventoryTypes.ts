@@ -8,6 +8,7 @@ export interface ItemProps {
 	price: number;
 	imgSrc: string;
 	quantity?: number;
+	botId: string;
 }
 
 export interface InventoryItemProps extends ItemProps {
