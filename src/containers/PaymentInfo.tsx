@@ -10,8 +10,9 @@ import { Button } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from './auth/Form';
-import Loading from '../components/Loading';
 import React, { useState } from 'react';
+
+import Loading from '../components/Loading';
 
 interface PaymentInfoProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentInfo'>;

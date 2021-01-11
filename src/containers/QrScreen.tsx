@@ -1,10 +1,11 @@
 import { Button } from 'react-native-elements';
-import { Ctx } from '../components/StateProvider';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+
+import { Ctx } from '../components/StateProvider';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import QrComponent from '../components/QrView';
-import React, { useContext } from 'react';
 import ScanGif from '../assets/scan.gif';
 
 type Props = {
@@ -14,16 +15,12 @@ type Props = {
 const QrScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
-	const navigateForward = () => {
-		navigation.navigate('Dashboard');
-	};
-
 	return (
 		<>
 			<Image source={ScanGif} style={styles.gif} />
 			<Text style={styles.title}>Scan QR code on the BruinBot to continue</Text>
 
-			<QrComponent navigateForward={navigateForward} />
+			<QrComponent navigation={navigation} />
 
 			<View>
 				{state.user ? (

@@ -1,5 +1,6 @@
 import { Animated, Dimensions, Image, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
+
 import robotLoading from '../assets/robotLoading.gif';
 
 const screenWidth = Dimensions.get('window').width;

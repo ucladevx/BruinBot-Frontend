@@ -1,8 +1,8 @@
 import { Alert, StyleSheet, View } from 'react-native';
-import { EventBot, MapNode } from '../types/apiTypes';
+import { EventBot, MapNode, Path } from '../types/apiTypes';
+import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
 import { HeaderInfo, ItemProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
-import { MAP_REFRESH_RATE } from '../config';
 import Bot from '../assets/robot.png';
 import BotService from '../services/BotService';
 import CampusData from '../assets/campusCoords.json';
@@ -18,8 +18,6 @@ import Marker from '../assets/marker.png';
 import React, { useEffect, useState } from 'react';
 import Tank from '../assets/tank.png';
 
-const EVENT_ID = '5ff10da1af6f951a7719ca96';
-
 const MapScreen = () => {
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
@@ -34,9 +32,7 @@ const MapScreen = () => {
 		[key: string]: ItemProps[];
 	} | null>(null);
 	// If markers are bots, these these contain the path of each bot, if it exists
-	const [botPaths, setBotPaths] = useState<{
-		[key: string]: Location[];
-	} | null>(null);
+	const [botPaths, setBotPaths] = useState<Location[][] | null>(null);
 
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
@@ -60,7 +56,7 @@ const MapScreen = () => {
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const data = await BotService.getEventBots(EVENT_ID);
+			const data = await BotService.getEventBots(HARDCODED_EVENT_ID);
 
 			const {
 				botMarkers,
@@ -91,8 +87,10 @@ const MapScreen = () => {
 			const { mapNodeMarkers, mapNodeHeaderInfo } = formatMapNodesData(
 				mapNodes
 			);
+			const { mapPaths } = formatMapPathsData(await MapService.getMapPaths());
 
 			setMarkers(mapNodeMarkers);
+			setBotPaths(mapPaths);
 			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
 			Alert.alert('Could not retrieve map nodes.');
@@ -131,6 +129,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={() => {
 							setMapNodes(
 								selectedBotForOrder.location.latitude,
@@ -155,7 +154,6 @@ const MapScreen = () => {
 								setLoading(true);
 								setTimeout(() => {
 									setLoading(false);
-									console.log('Success');
 									setShowMapNodes(false);
 								}, 1000);
 							},
@@ -184,7 +182,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={botPaths ? Object.values(botPaths) : []}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
@@ -197,6 +195,7 @@ const MapScreen = () => {
 						button={{
 							title: 'Order',
 							onButton: () => {
+								// TODO: add check for if bot is "InTransit"
 								setSelectedBotForOrder(selectedMarker);
 								setMapNodes(
 									selectedMarker.location.latitude,
@@ -228,7 +227,7 @@ export default MapScreen;
 const formatEventBotsData = (apiData: EventBot[]) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: { [key: string]: HeaderInfo } = {};
-	const botPaths: { [key: string]: Location[] } = {};
+	const botPaths: Location[][] = [];
 	const botItems: { [key: string]: ItemProps[] } = {};
 
 	apiData.forEach((bot, idx) => {
@@ -244,7 +243,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		});
 
 		botHeaderInfo[bot._id] = {
-			topLeft: bot.name + ' BruinBot',
+			topLeft: bot.name,
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0' + 'm away',
@@ -252,7 +251,9 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
-		botPaths[bot._id] = bot.path;
+		if (bot.status == 'InTransit') {
+			botPaths.push(bot.path);
+		}
 
 		botItems[bot._id] = items;
 	});
@@ -282,4 +283,17 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 		};
 	});
 	return { mapNodeMarkers, mapNodeHeaderInfo };
+};
+
+const formatMapPathsData = (apiData: Path[]) => {
+	const mapPaths: Location[][] = [];
+
+	apiData.forEach((path) => {
+		let formattedPath = path.points;
+		formattedPath.unshift(path.nodeA.location);
+		formattedPath.push(path.nodeB.location);
+		mapPaths.push(formattedPath);
+	});
+
+	return { mapPaths };
 };

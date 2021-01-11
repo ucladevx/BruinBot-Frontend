@@ -60,7 +60,7 @@ const SignupScreen = ({ navigation }: Props) => {
 							try {
 								const response = await Axios.post(BASE_URL + '/users/add', {
 									username: email,
-									firebase_id_token: idToken,
+									firebaseIdToken: idToken,
 								});
 								console.log(response.data);
 							} catch (error) {

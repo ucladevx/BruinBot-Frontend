@@ -1,4 +1,3 @@
-import * as ImagePicker from 'expo-image-picker';
 import {
 	ActivityIndicator,
 	Alert,
@@ -7,16 +6,18 @@ import {
 	Text,
 	View,
 } from 'react-native';
+import React, { useEffect, useState } from 'react';
+
+import * as ImagePicker from 'expo-image-picker';
 import { Button, Icon, Image, Input } from 'react-native-elements';
 import { Camera, PermissionResponse } from 'expo-camera';
-import { Ctx } from '../components/StateProvider';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 import { HARDCODED_EVENT_ID } from '../config';
 import { RootStackParamList } from '../../App';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { styles as formStyles } from './auth/FormStyles';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
-import React, { useContext, useEffect, useState } from 'react';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -26,7 +27,6 @@ interface AddItemProps {
 }
 
 const AddItem = ({ navigation }: AddItemProps) => {
-	const { state } = useContext(Ctx);
 	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
 	const [quantityErrorMessage, setQuantityErrorMessage] = useState('');
@@ -76,8 +76,6 @@ const AddItem = ({ navigation }: AddItemProps) => {
 			costErrorMessage !== ''
 		) {
 			Alert.alert('Please fix errors before submitting');
-		} else if (!state.bot) {
-			Alert.alert('Please scan a bot first');
 		} else {
 			try {
 				await ItemService.addItem(
@@ -85,7 +83,8 @@ const AddItem = ({ navigation }: AddItemProps) => {
 					cost,
 					HARDCODED_EVENT_ID,
 					photo,
-					state.bot._id,
+					// TO DO: get botId from navigation param
+					'bot id here',
 					quantity
 				);
 				Alert.alert('Added Item succesfully');
