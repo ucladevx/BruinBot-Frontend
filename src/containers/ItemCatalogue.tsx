@@ -20,9 +20,7 @@ interface ItemCatalogueProps {
 const ItemCatalogue = ({ navigation, route }: ItemCatalogueProps) => {
 	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
 			but if you come from QR view, botId will be set from navigation params */
-	const [botId] = useState<string>(
-		route.params.botId ? route.params.botId : '5ff798be0390ab19822d21db'
-	);
+	const botId = route.params.botId ?? '5ff798be0390ab19822d21db';
 	const [botInfo, setBotInfo] = useState<MapMenuProps['info']>({});
 	const [botItems, setBotItems] = useState<MapMenuProps['items']>({});
 	const [loading, setLoading] = useState(true);
