@@ -8,8 +8,9 @@ import {
 	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { RootStackParamList } from '../../App';
 import React from 'react';
+
+import { RootStackParamList } from '../../App';
 import Toggle from './Toggle';
 
 interface HeaderProps {

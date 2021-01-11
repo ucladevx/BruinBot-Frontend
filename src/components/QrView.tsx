@@ -2,12 +2,13 @@ import * as Linking from 'expo-linking';
 import * as Permissions from 'expo-permissions';
 import * as URL from 'url';
 import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import React, { useCallback, useEffect, useState } from 'react';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>
 import Border from '../assets/qr2_from_pngtree.png';
 

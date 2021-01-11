@@ -4,6 +4,7 @@ import { HeaderInfo, ItemProps } from '../types/inventoryTypes';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Crane from '../assets/crane.png';
+import Ham from '../assets/greenHam.jpg';
 import MapMenu from '../components/MapMenuView';
 import React, { useState } from 'react';
 
