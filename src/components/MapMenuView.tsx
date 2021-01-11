@@ -9,10 +9,11 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import { HeaderProps, ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Icon } from 'react-native-elements';
-import { NAV_HEIGHT } from '../constants';
 import React, { useRef } from 'react';
+
+import { HeaderProps, ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { NAV_HEIGHT } from '../constants';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
@@ -105,7 +106,13 @@ interface WrapValue {
 	collapsed: boolean;
 }
 
-const MapMenu = ({ info, items, collapsable = true, button }: MapMenuProps) => {
+const MapMenu = ({
+	id,
+	info,
+	items,
+	collapsable = true,
+	button,
+}: MapMenuProps) => {
 	const openOffset = -inventoryHeight + HEADER_HEIGHT;
 	const collapsedOffset = 0;
 
@@ -155,25 +162,25 @@ const MapMenu = ({ info, items, collapsable = true, button }: MapMenuProps) => {
 		  }
 		: { ...styles.container };
 
-	if (!info) {
+	if (!id.length || !info[id]) {
 		// invalid id, return empty view
 		return <View />;
 	}
 
 	if (!items) {
-		return <MapMenuHeader info={info} standalone={true} />;
+		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
 				<MapMenuHeader
-					info={info}
+					info={info[id]}
 					button={button}
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>
 				<FlatList
 					contentContainerStyle={styles.list}
-					data={items}
+					data={items[id]}
 					renderItem={({ item }) => (
 						<Item
 							_id={item._id}

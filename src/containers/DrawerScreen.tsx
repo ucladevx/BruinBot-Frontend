@@ -1,8 +1,9 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import React, { useState } from 'react';
+
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
-import React, { useState } from 'react';
 
 interface Props {
 	navigation: DrawerNavigationProp<RootStackParamList>;

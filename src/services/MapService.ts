@@ -1,6 +1,7 @@
+import Axios from 'axios';
+
 import { BASE_URL } from '../config';
 import { MapNode, Path } from '../types/apiTypes';
-import Axios from 'axios';
 
 const axios = Axios.create({
 	baseURL: BASE_URL,

@@ -1,6 +1,6 @@
 import { Button } from 'react-native-elements';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { HeaderInfo, ItemProps } from '../types/inventoryTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Crane from '../assets/crane.png';
@@ -15,39 +15,58 @@ interface InventoryModificationProps {
 	botId: string;
 }
 const InventoryModification = ({ navigation }: InventoryModificationProps) => {
-	const botInfo: HeaderInfo = {
+	//GET PROPER PROPS
+
+	const botInfo: MapMenuProps['info'] = {};
+	const botItems: MapMenuProps['items'] = {};
+
+	const item: ItemProps[] = [
+		{
+			_id: '1',
+			name: 'Ham 1',
+			price: 10,
+			imgSrc: Ham,
+		},
+		{
+			_id: '2',
+			name: 'Ham 2',
+			price: 15,
+			imgSrc: Ham,
+		},
+		{
+			_id: '3',
+			name: 'Ham 3',
+			price: 20,
+			imgSrc: Ham,
+		},
+		{
+			_id: '4',
+			name: 'Ham 4',
+			price: 10,
+			imgSrc: Ham,
+		},
+		{
+			_id: '5',
+			name: 'Ham 5',
+			price: 15,
+			imgSrc: Ham,
+		},
+		{
+			_id: '6',
+			name: 'Ham 6',
+			price: 20,
+			imgSrc: Ham,
+		},
+	];
+
+	botInfo['123'] = {
 		topLeft: 'Random Bear',
 		topRight: '10 items',
 		bottomLeft: '0 m away',
 		bottomRight: '5 items sold',
 		imgSrc: Crane,
 	};
-	const botItems: ItemProps[] = [
-		{
-			_id: '1',
-			name: 'Ham 1',
-			price: 10,
-			imgSrc: '',
-		},
-		{
-			_id: '2',
-			name: 'Ham 2',
-			price: 15,
-			imgSrc: '',
-		},
-		{
-			_id: '3',
-			name: 'Ham 3',
-			price: 20,
-			imgSrc: '',
-		},
-		{
-			_id: '4',
-			name: 'Ham 4',
-			price: 10,
-			imgSrc: '',
-		},
-	];
+	botItems['123'] = item;
 
 	const [info] = useState(botInfo);
 	const [items] = useState(botItems);
@@ -55,7 +74,7 @@ const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 	return (
 		<>
 			<View style={{ flex: 1 }}>
-				<MapMenu info={info} items={items} collapsable={false} />
+				<MapMenu id="123" info={info} items={items} collapsable={false} />
 				<Button
 					title="Add Item"
 					buttonStyle={styles.button}

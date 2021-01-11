@@ -41,8 +41,9 @@ export interface HeaderProps {
 }
 
 export interface MapMenuProps {
-	info: HeaderInfo;
-	items?: ItemProps[];
+	id: string;
+	info: { [key: string]: HeaderInfo };
+	items?: { [key: string]: ItemProps[] };
 	collapsedHeight?: number;
 	collapsable?: boolean;
 

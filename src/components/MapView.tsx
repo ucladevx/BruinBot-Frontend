@@ -10,9 +10,10 @@ import MapView, {
 	Region,
 } from 'react-native-maps';
 import React, { useEffect, useRef, useState } from 'react';
-// import mapDest from '../assets/mapDest.png';
+
 import { MAP_MARKER_SIZE } from '../constants';
-import { MapComponentProps, MarkerData } from '../types/mapTypes';
+import { MarkerData, PropTypes } from '../types/mapTypes';
+// import mapDest from '../assets/mapDest.png';
 import mapPinPrimary from '../assets/mapPin1.gif';
 import mapPinSecondary from '../assets/mapPin3.gif';
 import mapPinTertiary from '../assets/mapPin2.gif';
@@ -26,7 +27,7 @@ const MapComponent = ({
 	refresh,
 	selected,
 	onSelect,
-}: MapComponentProps) => {
+}: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
 
 	// Adds a new object to the MapComponent's state that keeps track of

@@ -27,7 +27,7 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 				<View style={styles.secondLevelFlexTop}>
 					<TouchableOpacity
 						style={styles.icon}
-						onPress={() => navigation.navigate('InventoryModification')}
+						onPress={() => navigation.navigate('Map')}
 					>
 						<Image source={shopImage} />
 						<Text style={styles.text}>Purchase items</Text>

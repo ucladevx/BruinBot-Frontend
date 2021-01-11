@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
+import Axios from 'axios';
+
 import { BASE_URL } from '../config';
 import { Platform } from 'react-native';
-import Axios from 'axios';
 
 const axios = Axios.create({
 	baseURL: BASE_URL,
@@ -24,7 +25,6 @@ const addItem = async (
 		size: 0,
 		arrayBuffer: () =>
 			new Promise<ArrayBuffer>((resolve) => {
-				//@ts-ignore
 				resolve(undefined);
 			}),
 		slice: () => new Blob(),

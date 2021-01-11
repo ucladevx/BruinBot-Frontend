@@ -1,22 +1,24 @@
 import { Alert, StyleSheet, View } from 'react-native';
-import { Ctx } from '../components/StateProvider';
-import { EventBot, MapNode } from '../types/apiTypes';
-import { HeaderInfo, ItemProps } from '../types/inventoryTypes';
-import { Location, MarkerData } from '../types/mapTypes';
-import { MAP_REFRESH_RATE } from '../config';
-import Bot from '../assets/robot.png';
+import React, { useEffect, useState } from 'react';
+
 import BotService from '../services/BotService';
-import CampusData from '../assets/campusCoords.json';
-import Crane from '../assets/crane.png';
 import Loading from '../components/Loading';
-import LocationImgA from '../assets/sampleImageLocation1.png';
-import LocationImgB from '../assets/sampleImageLocation2.png';
-import LocationImgC from '../assets/sampleImageLocation3.png';
 import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import MapService from '../services/MapService';
+
+import { EventBot, MapNode, Path } from '../types/apiTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { Location, MarkerData } from '../types/mapTypes';
+
+import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
+import Bot from '../assets/robot.png';
+import CampusData from '../assets/campusCoords.json';
+import Crane from '../assets/crane.png';
+import LocationImgA from '../assets/sampleImageLocation1.png';
+import LocationImgB from '../assets/sampleImageLocation2.png';
+import LocationImgC from '../assets/sampleImageLocation3.png';
 import Marker from '../assets/marker.png';
-import React, { useContext, useEffect, useState } from 'react';
 import Tank from '../assets/tank.png';
 
 const MapScreen = () => {
@@ -25,17 +27,16 @@ const MapScreen = () => {
 		null
 	);
 	// For displaying the header at the bottom of the screen associated with each marker
-	const [headerInfo, setHeaderInfo] = useState<{
-		[key: string]: HeaderInfo;
-	} | null>(null);
+	const [headerInfo, setHeaderInfo] = useState<MapMenuProps['info'] | null>(
+		null
+	);
 	// If markers are bots, these contain the inventories of each bot
-	const [inventories, setInventories] = useState<{
-		[key: string]: ItemProps[];
-	} | null>(null);
-	// If markers are bots, these these contain the path of each bot, if it exists
-	const [botPaths, setBotPaths] = useState<{
-		[key: string]: Location[];
-	} | null>(null);
+	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
+		null
+	);
+	// If markers are bots, these these contain the paths of each non-idle bot
+	// else, if markers are map ndoes, contains all of the possible paths
+	const [botPaths, setBotPaths] = useState<Location[][] | null>(null);
 
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
@@ -55,21 +56,19 @@ const MapScreen = () => {
 	> | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(false);
-	const { state } = useContext(Ctx);
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const data = await BotService.getEventBots(state.user!.eventId!);
-
+			const data = await BotService.getEventBots(HARDCODED_EVENT_ID);
 			const {
-				botMarkers,
+				botArray,
 				botHeaderInfo,
 				botItems,
 				botPaths,
 			} = formatEventBotsData(data);
 
-			setMarkers(botMarkers);
+			setMarkers(botArray);
 			setHeaderInfo(botHeaderInfo);
 			setInventories(botItems);
 			setBotPaths(botPaths);
@@ -88,11 +87,11 @@ const MapScreen = () => {
 	async function setMapNodes(latitude: number, longitude: number) {
 		try {
 			const mapNodes = await MapService.getMapNodes(latitude, longitude);
-			const { mapNodeMarkers, mapNodeHeaderInfo } = formatMapNodesData(
-				mapNodes
-			);
+			const { mapNodeArray, mapNodeHeaderInfo } = formatMapNodesData(mapNodes);
+			const { mapPaths } = formatMapPathsData(await MapService.getMapPaths());
 
-			setMarkers(mapNodeMarkers);
+			setMarkers(mapNodeArray);
+			setBotPaths(mapPaths);
 			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
 			Alert.alert('Could not retrieve map nodes.');
@@ -131,13 +130,14 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={() => {
 							setMapNodes(
 								selectedBotForOrder.location.latitude,
 								selectedBotForOrder.location.longitude
 							);
 						}}
-						selected={selectedMarker ?? undefined}
+						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
 							setSelectedMarker(marker);
 						}}
@@ -146,7 +146,7 @@ const MapScreen = () => {
 				{selectedMarker && (
 					<MapMenuHeader
 						info={headerInfo[selectedMarker ? selectedMarker._id : '']}
-						standalone
+						standalone={true}
 						button={{
 							title: 'Send',
 							onButton: () => {
@@ -155,7 +155,6 @@ const MapScreen = () => {
 								setLoading(true);
 								setTimeout(() => {
 									setLoading(false);
-									console.log('Success');
 									setShowMapNodes(false);
 								}, 1000);
 							},
@@ -184,7 +183,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={botPaths ? Object.values(botPaths) : []}
+						lineCoords={botPaths ? botPaths : []}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
@@ -192,11 +191,13 @@ const MapScreen = () => {
 				</View>
 				{selectedMarker && (
 					<MapMenu
-						info={headerInfo[selectedMarker._id]}
-						items={inventories[selectedMarker._id]}
+						id={selectedMarker ? selectedMarker._id : ''}
+						info={headerInfo}
+						items={inventories}
 						button={{
 							title: 'Order',
 							onButton: () => {
+								// TODO: add check for if bot is "InTransit"
 								setSelectedBotForOrder(selectedMarker);
 								setMapNodes(
 									selectedMarker.location.latitude,
@@ -227,14 +228,14 @@ export default MapScreen;
 
 const formatEventBotsData = (apiData: EventBot[]) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
-	const botHeaderInfo: { [key: string]: HeaderInfo } = {};
-	const botPaths: { [key: string]: Location[] } = {};
-	const botItems: { [key: string]: ItemProps[] } = {};
+	const botHeaderInfo: MapMenuProps['info'] = {};
+	const botPaths: Location[][] = [];
+	const botItems: MapMenuProps['items'] = {};
 
 	apiData.forEach((bot, idx) => {
-		botMarkers[bot._id] = { ...bot, location: { ...bot.location } }; // clone location
+		const { inventory, ...trimBot } = bot;
+		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location } }; // clone location
 
-		const { inventory } = bot;
 		const items: ItemProps[] = [];
 		let itemCount = 0;
 		inventory.forEach((obj) => {
@@ -244,7 +245,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		});
 
 		botHeaderInfo[bot._id] = {
-			topLeft: bot.name + ' BruinBot',
+			topLeft: bot.name,
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0' + 'm away',
@@ -252,16 +253,19 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
-		botPaths[bot._id] = bot.path;
+		if (bot.status == 'InTransit') {
+			botPaths.push(bot.path);
+		}
 
 		botItems[bot._id] = items;
 	});
-	return { botMarkers, botHeaderInfo, botItems, botPaths };
+	return { botArray: botMarkers, botHeaderInfo, botItems, botPaths };
 };
 
 const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeMarkers: { [key: string]: MarkerData } = {};
-	const mapNodeHeaderInfo: { [key: string]: HeaderInfo } = {};
+	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
+
 	apiData.forEach((node, idx) => {
 		// TODO: figure out what to name intermediate checkpoints
 		let name = node.name
@@ -281,5 +285,18 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 			imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
 		};
 	});
-	return { mapNodeMarkers, mapNodeHeaderInfo };
+	return { mapNodeArray: mapNodeMarkers, mapNodeHeaderInfo };
+};
+
+const formatMapPathsData = (apiData: Path[]) => {
+	const mapPaths: Location[][] = [];
+
+	apiData.forEach((path) => {
+		let formattedPath = path.points;
+		formattedPath.unshift(path.nodeA.location);
+		formattedPath.push(path.nodeB.location);
+		mapPaths.push(formattedPath);
+	});
+
+	return { mapPaths };
 };
