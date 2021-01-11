@@ -1,4 +1,5 @@
 import { Alert, StyleSheet, View } from 'react-native';
+import { Ctx } from '../components/StateProvider';
 import { EventBot, MapNode } from '../types/apiTypes';
 import { HeaderInfo, ItemProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
@@ -15,10 +16,8 @@ import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import MapService from '../services/MapService';
 import Marker from '../assets/marker.png';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Tank from '../assets/tank.png';
-
-const EVENT_ID = '5ff10da1af6f951a7719ca96';
 
 const MapScreen = () => {
 	// For displaying the markers on the map
@@ -56,11 +55,12 @@ const MapScreen = () => {
 	> | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(false);
+	const { state } = useContext(Ctx);
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const data = await BotService.getEventBots(EVENT_ID);
+			const data = await BotService.getEventBots(state.user!.eventId!);
 
 			const {
 				botMarkers,

@@ -12,7 +12,7 @@ type Props = {
 };
 
 const QrScreen = ({ navigation }: Props) => {
-	const { state } = useContext(Ctx);
+	const { state, dispatch } = useContext(Ctx);
 
 	const navigateForward = () => {
 		navigation.navigate('Dashboard');
@@ -32,7 +32,17 @@ const QrScreen = ({ navigation }: Props) => {
 						buttonStyle={styles.button}
 						titleStyle={styles.buttonText}
 						title="Sign out"
-						onPress={() => state.firebase.auth().signOut()}
+						onPress={() =>
+							state.firebase
+								.auth()
+								.signOut()
+								.then(() => {
+									dispatch({
+										type: 'SET_USER',
+										user: null,
+									});
+								})
+						}
 					/>
 				) : (
 					<Button

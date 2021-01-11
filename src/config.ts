@@ -4,6 +4,8 @@
  * address. You can find your IP address using the following command:
  *
  * ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
+ *
+ * So instead of 'http://localhost:8080' you have something like 'http://192.168.0.105:8080'
  */
 const BASE_URL = `http://localhost:8080/`;
 const HARDCODED_EVENT_ID = '5fd80707f3df17df0d703a5d';
