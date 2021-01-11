@@ -1,6 +1,5 @@
 import {
 	Action,
-	SetBotAction,
 	SetUserAction,
 	State,
 	StateAndDispatch,
@@ -19,7 +18,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const initialState: State = { firebase, user: null, bot: null };
+const initialState: State = { firebase, user: null };
 const Ctx = React.createContext<StateAndDispatch>(undefined!);
 
 const StateProvider = (props: { children: React.ReactNode }) => {
@@ -30,12 +29,6 @@ const StateProvider = (props: { children: React.ReactNode }) => {
 				return {
 					...state,
 					user: (action as SetUserAction).user,
-				};
-			}
-			if (action.type === 'SET_BOT') {
-				return {
-					...state,
-					bot: (action as SetBotAction).bot,
 				};
 			}
 			return state;
