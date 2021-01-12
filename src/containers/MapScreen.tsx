@@ -12,7 +12,7 @@ import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
 
 import { Ctx } from '../components/StateProvider';
-import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
+import { MAP_REFRESH_RATE } from '../config';
 import Bot from '../assets/robot.png';
 import CampusData from '../assets/campusCoords.json';
 import Crane from '../assets/crane.png';
