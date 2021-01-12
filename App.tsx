@@ -6,7 +6,7 @@ import React, { useContext } from 'react';
 
 import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
-import { NavCenter } from './src/containers/NavBarScreen';
+import { HeaderButton, NavCenter } from './src/containers/NavBarScreen';
 import AddItem from './src/containers/AddItemScreen';
 import CustomDrawer from './src/containers/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
@@ -101,10 +101,17 @@ const Home = () => {
 			<StatusBar barStyle="dark-content" />
 			<Stack.Navigator
 				drawerContent={(props: any) => <CustomDrawer {...props} />}
-				screenOptions={{
-					headerShown: true,
-					headerTitle: NavCenter,
-					headerTintColor: '#000',
+				screenOptions={({ route, navigation }) => {
+					const HeaderLeft = () => (
+						// avoid missing displayName warning
+						<HeaderButton navigation={navigation} screen={route.name} />
+					);
+					return {
+						headerShown: true,
+						headerLeft: HeaderLeft,
+						headerTitle: NavCenter,
+						headerTintColor: '#000',
+					};
 				}}
 			>
 				{stack}

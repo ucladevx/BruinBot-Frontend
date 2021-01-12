@@ -1,4 +1,3 @@
-import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
@@ -48,15 +47,6 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Icon
-				name="ios-arrow-back"
-				type="ionicon"
-				size={40}
-				style={styles.back}
-				onPress={() => {
-					navigation.navigate('Qr');
-				}}
-			/>
 		</>
 	);
 };
