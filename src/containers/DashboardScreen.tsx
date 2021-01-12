@@ -1,9 +1,7 @@
-import { Ctx } from '../components/StateProvider';
-import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React from 'react';
 
 import infoImage from '../assets/info.png';
 import messageImage from '../assets/message.png';
@@ -16,7 +14,6 @@ type Props = {
 };
 
 const DashboardScreen = ({ navigation }: Props) => {
-	const { dispatch } = useContext(Ctx);
 	return (
 		<>
 			<View style={styles.firstLevelFlex}>
@@ -44,16 +41,6 @@ const DashboardScreen = ({ navigation }: Props) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Icon
-				name="ios-arrow-back"
-				type="ionicon"
-				size={40}
-				style={styles.back}
-				onPress={() => {
-					dispatch({ type: 'SET_BOT', bot: null });
-					navigation.navigate('Qr');
-				}}
-			/>
 		</>
 	);
 };

@@ -1,9 +1,10 @@
+import { Ctx } from '../components/StateProvider';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { RootStackParamList } from '../../App';
 import Logo from '../assets/logo.png';
-import React from 'react';
+import React, { useContext } from 'react';
 
 export const NavCenter = () => <Image style={styles.logo} source={Logo} />;
 
@@ -18,6 +19,8 @@ interface ButtonConfig {
 }
 
 export const HeaderButton = ({ navigation, screen }: Props) => {
+	const { dispatch } = useContext(Ctx);
+
 	const defaultConfig: ButtonConfig = {
 		action: () => {
 			if (navigation.canGoBack()) {
@@ -35,6 +38,15 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 		Qr: {
 			action: () => navigation.openDrawer(),
 			icon: 'ios-menu',
+		},
+		Dashboard: {
+			action: () => {
+				dispatch({ type: 'SET_BOT', bot: null });
+				if (navigation.canGoBack()) {
+					navigation.goBack();
+				}
+			},
+			icon: 'ios-arrow-back',
 		},
 	};
 
