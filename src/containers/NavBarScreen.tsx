@@ -39,15 +39,6 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 			action: () => navigation.openDrawer(),
 			icon: 'ios-menu',
 		},
-		Dashboard: {
-			action: () => {
-				dispatch({ type: 'SET_BOT', bot: null });
-				if (navigation.canGoBack()) {
-					navigation.goBack();
-				}
-			},
-			icon: 'ios-arrow-back',
-		},
 	};
 
 	const pressHandler = () => {
