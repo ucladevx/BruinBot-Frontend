@@ -12,22 +12,11 @@ interface FirebaseUser {
 	uid: string;
 }
 
-// TODO: Add more fields later, or consolidate this
-interface Bot {
-	_id: string;
-}
-
-interface SetBotAction {
-	type: string;
-	bot: Bot | null;
-}
-
-type Action = SetUserAction | SetBotAction;
+type Action = SetUserAction;
 
 interface State {
 	firebase: typeof firebase;
 	user: (FirebaseUser & UserData) | null;
-	bot: Bot | null;
 }
 
 interface StateAndDispatch {
@@ -35,4 +24,4 @@ interface StateAndDispatch {
 	dispatch: Dispatch<Action>;
 }
 
-export { State, StateAndDispatch, Action, SetUserAction, SetBotAction };
+export { State, StateAndDispatch, Action, SetUserAction };

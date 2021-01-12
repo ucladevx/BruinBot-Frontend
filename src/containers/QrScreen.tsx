@@ -15,16 +15,12 @@ type Props = {
 const QrScreen = ({ navigation }: Props) => {
 	const { state } = useContext(Ctx);
 
-	const navigateForward = () => {
-		navigation.navigate('Dashboard');
-	};
-
 	return (
 		<>
 			<Image source={ScanGif} style={styles.gif} />
 			<Text style={styles.title}>Scan QR code on the BruinBot to continue</Text>
 
-			<QrComponent navigateForward={navigateForward} />
+			<QrComponent navigation={navigation} />
 
 			<View>
 				{state.user ? (

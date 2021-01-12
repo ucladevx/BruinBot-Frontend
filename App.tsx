@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
-import * as Linking from 'expo-linking';
-import { Alert, StatusBar } from 'react-native';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
+import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import { HeaderButton, NavCenter } from './src/containers/NavBarScreen';
 import AddItem from './src/containers/AddItemScreen';
@@ -17,7 +17,6 @@ import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import QrScreen from './src/containers/QrScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 
-import BotService from './src/services/BotService';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
 
@@ -30,14 +29,12 @@ export type RootStackParamList = {
 	InventoryModification: undefined;
 	AddItem: undefined;
 	Qr: undefined;
-	Dashboard: undefined;
+	Dashboard: { bot: Bot };
 	PaymentInfo: undefined;
 	PaymentSuccess: { success: boolean };
 };
 
 const Stack = createDrawerNavigator<RootStackParamList>();
-
-const prefix = Linking.makeUrl('/');
 
 const theme = {
 	...DefaultTheme,
@@ -48,13 +45,9 @@ const theme = {
 };
 
 export default function App() {
-	const linking = {
-		prefixes: [prefix],
-	};
-
 	return (
 		<StateProvider>
-			<NavigationContainer linking={linking} theme={theme}>
+			<NavigationContainer theme={theme}>
 				<Home />
 			</NavigationContainer>
 		</StateProvider>
@@ -62,39 +55,7 @@ export default function App() {
 }
 
 const Home = () => {
-	const { state, dispatch } = useContext(Ctx);
-
-	const updateBotFromDeepLink = useCallback(
-		(botId: string) => {
-			BotService.getOneBot(botId)
-				.then((bot) => {
-					dispatch({ type: 'SET_BOT', bot });
-					Alert.alert(`Connected to ${bot.name}!`);
-					Linking.openURL(Linking.makeUrl('Dashboard'));
-				})
-				.catch(() => {
-					Alert.alert('Could not connect to BruinBot...');
-				});
-		},
-		[dispatch]
-	);
-
-	useEffect(() => {
-		Linking.parseInitialURLAsync().then(({ path: _path, queryParams }) => {
-			if (queryParams && queryParams.botId) {
-				updateBotFromDeepLink(queryParams.botId);
-			}
-		});
-	}, [updateBotFromDeepLink]);
-
-	Linking.addEventListener('url', ({ url }) => {
-		if (url) {
-			const { queryParams } = Linking.parse(url);
-			if (queryParams && queryParams.botId) {
-				updateBotFromDeepLink(queryParams.botId);
-			}
-		}
-	});
+	const { state } = useContext(Ctx);
 
 	let stack;
 	if (state.user == null) {
