@@ -62,13 +62,13 @@ const LoginScreen = ({ navigation }: Props) => {
 						.signInWithEmailAndPassword(email, password)
 						// Fetch Firebase JWT
 						.then((user: firebase.User) => {
-							return Promise.all([user, user.getIdToken()]);
+							return Promise.all([user, user.getIdToken(true)]);
 						})
 						// Fetch user data
 						.then(([user, token]) => {
 							return Promise.all([
 								user,
-								Axios.get(BASE_URL + '/users/user', {
+								Axios.get(BASE_URL + 'users/user', {
 									params: { firebaseIdToken: token },
 								}),
 							]);
