@@ -32,6 +32,7 @@ export type RootStackParamList = {
 	Dashboard: { bot: Bot };
 	PaymentInfo: undefined;
 	PaymentSuccess: { success: boolean };
+	Settings: undefined;
 };
 
 const Stack = createDrawerNavigator<RootStackParamList>();
