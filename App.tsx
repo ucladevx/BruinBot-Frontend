@@ -17,6 +17,7 @@ import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import QrScreen from './src/containers/QrScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 
+import ItemCatalogue from './src/containers/ItemCatalogue';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
 
@@ -29,8 +30,14 @@ export type RootStackParamList = {
 	InventoryModification: undefined;
 	AddItem: undefined;
 	Qr: undefined;
+	ItemCatalogue: { botId: string };
+	PaymentInfo: {
+		botId: string;
+		itemId: string;
+		quantity: number;
+		amount: number;
+	};
 	Dashboard: { bot: Bot };
-	PaymentInfo: undefined;
 	PaymentSuccess: { success: boolean };
 };
 
@@ -67,6 +74,7 @@ const Home = () => {
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
@@ -75,6 +83,7 @@ const Home = () => {
 		// TODO: Change this to be something the user can toggle
 		stack = state.user.isOrganizer ? (
 			<>
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
@@ -89,6 +98,7 @@ const Home = () => {
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
