@@ -32,6 +32,10 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 			action: () => navigation.openDrawer(),
 			icon: 'ios-menu',
 		},
+		Qr: {
+			action: () => navigation.openDrawer(),
+			icon: 'ios-menu',
+		},
 	};
 
 	const pressHandler = () => {
