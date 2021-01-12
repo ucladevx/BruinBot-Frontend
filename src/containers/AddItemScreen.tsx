@@ -6,14 +6,13 @@ import {
 	Text,
 	View,
 } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
 import { Button, Icon, Image, Input } from 'react-native-elements';
 import { Camera, PermissionResponse } from 'expo-camera';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { Ctx } from '../components/StateProvider';
 import { HARDCODED_EVENT_ID } from '../config';
 import { RootStackParamList } from '../../App';
 import { styles as formStyles } from './auth/FormStyles';
@@ -28,7 +27,6 @@ interface AddItemProps {
 }
 
 const AddItem = ({ navigation }: AddItemProps) => {
-	const { state } = useContext(Ctx);
 	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
 	const [quantityErrorMessage, setQuantityErrorMessage] = useState('');
@@ -78,8 +76,6 @@ const AddItem = ({ navigation }: AddItemProps) => {
 			costErrorMessage !== ''
 		) {
 			Alert.alert('Please fix errors before submitting');
-		} else if (!state.bot) {
-			Alert.alert('Please scan a bot first');
 		} else {
 			try {
 				await ItemService.addItem(
@@ -87,7 +83,8 @@ const AddItem = ({ navigation }: AddItemProps) => {
 					cost,
 					HARDCODED_EVENT_ID,
 					photo,
-					state.bot._id,
+					// TO DO: get botId from navigation param
+					'bot id here',
 					quantity
 				);
 				Alert.alert('Added Item succesfully');

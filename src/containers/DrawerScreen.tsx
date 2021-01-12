@@ -1,7 +1,6 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Ctx } from '../components/StateProvider';
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
@@ -11,7 +10,6 @@ interface Props {
 }
 
 const Drawer = ({ navigation }: Props) => {
-	const { dispatch } = useContext(Ctx);
 	const [enterpriseMode, setEnterpriseMode] = useState(true);
 
 	const userHeader = {
@@ -34,7 +32,6 @@ const Drawer = ({ navigation }: Props) => {
 			route: 'Qr',
 			iconName: 'md-qr-scanner',
 			onPress: () => {
-				dispatch({ type: 'SET_BOT', bot: null });
 				navigation.navigate('Qr');
 			},
 		},
@@ -54,7 +51,6 @@ const Drawer = ({ navigation }: Props) => {
 			route: 'Qr',
 			iconName: 'md-qr-scanner',
 			onPress: () => {
-				dispatch({ type: 'SET_BOT', bot: null });
 				navigation.navigate('Qr');
 			},
 		},
@@ -63,7 +59,7 @@ const Drawer = ({ navigation }: Props) => {
 			route: 'Dashboard',
 			iconName: 'md-stats',
 			onPress: () => {
-				navigation.navigate('Dashboard');
+				navigation.navigate('Qr');
 			},
 		},
 		{
