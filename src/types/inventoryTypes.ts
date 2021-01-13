@@ -1,10 +1,19 @@
 import { ImageSourcePropType } from 'react-native';
+import { RootStackParamList } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export interface ItemProps {
 	_id: string;
 	name: string;
 	price: number;
 	imgSrc: string;
+	quantity?: number;
+	botId: string;
+}
+
+export interface InventoryItemProps extends ItemProps {
+	clickable?: boolean;
+	navigation?: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
 }
 
 /**
@@ -43,9 +52,11 @@ export interface HeaderProps {
 export interface MapMenuProps {
 	id: string;
 	info: { [key: string]: HeaderInfo };
-	items?: { [key: string]: ItemProps[] };
+	items?: { [key: string]: InventoryItemProps[] };
 	collapsedHeight?: number;
 	collapsable?: boolean;
+	clickable?: boolean;
+	navigation?: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
 
 	// TODO: This needs a refactor, since we are just passing button through to the header
 	// Configuration for button on the menu header
