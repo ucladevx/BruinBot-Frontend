@@ -1,11 +1,10 @@
 import { Button } from 'react-native-elements';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useContext } from 'react';
-
 import { Ctx } from '../components/StateProvider';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import QrComponent from '../components/QrView';
+import React, { useContext } from 'react';
 import ScanGif from '../assets/scan.gif';
 
 type Props = {
@@ -13,7 +12,7 @@ type Props = {
 };
 
 const QrScreen = ({ navigation }: Props) => {
-	const { state } = useContext(Ctx);
+	const { state, dispatch } = useContext(Ctx);
 
 	return (
 		<>
@@ -29,7 +28,17 @@ const QrScreen = ({ navigation }: Props) => {
 						buttonStyle={styles.button}
 						titleStyle={styles.buttonText}
 						title="Sign out"
-						onPress={() => state.firebase.auth().signOut()}
+						onPress={() =>
+							state.firebase
+								.auth()
+								.signOut()
+								.then(() => {
+									dispatch({
+										type: 'SET_USER',
+										user: null,
+									});
+								})
+						}
 					/>
 				) : (
 					<Button

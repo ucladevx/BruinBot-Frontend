@@ -36,7 +36,7 @@ export interface BotItem extends ApiResponse {
 
 export interface UserData extends ApiResponse {
 	_id: string;
-	isOrganizer: boolean;
+	eventId: string | null;
 }
 
 export interface EventBot extends Bot {

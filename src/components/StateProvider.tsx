@@ -4,7 +4,7 @@ import {
 	State,
 	StateAndDispatch,
 } from '../types/StateProviderTypes';
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import firebase from 'firebase';
 
 const firebaseConfig = {
@@ -36,21 +36,6 @@ const StateProvider = (props: { children: React.ReactNode }) => {
 		initialState
 	);
 
-	useEffect(() => {
-		firebase.auth().onAuthStateChanged(function (user) {
-			// TODO: Resolve Firebase user with Mongo user data here
-			if (user) {
-				dispatch({
-					type: 'SET_USER',
-					user: {
-						_id: 'hello world',
-						isOrganizer: true,
-						uid: user.uid,
-					},
-				});
-			}
-		});
-	}, []);
 	return (
 		<Ctx.Provider value={{ state, dispatch }}>{props.children}</Ctx.Provider>
 	);

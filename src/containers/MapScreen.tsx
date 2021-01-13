@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import BotService from '../services/BotService';
 import Loading from '../components/Loading';
@@ -11,7 +11,8 @@ import { EventBot, MapNode, Path } from '../types/apiTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
 
-import { HARDCODED_EVENT_ID, MAP_REFRESH_RATE } from '../config';
+import { Ctx } from '../components/StateProvider';
+import { MAP_REFRESH_RATE } from '../config';
 import Bot from '../assets/robot.png';
 import CampusData from '../assets/campusCoords.json';
 import Crane from '../assets/crane.png';
@@ -56,11 +57,12 @@ const MapScreen = () => {
 	> | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(false);
+	const { state } = useContext(Ctx);
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const data = await BotService.getEventBots(HARDCODED_EVENT_ID);
+			const data = await BotService.getEventBots(state.user!.eventId!);
 			const {
 				botArray,
 				botHeaderInfo,
