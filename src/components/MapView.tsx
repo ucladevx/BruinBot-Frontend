@@ -205,30 +205,33 @@ const MapComponent = ({
 						lineDashPattern={[10]}
 					/>
 				)}
-				{markers.map((marker) => (
-					<MarkerAnimated
-						tracksViewChanges={false}
-						key={marker._id}
-						coordinate={animatedLocations[marker._id]}
-						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
-						title={marker.name}
-						onPress={() => onSelect(marker)}
-					>
-						{selected && marker._id === selected._id ? (
-							<Image
-								source={mapPinSecondary}
-								style={styles.pin}
-								resizeMode="contain"
-							/>
-						) : (
-							<Image
-								source={mapPinPrimary}
-								style={styles.pin}
-								resizeMode="contain"
-							/>
-						)}
-					</MarkerAnimated>
-				))}
+				{markers.map(
+					(marker) =>
+						animatedLocations[marker._id] && (
+							<MarkerAnimated
+								tracksViewChanges={false}
+								key={marker._id}
+								coordinate={animatedLocations[marker._id]}
+								centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
+								title={marker.name}
+								onPress={() => onSelect(marker)}
+							>
+								{selected && marker._id === selected._id ? (
+									<Image
+										source={mapPinSecondary}
+										style={styles.pin}
+										resizeMode="contain"
+									/>
+								) : (
+									<Image
+										source={mapPinPrimary}
+										style={styles.pin}
+										resizeMode="contain"
+									/>
+								)}
+							</MarkerAnimated>
+						)
+				)}
 				{centralMarker && (
 					<Marker
 						tracksViewChanges={false}
