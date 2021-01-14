@@ -22,23 +22,25 @@ interface Props {
 
 const QrComponent = ({ navigation }: Props) => {
 	const [hasCameraPermission, setCameraPermission] = useState('null');
-	const [scanned, setScanned] = useState(false);
+	const [functionLock, setFunctionLock] = useState(false);
+	const [cameraLock, setCameraLock] = useState(false);
 
 	const alertError = (msg: string) => {
 		Alert.alert('Oops', msg, [
 			{
 				text: 'Ok',
-				onPress: () => setScanned(false),
+				onPress: () => setFunctionLock(false),
 			},
 		]);
 	};
 
 	const updateBotFromDeepLink = useCallback(
 		async (botId: string) => {
-			setScanned(true);
+			setFunctionLock(true);
 			try {
 				const bot = await BotService.getOneBot(botId);
 				Alert.alert(`Connected to ${bot.name}!`);
+				setCameraLock(true);
 				navigation.navigate('Dashboard', { bot });
 			} catch {
 				alertError('Could not connect to BruinBot...');
@@ -72,7 +74,8 @@ const QrComponent = ({ navigation }: Props) => {
 
 	useFocusEffect(
 		useCallback(() => {
-			setScanned(false);
+			setCameraLock(false);
+			setFunctionLock(false);
 		}, [])
 	);
 
@@ -86,40 +89,43 @@ const QrComponent = ({ navigation }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<BarCodeScanner
-				onBarCodeScanned={
-					scanned
-						? () => {}
-						: async ({ type: _type, data }) => {
-								setScanned(true);
-								const { query } = URL.parse(data);
-								if (!query) {
-									alertError('Please scan a BruinBot QR code!');
-									return;
-								}
-								const qrData = JSON.parse(
-									`{"${query}"}`.replace(/=/g, '": "').replace(/&/g, '", "')
-								);
-								const { botId } = qrData;
+			{!cameraLock && (
+				<BarCodeScanner
+					onBarCodeScanned={
+						functionLock
+							? () => {}
+							: async ({ type: _type, data }) => {
+									setFunctionLock(true);
+									const { query } = URL.parse(data);
+									if (!query) {
+										alertError('Please scan a BruinBot QR code!');
+										return;
+									}
+									const qrData = JSON.parse(
+										`{"${query}"}`.replace(/=/g, '": "').replace(/&/g, '", "')
+									);
+									const { botId } = qrData;
 
-								if (!botId) {
-									alertError('Please scan a BruinBot QR code!');
-									return;
-								}
+									if (!botId) {
+										alertError('Please scan a BruinBot QR code!');
+										return;
+									}
 
-								try {
-									const bot = await BotService.getOneBot(botId);
-									Alert.alert(`Connected to ${bot.name}!`);
-									navigation.navigate('Dashboard', { bot });
-								} catch (err) {
-									alertError('We cannot find this BruinBot...');
-								}
-						  }
-				}
-				style={[styles.scanner]}
-			>
-				<Image style={styles.qr} source={Border} />
-			</BarCodeScanner>
+									try {
+										const bot = await BotService.getOneBot(botId);
+										Alert.alert(`Connected to ${bot.name}!`);
+										setCameraLock(true);
+										navigation.navigate('Dashboard', { bot });
+									} catch (err) {
+										alertError('We cannot find this BruinBot...');
+									}
+							  }
+					}
+					style={[styles.scanner]}
+				>
+					<Image style={styles.qr} source={Border} />
+				</BarCodeScanner>
+			)}
 		</View>
 	);
 };
