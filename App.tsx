@@ -74,7 +74,11 @@ const Home = () => {
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
-				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen
+					name="Map"
+					component={MapScreen}
+					options={{ unmountOnBlur: true }}
+				/>
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
@@ -85,7 +89,11 @@ const Home = () => {
 		// TODO: Change this to be something the user can toggle
 		stack = state.user.eventId ? (
 			<>
-				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen
+					name="Map"
+					component={MapScreen}
+					options={{ unmountOnBlur: true }}
+				/>
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />

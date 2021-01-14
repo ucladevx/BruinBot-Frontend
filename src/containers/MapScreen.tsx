@@ -51,11 +51,6 @@ const MapScreen = () => {
 		setSelectedBotForOrder,
 	] = useState<MarkerData | null>(null);
 
-	// Holds the timeout object that runs requests periodically
-	const [updateInterval, setUpdateInterval] = useState<ReturnType<
-		typeof setTimeout
-	> | null>(null);
-
 	const [loading, setLoading] = useState<boolean>(false);
 	const { state } = useContext(Ctx);
 
@@ -101,13 +96,16 @@ const MapScreen = () => {
 	}
 
 	useEffect(() => {
+		let intervalId: ReturnType<typeof setTimeout> | null = null;
 		if (!showMapNodes) {
 			runRequests();
-			setUpdateInterval(setInterval(runRequests, MAP_REFRESH_RATE));
+			intervalId = setInterval(runRequests, MAP_REFRESH_RATE);
 		} else {
-			clearInterval(updateInterval!!);
+			clearInterval(intervalId!!);
 		}
-		return () => clearInterval(updateInterval!!);
+		return () => {
+			clearInterval(intervalId!!);
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes]);
 
