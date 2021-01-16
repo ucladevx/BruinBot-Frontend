@@ -107,10 +107,7 @@ const Home = () => {
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
-<<<<<<< HEAD
-=======
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
->>>>>>> e455fca4c1701127380c51bc2c68123d90bc873a
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
