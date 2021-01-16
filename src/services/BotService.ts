@@ -12,7 +12,7 @@ async function getEventBots(eventId: string) {
 	try {
 		const data: EventBot[] = (
 			await axios.get( 'events/bots', {
-				params: { eventId: "5ff79fe262764325a8a6ed98" },
+				params: { eventId },
 			})
 		).data;
 		return data;
