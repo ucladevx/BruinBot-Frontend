@@ -8,20 +8,26 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from './auth/Form';
+import ItemCatalogueService from '../services/ItemCatalogueService';
 import React, { useState } from 'react';
 
 import Loading from '../components/Loading';
 
 interface PaymentInfoProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentInfo'>;
+	route: RouteProp<RootStackParamList, 'PaymentInfo'>;
 }
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
+const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
+	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
+			but if you come from QR view, botId will be set from navigation params */
+	const botId = route.params.botId ?? '5ff798be0390ab19822d21db';
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');
 	const [cvv, setCVV] = useState('');
@@ -45,6 +51,20 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			number = number.substring(0, number.length - 1);
 		setExpiryDate(number);
 	};
+
+	const updateInventory = async () => {
+		try {
+			let data = await ItemCatalogueService.updateInventory(
+				botId,
+				route.params.itemId,
+				route.params.quantity
+			);
+			console.log(data);
+		} catch (err) {
+			Alert.alert('Could not update inventory.');
+		}
+	};
+
 	const processAndSubmitPayment = () => {
 		if (cardNumber.length !== 19) {
 			setLoading(false);
@@ -70,6 +90,10 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 		}
 
 		// TODO: Stripe API Payment Processing
+		/* route is unused for now, but for the Stripe API needs an amount parameter in the request
+		and amount is passed in through navigation and can be accessed as route.params.amount */
+		console.log(route.params);
+		updateInventory();
 		setTimeout(() => {
 			setLoading(false);
 			console.log('Success');
@@ -79,50 +103,49 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			});
 		}, 5000);
 	};
+
 	return (
-		<View style={styles.container}>
-			<Form title="Enter Payment Info" navigation={navigation}>
+		<Form title="Enter Payment Info" navigation={navigation}>
+			<TextInput
+				style={[styles.input, { width: screenWidth * 0.9 }]}
+				placeholder="0000 0000 0000 0000"
+				keyboardType={'numeric'}
+				value={cardNumber}
+				onChangeText={(text) => cleanupCardNumber(text)}
+				maxLength={19}
+			/>
+			<View style={styles.inputContainer}>
 				<TextInput
-					style={[styles.input, { width: screenWidth * 0.9 }]}
-					placeholder="0000 0000 0000 0000"
+					style={[styles.input, { width: screenWidth * 0.435 }]}
+					placeholder="MM/YY"
 					keyboardType={'numeric'}
-					value={cardNumber}
-					onChangeText={(text) => cleanupCardNumber(text)}
-					maxLength={19}
+					value={expiryDate}
+					onChangeText={(text) => cleanupExpiryDate(text)}
+					maxLength={5}
 				/>
-				<View style={styles.inputContainer}>
-					<TextInput
-						style={[styles.input, { width: screenWidth * 0.43 }]}
-						placeholder="MM/YY"
-						keyboardType={'numeric'}
-						value={expiryDate}
-						onChangeText={(text) => cleanupExpiryDate(text)}
-						maxLength={5}
-					/>
-					<TextInput
-						style={[styles.input, { width: screenWidth * 0.43 }]}
-						placeholder="000"
-						keyboardType={'numeric'}
-						value={cvv}
-						onChangeText={(text) => {
-							if (text.slice(-1) !== '.') setCVV(text);
-						}}
-						maxLength={3}
-					/>
-				</View>
-				<Button
-					onPress={() => {
-						Keyboard.dismiss();
-						setLoading(true);
-						setSubmitDisabled(true);
-						processAndSubmitPayment();
+				<TextInput
+					style={[styles.input, { width: screenWidth * 0.435 }]}
+					placeholder="000"
+					keyboardType={'numeric'}
+					value={cvv}
+					onChangeText={(text) => {
+						if (text.slice(-1) !== '.') setCVV(text);
 					}}
-					buttonStyle={styles.button}
-					title="Submit Payment"
-					titleStyle={styles.buttonText}
-					disabled={submitDisabled}
+					maxLength={3}
 				/>
-			</Form>
+			</View>
+			<Button
+				onPress={() => {
+					Keyboard.dismiss();
+					setLoading(true);
+					setSubmitDisabled(true);
+					processAndSubmitPayment();
+				}}
+				buttonStyle={styles.button}
+				title="Submit Payment"
+				titleStyle={styles.buttonText}
+				disabled={submitDisabled}
+			/>
 			{loading ? (
 				<View style={{ alignItems: 'center', flex: 1 }}>
 					<Loading loadingText={'Processing'} />
@@ -130,14 +153,16 @@ const PaymentInfo = ({ navigation }: PaymentInfoProps) => {
 			) : (
 				<View></View>
 			)}
-		</View>
+		</Form>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
 		alignItems: 'center',
+		alignContent: 'center',
+		marginTop: 30,
 		flex: 1,
 		marginLeft: screenWidth * 0.05,
 		marginRight: screenWidth * 0.05,
@@ -152,7 +177,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginTop: screenHeight * 0.01,
-		width: '100%',
+		width: screenWidth * 0.9,
 	},
 	input: {
 		backgroundColor: '#ddd',

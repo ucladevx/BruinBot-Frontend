@@ -1,6 +1,7 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import React, { useState } from 'react';
 
+import { Alert } from 'react-native';
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
@@ -37,10 +38,10 @@ const Drawer = ({ navigation }: Props) => {
 		},
 		{
 			text: 'Settings',
-			route: 'Map',
+			route: 'Settings',
 			iconName: 'md-settings',
 			onPress: () => {
-				navigation.navigate('Map');
+				Alert.alert('Event settings page in development');
 			},
 		},
 	];
@@ -55,19 +56,27 @@ const Drawer = ({ navigation }: Props) => {
 			},
 		},
 		{
+			text: 'Bruinbot Map',
+			route: 'Map',
+			iconName: 'md-map',
+			onPress: () => {
+				navigation.navigate('Map');
+			},
+		},
+		{
 			text: 'Event Statistics',
 			route: 'Dashboard',
 			iconName: 'md-stats',
 			onPress: () => {
-				navigation.navigate('Qr');
+				Alert.alert('Event stats page in development');
 			},
 		},
 		{
 			text: 'Event Settings',
-			route: 'Map',
+			route: 'Settings',
 			iconName: 'md-settings',
 			onPress: () => {
-				navigation.navigate('Map');
+				Alert.alert('Event settings page in development');
 			},
 		},
 	];

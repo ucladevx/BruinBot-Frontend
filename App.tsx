@@ -6,7 +6,7 @@ import React, { useContext } from 'react';
 
 import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
-import { NavCenter } from './src/containers/NavBarScreen';
+import { HeaderButton, NavCenter } from './src/containers/NavBarScreen';
 import AddItem from './src/containers/AddItemScreen';
 import CustomDrawer from './src/containers/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
@@ -17,6 +17,7 @@ import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
 import QrScreen from './src/containers/QrScreen';
 import SignupScreen from './src/containers/auth/SignupScreen';
 
+import ItemCatalogue from './src/containers/ItemCatalogue';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
 
@@ -29,9 +30,16 @@ export type RootStackParamList = {
 	InventoryModification: undefined;
 	AddItem: undefined;
 	Qr: undefined;
+	ItemCatalogue: { botId: string };
+	PaymentInfo: {
+		botId: string;
+		itemId: string;
+		quantity: number;
+		amount: number;
+	};
 	Dashboard: { bot: Bot };
-	PaymentInfo: undefined;
 	PaymentSuccess: { success: boolean };
+	Settings: undefined;
 };
 
 const Stack = createDrawerNavigator<RootStackParamList>();
@@ -66,7 +74,12 @@ const Home = () => {
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
-				<Stack.Screen name="Map" component={MapScreen} />
+				<Stack.Screen
+					name="Map"
+					component={MapScreen}
+					options={{ unmountOnBlur: true }}
+				/>
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
@@ -76,10 +89,15 @@ const Home = () => {
 		// TODO: Change this to be something the user can toggle
 		stack = state.user.eventId ? (
 			<>
+				<Stack.Screen
+					name="Map"
+					component={MapScreen}
+					options={{ unmountOnBlur: true }}
+				/>
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
-				<Stack.Screen name="Map" component={MapScreen} />
 				<Stack.Screen
 					name="InventoryModification"
 					component={InventoryModification}
@@ -89,6 +107,10 @@ const Home = () => {
 			<>
 				<Stack.Screen name="Qr" component={QrScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
+<<<<<<< HEAD
+=======
+				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
+>>>>>>> e455fca4c1701127380c51bc2c68123d90bc873a
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
@@ -101,10 +123,17 @@ const Home = () => {
 			<StatusBar barStyle="dark-content" />
 			<Stack.Navigator
 				drawerContent={(props: any) => <CustomDrawer {...props} />}
-				screenOptions={{
-					headerShown: true,
-					headerTitle: NavCenter,
-					headerTintColor: '#000',
+				screenOptions={({ route, navigation }) => {
+					const HeaderLeft = () => (
+						// avoid missing displayName warning
+						<HeaderButton navigation={navigation} screen={route.name} />
+					);
+					return {
+						headerShown: true,
+						headerLeft: HeaderLeft,
+						headerTitle: NavCenter,
+						headerTintColor: '#000',
+					};
 				}}
 			>
 				{stack}

@@ -1,103 +1,101 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Constants from 'expo-constants';
-import React from 'react';
-import bobaIcon from '../assets/icon.jpg';
+import { Alert, View } from 'react-native';
+import { Bot } from '../types/apiTypes';
+import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
+import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import BotService from '../services/BotService';
+import Crane from '../assets/crane.png';
+import Loading from '../components/Loading';
+import MapMenu from '../components/MapMenuView';
+import React, { useEffect, useState } from 'react';
+import Robot from '../assets/robot.png';
+import Tank from '../assets/tank.png';
 
-const data: {
-	name: string;
-	price: string;
-	deliveryTime: number;
-	image: string;
-	key: number;
-}[] = [];
-for (let i = 0; i < 25; i++) {
-	data.push({
-		name: 'Green Boba Tea',
-		price: '5.99',
-		deliveryTime: 10,
-		image: '../assets/bobaIcon.jpg',
-		key: i,
-	});
+interface ItemCatalogueProps {
+	navigation: StackNavigationProp<RootStackParamList, 'ItemCatalogue'>;
+	route: RouteProp<RootStackParamList, 'ItemCatalogue'>;
 }
 
-export default class ItemCatalogue extends React.Component {
-	constructor(props: any) {
-		super(props);
-	}
+const ItemCatalogue = ({ navigation, route }: ItemCatalogueProps) => {
+	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
+			but if you come from QR view, botId will be set from navigation params */
+	const botId = route.params.botId ?? '5ff798be0390ab19822d21db';
+	const [botInfo, setBotInfo] = useState<MapMenuProps['info']>({});
+	const [botItems, setBotItems] = useState<MapMenuProps['items']>({});
+	const [loading, setLoading] = useState(true);
 
-	render() {
+	const runRequests = async () => {
+		try {
+			console.log(botId);
+			let data = await BotService.getOneBot(botId);
+			const { botHeaderInfo, botItems } = cleanUpData(data);
+			setBotInfo(botHeaderInfo);
+			setBotItems(botItems);
+			setLoading(false);
+		} catch (err) {
+			Alert.alert('Could not retrieve bot information.');
+		}
+	};
+
+	useEffect(() => {
+		if (loading) runRequests();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading]);
+
+	if (loading) {
 		return (
-			<View style={styles.container}>
-				<Text style={styles.header}>Menu</Text>
-				<View></View>
-				<ScrollView>
-					{data.map((item) => {
-						return (
-							<View key={item.key} style={styles.item}>
-								<Image source={bobaIcon} style={styles.image} />
-								<View style={styles.itemTitle}>
-									<Text style={styles.itemName}>{item.name}</Text>
-									<Text style={styles.itemDeliveryTime}>
-										{item.deliveryTime} min
-									</Text>
-								</View>
-								<View style={styles.priceContainer}>
-									<Text style={styles.itemPrice}>${item.price}</Text>
-								</View>
-							</View>
-						);
-					})}
-				</ScrollView>
+			<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+				<Loading loadingText={'Loading'} />
 			</View>
 		);
 	}
-}
 
-const styles = StyleSheet.create({
-	container: {
-		marginTop: Constants.statusBarHeight,
-		marginLeft: 20,
-		marginRight: 20,
-	},
-	header: {
-		fontSize: 30,
-		fontWeight: 'bold',
-		marginLeft: '5%',
-		marginTop: '3%',
-	},
-	item: {
-		borderWidth: 1,
-		borderColor: 'gray',
-		borderRadius: 5,
-		flexDirection: 'row',
-		padding: '5%',
-		marginTop: '3%',
-		alignItems: 'center',
-	},
-	image: {
-		borderRadius: 3,
-		height: '140%',
-		width: '10%',
-		paddingLeft: '15%',
-	},
-	itemTitle: {
-		flexDirection: 'column',
-		flex: 2,
-		paddingLeft: '5%',
-	},
-	itemName: {
-		fontWeight: 'bold',
-		fontSize: 16,
-	},
-	itemDeliveryTime: {
-		color: 'gray',
-	},
-	itemPrice: {
-		color: 'black',
-		fontSize: 16,
-	},
-	priceContainer: {
-		flex: 1,
-		alignItems: 'flex-end',
-	},
-});
+	return (
+		<>
+			<View style={{ flex: 1 }}>
+				<MapMenu
+					id={botId}
+					info={botInfo}
+					items={botItems}
+					collapsable={false}
+					clickable={true}
+					navigation={navigation}
+				/>
+			</View>
+		</>
+	);
+};
+
+export default ItemCatalogue;
+
+/** --------------------------- HELPER FUNCTIONS ---------------------------- */
+
+const cleanUpData = (bot: Bot) => {
+	const botHeaderInfo: MapMenuProps['info'] = {};
+	const botItems: MapMenuProps['items'] = {};
+
+	const items: ItemProps[] = [];
+	let itemCount = 0;
+	bot.inventory.forEach((obj: { item: ItemProps; quantity: number }) => {
+		items.push({
+			_id: obj.item._id,
+			name: obj.item.name,
+			price: obj.item.price,
+			imgSrc: obj.item.imgSrc,
+			quantity: obj.quantity,
+			botId: bot._id,
+		});
+		itemCount += obj.quantity;
+	});
+
+	botHeaderInfo[bot._id] = {
+		topLeft: bot.name + ' BruinBot',
+		topRight: itemCount.toString() + ' items',
+		bottomLeft: '',
+		bottomRight: '',
+		imgSrc: [Robot, Tank, Crane][Math.floor(Math.random() * 3) % 3],
+	};
+	botItems[bot._id] = items;
+	return { botHeaderInfo, botItems };
+};

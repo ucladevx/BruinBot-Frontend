@@ -1,4 +1,3 @@
-import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
@@ -32,7 +31,14 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 						<Image source={shopImage} />
 						<Text style={styles.text}>Purchase items</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.icon}>
+					<TouchableOpacity
+						style={styles.icon}
+						onPress={() =>
+							navigation.navigate('ItemCatalogue', {
+								botId: bot._id,
+							})
+						}
+					>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>
 					</TouchableOpacity>
@@ -48,15 +54,6 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Icon
-				name="ios-arrow-back"
-				type="ionicon"
-				size={40}
-				style={styles.back}
-				onPress={() => {
-					navigation.navigate('Qr');
-				}}
-			/>
 		</>
 	);
 };

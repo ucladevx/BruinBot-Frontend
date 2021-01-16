@@ -26,36 +26,42 @@ const InventoryModification = ({ navigation }: InventoryModificationProps) => {
 			name: 'Ham 1',
 			price: 10,
 			imgSrc: Ham,
+			botId: '123',
 		},
 		{
 			_id: '2',
 			name: 'Ham 2',
 			price: 15,
 			imgSrc: Ham,
+			botId: '123',
 		},
 		{
 			_id: '3',
 			name: 'Ham 3',
 			price: 20,
 			imgSrc: Ham,
+			botId: '123',
 		},
 		{
 			_id: '4',
 			name: 'Ham 4',
 			price: 10,
 			imgSrc: Ham,
+			botId: '123',
 		},
 		{
 			_id: '5',
 			name: 'Ham 5',
 			price: 15,
 			imgSrc: Ham,
+			botId: '123',
 		},
 		{
 			_id: '6',
 			name: 'Ham 6',
 			price: 20,
 			imgSrc: Ham,
+			botId: '123',
 		},
 	];
 
