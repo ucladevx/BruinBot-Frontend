@@ -28,11 +28,12 @@ const QrComponent = ({ navigation }: Props) => {
 
 	const alertError = (msg: string) => {
 		if (!alert) {
+			setAlert(true);
 			Alert.alert('Oops', msg, [
 				{
 					text: 'Ok',
 					onPress: () => {
-						setFunctionLock(false),
+						setFunctionLock(false);
 						setAlert(false);
 					},
 				},
