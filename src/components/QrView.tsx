@@ -24,14 +24,20 @@ const QrComponent = ({ navigation }: Props) => {
 	const [hasCameraPermission, setCameraPermission] = useState('null');
 	const [functionLock, setFunctionLock] = useState(false);
 	const [cameraLock, setCameraLock] = useState(false);
+	const [alert, setAlert] = useState(false);
 
 	const alertError = (msg: string) => {
-		Alert.alert('Oops', msg, [
-			{
-				text: 'Ok',
-				onPress: () => setFunctionLock(false),
-			},
-		]);
+		if (!alert) {
+			Alert.alert('Oops', msg, [
+				{
+					text: 'Ok',
+					onPress: () => {
+						setFunctionLock(false),
+						setAlert(false);
+					},
+				},
+			]);
+		}
 	};
 
 	const updateBotFromDeepLink = useCallback(
