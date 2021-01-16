@@ -11,7 +11,7 @@ const axios = Axios.create({
 async function getEventBots(eventId: string) {
 	try {
 		const data: EventBot[] = (
-			await axios.get( 'events/bots', {
+			await axios.get('events/bots', {
 				params: { eventId },
 			})
 		).data;

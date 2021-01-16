@@ -13,15 +13,13 @@ import { Button, Icon, Image, Input } from 'react-native-elements';
 import { Camera, PermissionResponse } from 'expo-camera';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+import { Bot } from '../types/apiTypes';
 import { Ctx } from '../components/StateProvider';
 import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
 import { styles as formStyles } from './auth/FormStyles';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
-import { Route } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
-import { Bot } from '../types/apiTypes'
-
 
 const screenWidth = Dimensions.get('window').width;
 
