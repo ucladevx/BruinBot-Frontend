@@ -58,7 +58,7 @@ const SignupScreen = ({ navigation }: Props) => {
 							console.log(idToken);
 							//Works up to here. Just learn how to use axios
 							try {
-								const response = await Axios.post(BASE_URL + '/users/add', {
+								const response = await Axios.post(BASE_URL + 'users/add', {
 									username: email,
 									firebaseIdToken: idToken,
 								});

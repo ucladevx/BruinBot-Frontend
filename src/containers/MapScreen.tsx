@@ -7,13 +7,13 @@ import MapComponent from '../components/MapView';
 import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
 import MapService from '../services/MapService';
 
-import { EventBot, MapNode, Path } from '../types/apiTypes';
+import { Bot, MapNode, Path } from '../types/apiTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
 
 import { Ctx } from '../components/StateProvider';
 import { MAP_REFRESH_RATE } from '../config';
-import Bot from '../assets/robot.png';
+import BotPic from '../assets/robot.png';
 import CampusData from '../assets/campusCoords.json';
 import Crane from '../assets/crane.png';
 import LocationImgA from '../assets/sampleImageLocation1.png';
@@ -228,7 +228,7 @@ export default MapScreen;
 
 /** --------------------------- HELPER FUNCTIONS ---------------------------- */
 
-const formatEventBotsData = (apiData: EventBot[]) => {
+const formatEventBotsData = (apiData: Bot[]) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: MapMenuProps['info'] = {};
 	const botPaths: Location[][] = [];
@@ -252,7 +252,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: '0' + 'm away',
 			bottomRight: '0' + ' items sold',
-			imgSrc: [Bot, Tank, Crane][idx % 3],
+			imgSrc: [BotPic, Tank, Crane][idx % 3],
 		};
 
 		if (bot.status == 'InTransit') {

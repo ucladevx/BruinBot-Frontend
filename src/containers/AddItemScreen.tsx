@@ -18,16 +18,19 @@ import { RootStackParamList } from '../../App';
 import { styles as formStyles } from './auth/FormStyles';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
+import { Route, RouteProp } from '@react-navigation/native';
+import { Bot } from '../types/apiTypes';
 
 const screenWidth = Dimensions.get('window').width;
 
 interface AddItemProps {
 	navigation: StackNavigationProp<RootStackParamList, 'AddItem'>;
-	botId: string;
+	route: RouteProp<RootStackParamList, 'AddItem'>;
 }
 
-const AddItem = ({ navigation }: AddItemProps) => {
+const AddItem = ({ navigation, route }: AddItemProps) => {
 	const { state } = useContext(Ctx);
+	const bot: Bot = route.params.bot;
 
 	const [nameErrorMessage] = useState('');
 	const [costErrorMessage, setCostErrorMessage] = useState('');
@@ -85,12 +88,11 @@ const AddItem = ({ navigation }: AddItemProps) => {
 					cost,
 					state.user!.eventId!,
 					photo,
-					// TO DO: get botId from navigation param
-					'bot id here',
+					bot._id,
 					quantity
 				);
 				Alert.alert('Added Item succesfully');
-				navigation.navigate('InventoryModification');
+				navigation.navigate('InventoryModification', {bot: bot});
 			} catch (err) {
 				Alert.alert('Something went wrong when submitting...');
 			}

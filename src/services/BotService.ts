@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 import { BASE_URL } from '../config';
-import { Bot, EventBot } from '../types/apiTypes';
+import { Bot } from '../types/apiTypes';
 
 const axios = Axios.create({
 	baseURL: BASE_URL,
@@ -10,9 +10,10 @@ const axios = Axios.create({
 
 async function getEventBots(eventId: string) {
 	try {
-		const data: EventBot[] = (
-			await axios.get('/events/bots', {
-				params: { eventId },
+		let eventIdFake: string = "5ff79fe262764325a8a6ed98";
+		const data: Bot[] = (
+			await axios.get('events/bots', {
+				params: { eventId: eventIdFake },
 			})
 		).data;
 		return data;

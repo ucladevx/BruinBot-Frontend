@@ -19,6 +19,8 @@ export interface Bot extends ApiResponse {
 	name: string;
 	location: Location;
 	status: String;
+	inventory: BotItem[];
+	path: Location[];
 }
 
 export interface Item extends ApiResponse {
@@ -37,11 +39,6 @@ export interface BotItem extends ApiResponse {
 export interface UserData extends ApiResponse {
 	_id: string;
 	eventId: string | null;
-}
-
-export interface EventBot extends Bot {
-	inventory: BotItem[];
-	path: Location[];
 }
 
 export interface MapNode extends ApiResponse {

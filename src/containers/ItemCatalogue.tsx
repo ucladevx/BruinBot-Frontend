@@ -1,5 +1,5 @@
 import { Alert, View } from 'react-native';
-import { Bot } from '../types/apiTypes';
+import { Bot, Item } from '../types/apiTypes';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
@@ -77,7 +77,7 @@ const cleanUpData = (bot: Bot) => {
 
 	const items: ItemProps[] = [];
 	let itemCount = 0;
-	bot.inventory.forEach((obj: { item: ItemProps; quantity: number }) => {
+	bot.inventory.forEach((obj: { item: Item; quantity: number }) => {
 		items.push({
 			_id: obj.item._id,
 			name: obj.item.name,

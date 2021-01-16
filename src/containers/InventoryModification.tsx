@@ -3,8 +3,10 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 import Crane from '../assets/crane.png';
 import Ham from '../assets/greenHam.jpg';
+import { Bot, BotItem } from '../types/apiTypes';
 import MapMenu from '../components/MapMenuView';
 import React, { useState } from 'react';
 
@@ -12,81 +14,51 @@ const screenWidth = Dimensions.get('window').width;
 
 interface InventoryModificationProps {
 	navigation: StackNavigationProp<RootStackParamList, 'InventoryModification'>;
-	botId: string;
+	route: RouteProp<RootStackParamList, 'InventoryModification'>;
 }
-const InventoryModification = ({ navigation }: InventoryModificationProps) => {
+const InventoryModification = ({ navigation, route }: InventoryModificationProps) => {
 	//GET PROPER PROPS
+
+	const bot: Bot = route.params.bot;
 
 	const botInfo: MapMenuProps['info'] = {};
 	const botItems: MapMenuProps['items'] = {};
 
-	const item: ItemProps[] = [
-		{
-			_id: '1',
-			name: 'Ham 1',
-			price: 10,
-			imgSrc: Ham,
-			botId: '123',
-		},
-		{
-			_id: '2',
-			name: 'Ham 2',
-			price: 15,
-			imgSrc: Ham,
-			botId: '123',
-		},
-		{
-			_id: '3',
-			name: 'Ham 3',
-			price: 20,
-			imgSrc: Ham,
-			botId: '123',
-		},
-		{
-			_id: '4',
-			name: 'Ham 4',
-			price: 10,
-			imgSrc: Ham,
-			botId: '123',
-		},
-		{
-			_id: '5',
-			name: 'Ham 5',
-			price: 15,
-			imgSrc: Ham,
-			botId: '123',
-		},
-		{
-			_id: '6',
-			name: 'Ham 6',
-			price: 20,
-			imgSrc: Ham,
-			botId: '123',
-		},
-	];
 
-	botInfo['123'] = {
-		topLeft: 'Random Bear',
-		topRight: '10 items',
-		bottomLeft: '0 m away',
-		bottomRight: '5 items sold',
+	let items: ItemProps[] = [];
+	let itemCount: number = 0;
+
+	for (let botItem of bot.inventory){
+		items.push({
+			_id: botItem.item._id,
+			name: botItem.item.name,
+			price: botItem.item.price,
+			imgSrc: botItem.item.imgSrc,
+			quantity: botItem.quantity,
+			botId: bot._id
+		});
+		itemCount += botItem.quantity;
+	}
+
+	botInfo[bot._id] = {
+		topLeft: bot.name,
+		topRight: itemCount.toString() + ' items',
+		bottomLeft: '0 m away', //Change to actual
+		bottomRight: '5 items sold', //Change to actual
 		imgSrc: Crane,
 	};
-	botItems['123'] = item;
-
-	const [info] = useState(botInfo);
-	const [items] = useState(botItems);
+	botItems[bot._id] = items;
 
 	return (
 		<>
 			<View style={{ flex: 1 }}>
-				<MapMenu id="123" info={info} items={items} collapsable={false} />
+				<MapMenu id={bot._id} info={botInfo} items={botItems} collapsable={false} />
 				<Button
 					title="Add Item"
 					buttonStyle={styles.button}
 					containerStyle={styles.buttonContainer}
 					onPress={() => {
-						navigation.navigate('AddItem');
+						navigation.navigate('AddItem', {bot: bot});
 					}}
 				/>
 			</View>
