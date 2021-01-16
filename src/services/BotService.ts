@@ -10,10 +10,9 @@ const axios = Axios.create({
 
 async function getEventBots(eventId: string) {
 	try {
-		let eventIdFake: string = "5ff79fe262764325a8a6ed98";
 		const data: Bot[] = (
 			await axios.get('events/bots', {
-				params: { eventId: eventIdFake },
+				params: { eventId },
 			})
 		).data;
 		return data;
