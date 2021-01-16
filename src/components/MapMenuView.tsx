@@ -8,10 +8,14 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	Platform
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useRef } from 'react';
+
+import emptyInventoryRobot from '../assets/emptyInventoryRobot.gif';
+import tenor from '../assets/tenor.gif';
 
 import {
 	HeaderProps,
@@ -244,8 +248,32 @@ const MapMenu = ({
 		return <View />;
 	}
 
-	if (!items) {
-		return <MapMenuHeader info={info[id]} standalone={true} />;
+	if (!items || items[id].length === 0) {
+		return (
+			<View style={{ flex: 1 }}>
+				<MapMenuHeader info={info[id]} standalone={true} />
+				<View
+					style={{
+						flex: 1,
+						height: screenHeight - HEADER_HEIGHT,
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<Image source={emptyInventoryRobot} style={styles.gif} />
+					<Text
+						style={{
+							fontSize: 50,
+							fontWeight: 'bold',
+							marginTop: screenHeight * 0.05,
+							fontFamily: Platform.OS === 'ios' ? 'Courier' : 'serif',
+						}}
+					>
+						Sold Out
+					</Text>
+				</View>
+			</View>
+		);
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
@@ -279,6 +307,9 @@ const MapMenu = ({
 	}
 };
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
 	header: {
 		height: HEADER_HEIGHT,
@@ -293,7 +324,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	container: {
-		width: Dimensions.get('window').width,
+		width: screenWidth,
 		height: inventoryHeight + BUFFER_HEIGHT,
 		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
@@ -326,6 +357,21 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 		paddingRight: 10,
 		padding: 5,
+	},
+	/*
+	if gif is tenor
+	gif: {
+		marginLeft: screenWidth * 0.1,
+		aspectRatio: 1,
+		width: screenWidth * 0.5,
+		height: undefined,
+	}
+	*/
+	gif: {
+		borderRadius: 200,
+		aspectRatio: 1,
+		width: screenWidth * 0.6,
+		height: undefined,
 	},
 });
 
