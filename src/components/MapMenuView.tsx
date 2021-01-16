@@ -39,14 +39,20 @@ const Item = ({
 		return (
 			// TODO: Navigate to payment screen
 			<TouchableOpacity
-				onPress={() =>
-					navigation?.navigate('PaymentInfo', {
-						amount: price,
-						itemId: _id,
-						quantity: -1,
-						botId: botId,
-					})
-				}
+				onPress={() => {
+					if (price !== 0) {
+						navigation?.navigate('PaymentInfo', {
+							amount: price,
+							itemId: _id,
+							quantity: -1,
+							botId: botId,
+						});
+					} else {
+						navigation?.navigate('PaymentSuccess', {
+							success: true,
+						});
+					}
+				}}
 				key={_id}
 			>
 				<View
@@ -91,7 +97,9 @@ const Item = ({
 							</View>
 						)}
 					</View>
-					<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+					<Text style={{ fontWeight: 'bold' }}>
+						{price === 0 ? 'FREE' : '$' + price.toFixed(2)}
+					</Text>
 				</View>
 			</TouchableOpacity>
 		);
@@ -252,7 +260,7 @@ const MapMenu = ({
 				<MapMenuHeader
 					info={info[id]}
 					button={button}
-					standalone={false}
+					standalone={!collapsable}
 					{...panResponder.panHandlers}
 				/>
 				<FlatList
