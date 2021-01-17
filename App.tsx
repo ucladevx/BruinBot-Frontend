@@ -27,8 +27,8 @@ export type RootStackParamList = {
 	PasswordReset: undefined;
 	Blank: undefined;
 	Map: undefined;
-	InventoryModification: undefined;
-	AddItem: undefined;
+	InventoryModification: { bot: Bot };
+	AddItem: { bot: Bot };
 	Qr: undefined;
 	ItemCatalogue: { botId: string };
 	PaymentInfo: {
