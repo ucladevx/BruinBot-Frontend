@@ -26,20 +26,23 @@ const QrComponent = ({ navigation }: Props) => {
 	const [cameraLock, setCameraLock] = useState(false);
 	const [alert, setAlert] = useState(false);
 
-	const alertError = (msg: string) => {
-		if (!alert) {
-			setAlert(true);
-			Alert.alert('Oops', msg, [
-				{
-					text: 'Ok',
-					onPress: () => {
-						setFunctionLock(false);
-						setAlert(false);
+	const alertError = useCallback(
+		(msg: string) => {
+			if (!alert) {
+				setAlert(true);
+				Alert.alert('Oops', msg, [
+					{
+						text: 'Ok',
+						onPress: () => {
+							setFunctionLock(false);
+							setAlert(false);
+						},
 					},
-				},
-			]);
-		}
-	};
+				]);
+			}
+		},
+		[alert]
+	);
 
 	const updateBotFromDeepLink = useCallback(
 		async (botId: string) => {
@@ -53,7 +56,7 @@ const QrComponent = ({ navigation }: Props) => {
 				alertError('Could not connect to BruinBot...');
 			}
 		},
-		[navigation]
+		[navigation, alertError]
 	);
 
 	useEffect(() => {
