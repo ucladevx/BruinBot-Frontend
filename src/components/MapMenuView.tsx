@@ -14,8 +14,7 @@ import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useRef } from 'react';
 
-import emptyInventoryRobot from '../assets/emptyInventoryRobot.gif';
-import tenor from '../assets/tenor.gif';
+import emptyInventoryRobot from '../assets/emptyInventoryRobot.png';
 
 import {
 	HeaderProps,
@@ -248,32 +247,8 @@ const MapMenu = ({
 		return <View />;
 	}
 
-	if (!items || items[id].length === 0) {
-		return (
-			<View style={{ flex: 1 }}>
-				<MapMenuHeader info={info[id]} standalone={true} />
-				<View
-					style={{
-						flex: 1,
-						height: screenHeight - HEADER_HEIGHT,
-						justifyContent: 'center',
-						alignItems: 'center',
-					}}
-				>
-					<Image source={emptyInventoryRobot} style={styles.gif} />
-					<Text
-						style={{
-							fontSize: 50,
-							fontWeight: 'bold',
-							marginTop: screenHeight * 0.05,
-							fontFamily: Platform.OS === 'ios' ? 'Courier' : 'serif',
-						}}
-					>
-						Sold Out
-					</Text>
-				</View>
-			</View>
-		);
+	if (!items) {
+		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
 		return (
 			<Animated.View style={animatedStyle}>
@@ -283,25 +258,35 @@ const MapMenu = ({
 					standalone={false}
 					{...panResponder.panHandlers}
 				/>
-				<FlatList
-					contentContainerStyle={styles.list}
-					data={items[id]}
-					renderItem={({ item }) => (
-						<Item
-							_id={item._id}
-							name={item.name}
-							price={item.price}
-							quantity={item.quantity}
-							imgSrc={item.imgSrc}
-							clickable={clickable}
-							navigation={navigation}
-							botId={item.botId}
+				{items[id].length === 0 ? (
+					<View style={styles.emptyInventoryContainer}>
+						<Image
+							source={emptyInventoryRobot}
+							style={styles.emptyInventoryRobot}
 						/>
-					)}
-					keyExtractor={(item) => item._id}
-					horizontal={false}
-					numColumns={2}
-				/>
+						<Text style={styles.emptyInventoryText}>Sold Out</Text>
+					</View>
+				) : (
+					<FlatList
+						contentContainerStyle={styles.list}
+						data={items[id]}
+						renderItem={({ item }) => (
+							<Item
+								_id={item._id}
+								name={item.name}
+								price={item.price}
+								quantity={item.quantity}
+								imgSrc={item.imgSrc}
+								clickable={clickable}
+								navigation={navigation}
+								botId={item.botId}
+							/>
+						)}
+						keyExtractor={(item) => item._id}
+						horizontal={false}
+						numColumns={2}
+					/>
+				)}
 			</Animated.View>
 		);
 	}
@@ -358,19 +343,21 @@ const styles = StyleSheet.create({
 		paddingRight: 10,
 		padding: 5,
 	},
-	/*
-	if gif is tenor
-	gif: {
-		marginLeft: screenWidth * 0.1,
+	emptyInventoryContainer: {
+		flex: 1,
+		height: screenHeight - HEADER_HEIGHT,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	emptyInventoryText: {
+		fontSize: 40,
+		fontWeight: 'bold',
+		marginTop: screenHeight * 0.01,
+		fontFamily: Platform.OS === 'ios' ? 'Courier' : 'serif',
+	},
+	emptyInventoryRobot: {
 		aspectRatio: 1,
-		width: screenWidth * 0.5,
-		height: undefined,
-	}
-	*/
-	gif: {
-		borderRadius: 200,
-		aspectRatio: 1,
-		width: screenWidth * 0.6,
+		width: screenWidth * 0.4,
 		height: undefined,
 	},
 });
