@@ -1,4 +1,7 @@
-import { Alert, StyleSheet, View } from 'react-native';
+import * as Linking from 'expo-linking';
+import * as Loc from 'expo-location';
+import * as Permissions from 'expo-permissions';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 
 import BotService from '../services/BotService';
@@ -12,6 +15,7 @@ import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { Location, MarkerData } from '../types/mapTypes';
 
 import { Ctx } from '../components/StateProvider';
+import { IntentLauncher } from 'expo';
 import { MAP_REFRESH_RATE } from '../config';
 import Bot from '../assets/robot.png';
 import CampusData from '../assets/campusCoords.json';
@@ -51,26 +55,43 @@ const MapScreen = () => {
 		setSelectedBotForOrder,
 	] = useState<MarkerData | null>(null);
 
+	const [hasLocationPermission, setLocationPermission] = useState('null');
+	const [locationGranted, setLocationGranted] = useState(false);
+	const [alert, setAlert] = useState(false);
+
 	const [loading, setLoading] = useState<boolean>(false);
 	const { state } = useContext(Ctx);
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
+			const userLocation: Location = await findUserLocation();
+			//'5ff798be0390ab19822d21df'
 			const data = await BotService.getEventBots(state.user!.eventId!);
 			const {
 				botArray,
 				botHeaderInfo,
 				botItems,
 				botPaths,
-			} = formatEventBotsData(data);
+			} = formatEventBotsData(data, userLocation);
 
 			setMarkers(botArray);
 			setHeaderInfo(botHeaderInfo);
 			setInventories(botItems);
 			setBotPaths(botPaths);
 		} catch (err) {
-			Alert.alert('Could not retrieve bot information.');
+			console.log(alert);
+			if (!alert) {
+				setAlert(true);
+				Alert.alert('Oops', 'Could not retrieve bot/location information.', [
+					{
+						text: 'Ok',
+						onPress: () => {
+							setAlert(false);
+						},
+					},
+				]);
+			}
 		}
 	}
 
@@ -91,13 +112,41 @@ const MapScreen = () => {
 			setBotPaths(mapPaths);
 			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
-			Alert.alert('Could not retrieve map nodes.');
+			if (!alert) {
+				setAlert(true);
+				Alert.alert('Oops', 'Could not retrieve map nodes.', [
+					{
+						text: 'Ok',
+						onPress: () => {
+							setAlert(false);
+						},
+					},
+				]);
+			}
 		}
 	}
 
+	/**
+	 * Finds and sets the user's location
+	 */
+	async function findUserLocation() {
+		let location = await Loc.getCurrentPositionAsync({});
+		//console.log(location);
+		return {
+			longitude: location.coords.latitude,
+			latitude: location.coords.latitude,
+		};
+	}
+
+	useEffect(() => {
+		Permissions.askAsync(Permissions.LOCATION).then((res) => {
+			setLocationPermission(res.status);
+		});
+	}, [hasLocationPermission]);
+
 	useEffect(() => {
 		let intervalId: ReturnType<typeof setTimeout> | null = null;
-		if (!showMapNodes) {
+		if (!showMapNodes && hasLocationPermission === 'granted') {
 			runRequests();
 			intervalId = setInterval(runRequests, MAP_REFRESH_RATE);
 		} else {
@@ -107,7 +156,58 @@ const MapScreen = () => {
 			clearInterval(intervalId!!);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [showMapNodes]);
+	}, [showMapNodes, hasLocationPermission]);
+
+	if (hasLocationPermission === 'null' || hasLocationPermission !== 'granted') {
+		if (hasLocationPermission !== 'granted') {
+			if (!alert) {
+				setAlert(true);
+				Alert.alert('Oops', 'No access to location permissions.', [
+					{
+						text: 'Ok',
+						onPress: () => {
+							setAlert(false);
+							setLocationPermission('null');
+						},
+					},
+					{
+						text: 'Open Settings',
+						onPress: () => {
+							setAlert(false);
+							if (Platform.OS == 'ios') {
+								// Linking for iOS
+								Linking.openURL('app-settings:');
+							} else {
+								// IntentLauncher for Android
+								IntentLauncher.startActivityAsync(
+									IntentLauncher.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS
+								);
+							}
+							setLocationPermission('null');
+						},
+					},
+				]);
+			}
+		}
+		return (
+			<View style={styles.container}>
+				<Loading loadingText={'Loading'} />
+			</View>
+		);
+	} else {
+		if (!alert && !locationGranted) {
+			setAlert(true);
+			Alert.alert('Thank you', 'Location permissions granted.', [
+				{
+					text: 'Ok',
+					onPress: () => {
+						setAlert(false);
+						setLocationGranted(true);
+					},
+				},
+			]);
+		}
+	}
 
 	if (loading || !markers || !headerInfo) {
 		return (
@@ -226,7 +326,10 @@ export default MapScreen;
 
 /** --------------------------- HELPER FUNCTIONS ---------------------------- */
 
-const formatEventBotsData = (apiData: EventBot[]) => {
+const formatEventBotsData = (
+	apiData: EventBot[],
+	userLocation: Location | null
+) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: MapMenuProps['info'] = {};
 	const botPaths: Location[][] = [];
@@ -244,11 +347,23 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 			itemCount += obj.quantity;
 		});
 
+		const distance = userLocation
+			? coordDistanceM(
+					bot.location.latitude,
+					bot.location.longitude,
+					userLocation?.latitude,
+					userLocation?.longitude
+			  )
+					.toFixed(0)
+					.toString()
+					.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			: '0';
+
 		botHeaderInfo[bot._id] = {
 			topLeft: bot.name,
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
-			bottomLeft: '0' + 'm away',
+			bottomLeft: distance + 'm away',
 			bottomRight: '0' + ' items sold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
@@ -300,3 +415,42 @@ const formatMapPathsData = (apiData: Path[]) => {
 
 	return { mapPaths };
 };
+
+/**
+ * Converts degrees to radians.
+ *
+ * @param {number} degrees Number of degrees to convert to radians
+ *
+ * @returns {number} Degree in radians
+ */
+function degToRad(degrees: number) {
+	return (degrees * Math.PI) / 180;
+}
+
+/**
+ * Returns the distance between two coordinates in meters.
+ * Uses the haversine formula.
+ *
+ * @param {number} lat1 Latitude of the first coordinate
+ * @param {number} lon1 Longitude of the first coordinate
+ * @param {number} lat2 Latitude of the second coordinate
+ * @param {number} lon2 Longitude of the second coordinate
+ *
+ * @returns {number} Distance between two points on a globe
+ */
+function coordDistanceM(
+	lat1: number,
+	lon1: number,
+	lat2: number,
+	lon2: number
+) {
+	let radiusM = 6371e3;
+	let lat1rad = degToRad(lat1);
+	let lon1rad = degToRad(lon1);
+	let lat2rad = degToRad(lat2);
+	let lon2rad = degToRad(lon2);
+	let u = Math.sin((lat2rad - lat1rad) / 2);
+	let v = Math.sin((lon2rad - lon1rad) / 2);
+	let x = Math.sqrt(u * u + Math.cos(lat1rad) * Math.cos(lat2rad) * v * v);
+	return 2.0 * radiusM * Math.asin(x);
+}
