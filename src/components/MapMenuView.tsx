@@ -4,7 +4,6 @@ import {
 	FlatList,
 	Image,
 	PanResponder,
-	Platform,
 	Pressable,
 	StyleSheet,
 	Text,
@@ -350,10 +349,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	emptyInventoryText: {
-		fontSize: 40,
+		fontSize: 35,
 		fontWeight: 'bold',
 		marginTop: screenHeight * 0.01,
-		fontFamily: Platform.OS === 'ios' ? 'Courier' : 'serif',
+		color: '#bababa',
 	},
 	emptyInventoryRobot: {
 		aspectRatio: 1,
