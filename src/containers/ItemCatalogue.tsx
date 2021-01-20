@@ -80,7 +80,7 @@ const cleanUpData = (bot: Bot) => {
 			price: obj.item.price,
 			imgSrc: obj.item.imgSrc,
 			quantity: obj.quantity,
-			botId: bot._id,
+			bot: bot,
 		});
 		itemCount += obj.quantity;
 	});
