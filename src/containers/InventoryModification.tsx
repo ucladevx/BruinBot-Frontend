@@ -35,7 +35,7 @@ const InventoryModification = ({
 			price: botItem.item.price,
 			imgSrc: botItem.item.imgSrc,
 			quantity: botItem.quantity,
-			botId: bot._id,
+			bot: bot,
 		});
 		itemCount += botItem.quantity;
 	}

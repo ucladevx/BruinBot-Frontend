@@ -33,7 +33,7 @@ const Item = ({
 	quantity,
 	clickable = false,
 	navigation = undefined,
-	botId,
+	bot,
 }: InventoryItemProps) => {
 	const itemBody = (
 		<View style={styles.item} key={_id}>
@@ -84,7 +84,7 @@ const Item = ({
 						amount: price,
 						itemId: _id,
 						quantity: -1,
-						botId: botId,
+						bot: bot,
 					})
 				}
 				key={_id}
@@ -253,7 +253,7 @@ const MapMenu = ({
 							imgSrc={item.imgSrc}
 							clickable={clickable}
 							navigation={navigation}
-							botId={item.botId}
+							bot={item.bot}
 						/>
 					)}
 					keyExtractor={(item) => item._id}

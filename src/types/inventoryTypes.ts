@@ -1,3 +1,4 @@
+import { Bot } from './apiTypes';
 import { ImageSourcePropType } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -8,7 +9,7 @@ export interface ItemProps {
 	price: number;
 	imgSrc: string;
 	quantity?: number;
-	botId: string;
+	bot: Bot;
 }
 
 export interface InventoryItemProps extends ItemProps {
