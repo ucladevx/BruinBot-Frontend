@@ -66,7 +66,6 @@ const MapScreen = () => {
 		// TODO: use actual API given event id from logged in user
 		try {
 			const userLocation: Location = await findUserLocation();
-			//'5ff798be0390ab19822d21df'
 			const data = await BotService.getEventBots(state.user!.eventId!);
 			const {
 				botArray,
@@ -343,7 +342,7 @@ const formatEventBotsData = (
 		let itemCount = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
-			items.push({ ...obj.item, botId: bot._id });
+			items.push({ ...obj.item, quantity: obj.quantity, botId: bot._id });
 			itemCount += obj.quantity;
 		});
 
@@ -364,7 +363,7 @@ const formatEventBotsData = (
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: distance + 'm away',
-			bottomRight: '0' + ' items sold',
+			bottomRight: bot.sales.itemsSold + ' items sold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
