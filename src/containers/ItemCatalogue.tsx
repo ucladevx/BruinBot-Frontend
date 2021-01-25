@@ -4,7 +4,6 @@ import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import BotService from '../services/BotService';
 import Crane from '../assets/crane.png';
 import Loading from '../components/Loading';
 import MapMenu from '../components/MapMenuView';
@@ -18,18 +17,15 @@ interface ItemCatalogueProps {
 }
 
 const ItemCatalogue = ({ navigation, route }: ItemCatalogueProps) => {
-	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
-			but if you come from QR view, botId will be set from navigation params */
-	const botId = route.params.botId ?? '5ff798be0390ab19822d21db';
+	const bot = route.params.bot;
 	const [botInfo, setBotInfo] = useState<MapMenuProps['info']>({});
 	const [botItems, setBotItems] = useState<MapMenuProps['items']>({});
 	const [loading, setLoading] = useState(true);
 
 	const runRequests = async () => {
 		try {
-			console.log(botId);
-			let data = await BotService.getOneBot(botId);
-			const { botHeaderInfo, botItems } = cleanUpData(data);
+			console.log(bot);
+			const { botHeaderInfo, botItems } = cleanUpData(bot);
 			setBotInfo(botHeaderInfo);
 			setBotItems(botItems);
 			setLoading(false);
@@ -55,7 +51,7 @@ const ItemCatalogue = ({ navigation, route }: ItemCatalogueProps) => {
 		<>
 			<View style={{ flex: 1 }}>
 				<MapMenu
-					id={botId}
+					id={bot._id}
 					info={botInfo}
 					items={botItems}
 					collapsable={false}
@@ -84,7 +80,7 @@ const cleanUpData = (bot: Bot) => {
 			price: obj.item.price,
 			imgSrc: obj.item.imgSrc,
 			quantity: obj.quantity,
-			botId: bot._id,
+			bot: bot,
 		});
 		itemCount += obj.quantity;
 	});

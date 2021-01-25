@@ -25,9 +25,6 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
-	/* OG Bot is BruinBear with id 5ff798be0390ab19822d21db for demo purposes (from local deb db),
-			but if you come from QR view, botId will be set from navigation params */
-	const botId = route.params.botId ?? '5ff798be0390ab19822d21db';
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');
 	const [cvv, setCVV] = useState('');
@@ -55,7 +52,7 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 	const updateInventory = async () => {
 		try {
 			let data = await ItemCatalogueService.updateInventory(
-				botId,
+				route.params.bot._id,
 				route.params.itemId,
 				route.params.quantity
 			);

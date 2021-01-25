@@ -35,70 +35,9 @@ const Item = ({
 	quantity,
 	clickable = false,
 	navigation = undefined,
-	botId,
+	bot,
 }: InventoryItemProps) => {
-	if (clickable) {
-		return (
-			// TODO: Navigate to payment screen
-			<TouchableOpacity
-				onPress={() =>
-					navigation?.navigate('PaymentInfo', {
-						amount: price,
-						itemId: _id,
-						quantity: -1,
-						botId: botId,
-					})
-				}
-				key={_id}
-			>
-				<View
-					style={[
-						styles.item,
-						{ width: Dimensions.get('window').width * 0.44 },
-					]}
-					key={_id}
-				>
-					<Image
-						style={{
-							width: '100%',
-							height: 150,
-							borderRadius: 10,
-							resizeMode: 'contain',
-						}}
-						source={{ uri: imgSrc }}
-					/>
-					<View
-						style={{
-							marginTop: 10,
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<Text style={{ fontSize: 16 }}>{name}</Text>
-						{quantity !== 0 ? (
-							<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
-						) : (
-							<View
-								style={{
-									borderColor: 'red',
-									borderRadius: 5,
-									borderWidth: 1,
-									padding: 3,
-								}}
-							>
-								<Text style={{ fontWeight: 'bold', color: 'red' }}>
-									{quantity} left
-								</Text>
-							</View>
-						)}
-					</View>
-					<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
-				</View>
-			</TouchableOpacity>
-		);
-	}
-	return (
+	const itemBody = (
 		<View style={styles.item} key={_id}>
 			<Image
 				style={{
@@ -109,10 +48,55 @@ const Item = ({
 				}}
 				source={{ uri: imgSrc }}
 			/>
-			<Text style={{ marginTop: 10 }}>{name}</Text>
+			<View
+				style={{
+					marginTop: 10,
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				<Text style={{ fontSize: 16 }}>{name}</Text>
+				{quantity !== 0 ? (
+					<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
+				) : (
+					<View
+						style={{
+							borderColor: 'red',
+							borderRadius: 5,
+							borderWidth: 1,
+							padding: 3,
+						}}
+					>
+						<Text style={{ fontWeight: 'bold', color: 'red' }}>
+							{quantity} left
+						</Text>
+					</View>
+				)}
+			</View>
 			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
 		</View>
 	);
+
+	if (clickable) {
+		return (
+			<TouchableOpacity
+				onPress={() =>
+					navigation?.navigate('PaymentInfo', {
+						amount: price,
+						itemId: _id,
+						quantity: -1,
+						bot: bot,
+					})
+				}
+				key={_id}
+			>
+				{itemBody}
+			</TouchableOpacity>
+		);
+	} else {
+		return itemBody;
+	}
 };
 
 const MapMenuHeader = ({ info, standalone, button, ...rest }: HeaderProps) => {
@@ -246,6 +230,8 @@ const MapMenu = ({
 		return <View />;
 	}
 
+	console.log(items);
+
 	if (!items) {
 		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
@@ -254,7 +240,7 @@ const MapMenu = ({
 				<MapMenuHeader
 					info={info[id]}
 					button={button}
-					standalone={false}
+					standalone={!collapsable}
 					{...panResponder.panHandlers}
 				/>
 				{items[id].length === 0 ? (
