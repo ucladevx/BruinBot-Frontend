@@ -264,7 +264,7 @@ const MapMenu = ({
 								imgSrc={item.imgSrc}
 								clickable={clickable}
 								navigation={navigation}
-								botId={item.botId}
+								bot={item.bot}
 							/>
 						)}
 						keyExtractor={(item) => item._id}
