@@ -87,7 +87,7 @@ const Home = () => {
 	} else {
 		// If the user's "eventId" is empty or null, then they are an organizer
 		// TODO: Change this to be something the user can toggle
-		stack = state.user.eventId ? (
+		stack = state.isEnterpriseMode ? (
 			<>
 				<Stack.Screen
 					name="Map"
