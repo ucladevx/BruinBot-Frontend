@@ -31,7 +31,7 @@ async function updateInventory(
 async function getBot(botId: string) {
 	try {
 		let data: Bot = (
-			await axios.get('/bots/bot', {
+			await axios.get('bots/bot', {
 				params: {
 					botId: botId,
 				},

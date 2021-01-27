@@ -29,7 +29,7 @@ const LoginScreen = ({ navigation }: Props) => {
 	}, [navigation, state.user]);
 
 	return (
-		<Form bigTitle title="BruinBot" navigation={navigation}>
+		<Form bigTitle title="Log in" navigation={navigation}>
 			<Input
 				placeholder="Email"
 				errorMessage={formErrors.email}

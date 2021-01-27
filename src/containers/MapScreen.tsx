@@ -240,7 +240,7 @@ const formatEventBotsData = (apiData: EventBot[]) => {
 		let itemCount = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
-			items.push({ ...obj.item, botId: bot._id });
+			items.push({ ...obj.item, bot: bot });
 			itemCount += obj.quantity;
 		});
 

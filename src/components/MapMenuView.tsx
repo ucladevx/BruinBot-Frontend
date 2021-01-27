@@ -13,6 +13,8 @@ import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useRef } from 'react';
 
+import emptyInventoryRobot from '../assets/emptyInventoryRobot.png';
+
 import {
 	HeaderProps,
 	InventoryItemProps,
@@ -33,78 +35,9 @@ const Item = ({
 	quantity,
 	clickable = false,
 	navigation = undefined,
-	botId,
+	bot,
 }: InventoryItemProps) => {
-	if (clickable) {
-		return (
-			// TODO: Navigate to payment screen
-			<TouchableOpacity
-				onPress={() => {
-					if (price !== 0) {
-						navigation?.navigate('PaymentInfo', {
-							amount: price,
-							itemId: _id,
-							quantity: -1,
-							botId: botId,
-						});
-					} else {
-						navigation?.navigate('PaymentSuccess', {
-							success: true,
-						});
-					}
-				}}
-				key={_id}
-			>
-				<View
-					style={[
-						styles.item,
-						{ width: Dimensions.get('window').width * 0.44 },
-					]}
-					key={_id}
-				>
-					<Image
-						style={{
-							width: '100%',
-							height: 150,
-							borderRadius: 10,
-							resizeMode: 'contain',
-						}}
-						source={{ uri: imgSrc }}
-					/>
-					<View
-						style={{
-							marginTop: 10,
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<Text style={{ fontSize: 16 }}>{name}</Text>
-						{quantity !== 0 ? (
-							<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
-						) : (
-							<View
-								style={{
-									borderColor: 'red',
-									borderRadius: 5,
-									borderWidth: 1,
-									padding: 3,
-								}}
-							>
-								<Text style={{ fontWeight: 'bold', color: 'red' }}>
-									{quantity} left
-								</Text>
-							</View>
-						)}
-					</View>
-					<Text style={{ fontWeight: 'bold' }}>
-						{price === 0 ? 'FREE' : '$' + price.toFixed(2)}
-					</Text>
-				</View>
-			</TouchableOpacity>
-		);
-	}
-	return (
+	const itemBody = (
 		<View style={styles.item} key={_id}>
 			<Image
 				style={{
@@ -115,10 +48,63 @@ const Item = ({
 				}}
 				source={{ uri: imgSrc }}
 			/>
-			<Text style={{ marginTop: 10 }}>{name}</Text>
-			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+			<View
+				style={{
+					marginTop: 10,
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				<Text style={{ fontSize: 16 }}>{name}</Text>
+				{quantity !== 0 ? (
+					<Text style={{ fontStyle: 'italic' }}>{quantity} left</Text>
+				) : (
+					<View
+						style={{
+							borderColor: 'red',
+							borderRadius: 5,
+							borderWidth: 1,
+							padding: 3,
+						}}
+					>
+						<Text style={{ fontWeight: 'bold', color: 'red' }}>
+							{quantity} left
+						</Text>
+					</View>
+				)}
+			</View>
+			<Text style={{ fontWeight: 'bold' }}>
+				{price === 0 ? 'FREE' : '$' + price.toFixed(2)}
+			</Text>
 		</View>
 	);
+
+	if (clickable) {
+		return (
+			<TouchableOpacity
+				onPress={() => {
+					if (price !== 0) {
+						navigation?.navigate('PaymentInfo', {
+							amount: price,
+							itemId: _id,
+							quantity: -1,
+							bot: bot,
+						});
+					} else {
+						navigation?.navigate('PaymentSuccess', {
+							success: true,
+						});
+					}
+				}}
+				key={_id}
+			>
+				{itemBody}
+			</TouchableOpacity>
+		);
+	} else {
+		return itemBody;
+	}
 };
 
 const MapMenuHeader = ({ info, standalone, button, ...rest }: HeaderProps) => {
@@ -252,6 +238,8 @@ const MapMenu = ({
 		return <View />;
 	}
 
+	console.log(items);
+
 	if (!items) {
 		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
@@ -263,29 +251,42 @@ const MapMenu = ({
 					standalone={!collapsable}
 					{...panResponder.panHandlers}
 				/>
-				<FlatList
-					contentContainerStyle={styles.list}
-					data={items[id]}
-					renderItem={({ item }) => (
-						<Item
-							_id={item._id}
-							name={item.name}
-							price={item.price}
-							quantity={item.quantity}
-							imgSrc={item.imgSrc}
-							clickable={clickable}
-							navigation={navigation}
-							botId={item.botId}
+				{items[id].length === 0 ? (
+					<View style={styles.emptyInventoryContainer}>
+						<Image
+							source={emptyInventoryRobot}
+							style={styles.emptyInventoryRobot}
 						/>
-					)}
-					keyExtractor={(item) => item._id}
-					horizontal={false}
-					numColumns={2}
-				/>
+						<Text style={styles.emptyInventoryText}>Sold Out</Text>
+					</View>
+				) : (
+					<FlatList
+						contentContainerStyle={styles.list}
+						data={items[id]}
+						renderItem={({ item }) => (
+							<Item
+								_id={item._id}
+								name={item.name}
+								price={item.price}
+								quantity={item.quantity}
+								imgSrc={item.imgSrc}
+								clickable={clickable}
+								navigation={navigation}
+								bot={item.bot}
+							/>
+						)}
+						keyExtractor={(item) => item._id}
+						horizontal={false}
+						numColumns={2}
+					/>
+				)}
 			</Animated.View>
 		);
 	}
 };
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	header: {
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	container: {
-		width: Dimensions.get('window').width,
+		width: screenWidth,
 		height: inventoryHeight + BUFFER_HEIGHT,
 		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
@@ -334,6 +335,23 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 		paddingRight: 10,
 		padding: 5,
+	},
+	emptyInventoryContainer: {
+		flex: 1,
+		height: screenHeight - HEADER_HEIGHT,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	emptyInventoryText: {
+		fontSize: 35,
+		fontWeight: 'bold',
+		marginTop: screenHeight * 0.01,
+		color: '#bababa',
+	},
+	emptyInventoryRobot: {
+		aspectRatio: 1,
+		width: screenWidth * 0.4,
+		height: undefined,
 	},
 });
 

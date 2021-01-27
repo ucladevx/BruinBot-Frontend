@@ -1,5 +1,6 @@
 import {
 	Action,
+	SetEnterpriseAction,
 	SetUserAction,
 	State,
 	StateAndDispatch,
@@ -18,7 +19,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const initialState: State = { firebase, user: null };
+const initialState: State = { firebase, user: null, isEnterpriseMode: false };
 const Ctx = React.createContext<StateAndDispatch>(undefined!);
 
 const StateProvider = (props: { children: React.ReactNode }) => {
@@ -29,6 +30,11 @@ const StateProvider = (props: { children: React.ReactNode }) => {
 				return {
 					...state,
 					user: (action as SetUserAction).user,
+				};
+			} else if (action.type === 'SET_ENTERPRISE_MODE') {
+				return {
+					...state,
+					isEnterpriseMode: (action as SetEnterpriseAction).isEnterpriseMode,
 				};
 			}
 			return state;

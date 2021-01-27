@@ -27,8 +27,8 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 					<TouchableOpacity
 						style={styles.icon}
 						onPress={() =>
-							navigation.navigate('ItemCatalogue', {
-								botId: bot._id,
+							navigation.navigate('InventoryModification', {
+								bot: bot,
 							})
 						}
 					>

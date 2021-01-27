@@ -7,16 +7,22 @@ interface SetUserAction {
 	user: (FirebaseUser & UserData) | null;
 }
 
+interface SetEnterpriseAction {
+	type: string;
+	isEnterpriseMode: boolean;
+}
+
 // TODO: Put these types into another file
 interface FirebaseUser {
 	uid: string;
 }
 
-type Action = SetUserAction;
+type Action = SetUserAction | SetEnterpriseAction;
 
 interface State {
 	firebase: typeof firebase;
 	user: (FirebaseUser & UserData) | null;
+	isEnterpriseMode: boolean;
 }
 
 interface StateAndDispatch {
@@ -24,4 +30,4 @@ interface StateAndDispatch {
 	dispatch: Dispatch<Action>;
 }
 
-export { State, StateAndDispatch, Action, SetUserAction };
+export { State, StateAndDispatch, Action, SetUserAction, SetEnterpriseAction };

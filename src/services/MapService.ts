@@ -11,7 +11,7 @@ const axios = Axios.create({
 async function getMapNodes(latitude: number, longitude: number) {
 	try {
 		const data: MapNode[] = (
-			await axios.get('/paths/nodes/location', {
+			await axios.get('paths/nodes/location', {
 				params: {
 					latitude: latitude,
 					longitude: longitude,
@@ -27,7 +27,7 @@ async function getMapNodes(latitude: number, longitude: number) {
 
 async function getMapPaths() {
 	try {
-		const data: Path[] = (await axios.get('/paths')).data;
+		const data: Path[] = (await axios.get('paths')).data;
 		return data;
 	} catch (e) {
 		console.log(e);
