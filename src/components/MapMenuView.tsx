@@ -74,21 +74,29 @@ const Item = ({
 					</View>
 				)}
 			</View>
-			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+			<Text style={{ fontWeight: 'bold' }}>
+				{price === 0 ? 'FREE' : '$' + price.toFixed(2)}
+			</Text>
 		</View>
 	);
 
 	if (clickable) {
 		return (
 			<TouchableOpacity
-				onPress={() =>
-					navigation?.navigate('PaymentInfo', {
-						amount: price,
-						itemId: _id,
-						quantity: -1,
-						bot: bot,
-					})
-				}
+				onPress={() => {
+					if (price !== 0) {
+						navigation?.navigate('PaymentInfo', {
+							amount: price,
+							itemId: _id,
+							quantity: -1,
+							bot: bot,
+						});
+					} else {
+						navigation?.navigate('PaymentSuccess', {
+							success: true,
+						});
+					}
+				}}
 				key={_id}
 			>
 				{itemBody}

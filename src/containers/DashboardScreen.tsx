@@ -26,19 +26,16 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 				<View style={styles.secondLevelFlexTop}>
 					<TouchableOpacity
 						style={styles.icon}
-						onPress={() => navigation.navigate('Map')}
-					>
-						<Image source={shopImage} />
-						<Text style={styles.text}>Purchase items</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.icon}
 						onPress={() =>
 							navigation.navigate('InventoryModification', {
 								bot: bot,
 							})
 						}
 					>
+						<Image source={shopImage} />
+						<Text style={styles.text}>Purchase items</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.icon}>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>
 					</TouchableOpacity>
