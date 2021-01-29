@@ -56,7 +56,6 @@ const MapScreen = () => {
 	] = useState<MarkerData | null>(null);
 
 	const [hasLocationPermission, setLocationPermission] = useState('null');
-	const [locationGranted, setLocationGranted] = useState(false);
 	const [alert, setAlert] = useState(false);
 
 	const [loading, setLoading] = useState<boolean>(false);
@@ -79,7 +78,6 @@ const MapScreen = () => {
 			setInventories(botItems);
 			setBotPaths(botPaths);
 		} catch (err) {
-			console.log(alert);
 			if (!alert) {
 				setAlert(true);
 				Alert.alert('Oops', 'Could not retrieve bot/location information.', [
@@ -138,9 +136,22 @@ const MapScreen = () => {
 	}
 
 	useEffect(() => {
-		Permissions.askAsync(Permissions.LOCATION).then((res) => {
-			setLocationPermission(res.status);
-		});
+		if (hasLocationPermission !== 'granted') {
+			Permissions.askAsync(Permissions.LOCATION).then((res) => {
+				setLocationPermission(res.status);
+				if (res.status === 'granted') {
+					setAlert(true);
+					Alert.alert('Thank you', 'Location permissions granted.', [
+						{
+							text: 'Ok',
+							onPress: () => {
+								setAlert(false);
+							},
+						},
+					]);
+				}
+			});
+		}
 	}, [hasLocationPermission]);
 
 	useEffect(() => {
@@ -157,55 +168,40 @@ const MapScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes, hasLocationPermission]);
 
-	if (hasLocationPermission === 'null' || hasLocationPermission !== 'granted') {
-		if (hasLocationPermission !== 'granted') {
-			if (!alert) {
-				setAlert(true);
-				Alert.alert('Oops', 'No access to location permissions.', [
-					{
-						text: 'Ok',
-						onPress: () => {
-							setAlert(false);
-							setLocationPermission('null');
-						},
+	if (hasLocationPermission !== 'granted') {
+		if (!alert && hasLocationPermission === 'denied') {
+			setAlert(true);
+			Alert.alert('Oops', 'No access to location permissions.', [
+				{
+					text: 'Ok',
+					onPress: () => {
+						setLocationPermission('null');
+						setAlert(false);
 					},
-					{
-						text: 'Open Settings',
-						onPress: () => {
-							setAlert(false);
-							if (Platform.OS == 'ios') {
-								// Linking for iOS
-								Linking.openURL('app-settings:');
-							} else {
-								// IntentLauncher for Android
-								IntentLauncher.startActivityAsync(
-									IntentLauncher.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS
-								);
-							}
-							setLocationPermission('null');
-						},
+				},
+				{
+					text: 'Open Settings',
+					onPress: () => {
+						setAlert(false);
+						if (Platform.OS == 'ios') {
+							// Linking for iOS
+							Linking.openURL('app-settings:');
+						} else {
+							// IntentLauncher for Android
+							IntentLauncher.startActivityAsync(
+								IntentLauncher.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS
+							);
+						}
+						setLocationPermission('null');
 					},
-				]);
-			}
+				},
+			]);
 		}
 		return (
 			<View style={styles.container}>
 				<Loading loadingText={'Loading'} />
 			</View>
 		);
-	} else {
-		if (!alert && !locationGranted) {
-			setAlert(true);
-			Alert.alert('Thank you', 'Location permissions granted.', [
-				{
-					text: 'Ok',
-					onPress: () => {
-						setAlert(false);
-						setLocationGranted(true);
-					},
-				},
-			]);
-		}
 	}
 
 	if (loading || !markers || !headerInfo) {
@@ -340,10 +336,12 @@ const formatEventBotsData = (
 
 		const items: ItemProps[] = [];
 		let itemCount = 0;
+		let itemsSold = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
 			items.push({ ...obj.item, quantity: obj.quantity, botId: bot._id });
 			itemCount += obj.quantity;
+			itemsSold += obj.sales.numSold;
 		});
 
 		const distance = userLocation
@@ -363,7 +361,7 @@ const formatEventBotsData = (
 			topRight: itemCount.toString() + ' items',
 			// TODO: fix distance, items sold, and bot image
 			bottomLeft: distance + 'm away',
-			bottomRight: bot.sales.itemsSold + ' items sold',
+			bottomRight: itemsSold + ' items sold',
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
