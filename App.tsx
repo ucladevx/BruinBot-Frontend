@@ -11,15 +11,15 @@ import AddItem from './src/containers/AddItemScreen';
 import CustomDrawer from './src/containers/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification';
+import ItemCatalogue from './src/containers/ItemCatalogue';
+import ItemWeight from './src/containers/ItemWeightScreen';
 import LoginScreen from './src/containers/auth/LoginScreen';
 import MapScreen from './src/containers/MapScreen';
 import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
-import QrScreen from './src/containers/QrScreen';
-import SignupScreen from './src/containers/auth/SignupScreen';
-
-import ItemCatalogue from './src/containers/ItemCatalogue';
 import PaymentInfo from './src/containers/PaymentInfo';
 import PaymentSuccess from './src/containers/PaymentSuccessScreen';
+import QrScreen from './src/containers/QrScreen';
+import SignupScreen from './src/containers/auth/SignupScreen';
 
 export type RootStackParamList = {
 	Login: undefined;
@@ -29,6 +29,10 @@ export type RootStackParamList = {
 	Map: undefined;
 	InventoryModification: { bot: Bot };
 	AddItem: { bot: Bot };
+	ItemWeight: {
+		itemId: string;
+		botId: string;
+	};
 	Qr: undefined;
 	ItemCatalogue: { bot: Bot };
 	PaymentInfo: {
@@ -102,6 +106,7 @@ const Home = () => {
 					name="InventoryModification"
 					component={InventoryModification}
 				/>
+				<Stack.Screen name="ItemWeight" component={ItemWeight}></Stack.Screen>
 			</>
 		) : (
 			<>
