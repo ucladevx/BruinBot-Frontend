@@ -19,10 +19,10 @@ import { Item } from '../types/apiTypes';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { styles as formStyles } from './auth/FormStyles';
+import BotService from '../services/BotService';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
 import Loading from '../components/Loading';
-import BotService from '../services/BotService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;

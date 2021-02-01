@@ -1,5 +1,4 @@
 import { BASE_URL } from '../config';
-import { Bot } from '../types/apiTypes';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
