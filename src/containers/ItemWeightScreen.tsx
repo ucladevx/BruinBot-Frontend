@@ -5,7 +5,6 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
-import BotService from '../services/BotService';
 import Loading from '../components/Loading';
 import React, { useEffect, useState } from 'react';
 
@@ -32,8 +31,7 @@ const ItemWeight = ({ navigation, route }: ItemWeightProps) => {
 		})
 			.then(async () => {
 				setItemSubmitted(true);
-				let bot: Bot = await BotService.getOneBot(route.params.botId);
-				navigation.navigate('InventoryModification', { bot: bot });
+				navigation.navigate('InventoryModification', { bot: route.params.bot });
 				//setTimeout(5000);
 			})
 			.catch((err) => {

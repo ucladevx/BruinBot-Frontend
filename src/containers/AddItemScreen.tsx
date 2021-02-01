@@ -22,6 +22,7 @@ import { styles as formStyles } from './auth/FormStyles';
 import Form from './auth/Form';
 import ItemService from '../services/ItemService';
 import Loading from '../components/Loading';
+import BotService from '../services/BotService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -98,9 +99,10 @@ const AddItem = ({ navigation, route }: AddItemProps) => {
 					quantity
 				);
 				Alert.alert('Added Item succesfully');
+				let updatedBot: Bot = await BotService.getOneBot(bot._id);
 				navigation.navigate('ItemWeight', {
 					itemId: addedItem._id,
-					botId: bot._id,
+					bot: updatedBot,
 				});
 			} catch (err) {
 				Alert.alert('Something went wrong when submitting...');

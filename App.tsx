@@ -31,7 +31,7 @@ export type RootStackParamList = {
 	AddItem: { bot: Bot };
 	ItemWeight: {
 		itemId: string;
-		botId: string;
+		bot: Bot;
 	};
 	Qr: undefined;
 	ItemCatalogue: { bot: Bot };
