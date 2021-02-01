@@ -1,8 +1,9 @@
+import { Ctx } from '../components/StateProvider';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import infoImage from '../assets/info.png';
 import messageImage from '../assets/message.png';
@@ -20,21 +21,36 @@ const DashboardScreen = ({ route, navigation }: Props) => {
 	// It's currently unused
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { bot } = route.params;
+	const { state } = useContext(Ctx);
 	return (
 		<>
 			<View style={styles.firstLevelFlex}>
 				<View style={styles.secondLevelFlexTop}>
-					<TouchableOpacity
-						style={styles.icon}
-						onPress={() =>
-							navigation.navigate('InventoryModification', {
-								bot: bot,
-							})
-						}
-					>
-						<Image source={shopImage} />
-						<Text style={styles.text}>Purchase items</Text>
-					</TouchableOpacity>
+					{state.isEnterpriseMode ? (
+						<TouchableOpacity
+							style={styles.icon}
+							onPress={() =>
+								navigation.navigate('InventoryModification', {
+									bot: bot,
+								})
+							}
+						>
+							<Image source={shopImage} />
+							<Text style={styles.text}>Edit Inventory</Text>
+						</TouchableOpacity>
+					) : (
+						<TouchableOpacity
+							style={styles.icon}
+							onPress={() =>
+								navigation.navigate('ItemCatalogue', {
+									bot: bot,
+								})
+							}
+						>
+							<Image source={shopImage} />
+							<Text style={styles.text}>Purchase items</Text>
+						</TouchableOpacity>
+					)}
 					<TouchableOpacity style={styles.icon}>
 						<Image source={messageImage} />
 						<Text style={styles.text}>Talk to me!</Text>
