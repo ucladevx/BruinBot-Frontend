@@ -25,7 +25,9 @@ import { NAV_HEIGHT } from '../constants';
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
 
-const inventoryHeight = Dimensions.get('window').height - (NAV_HEIGHT + 10);
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const inventoryHeight = screenHeight - (NAV_HEIGHT + 10);
 
 const Item = ({
 	_id,
@@ -38,7 +40,14 @@ const Item = ({
 	bot,
 }: InventoryItemProps) => {
 	const itemBody = (
-		<View style={styles.item} key={_id}>
+		<View
+			style={{
+				...styles.item,
+				// adjust item width when nested under TouchableOpacity
+				width: clickable ? screenWidth * 0.44 : styles.item.width,
+			}}
+			key={_id}
+		>
 			<Image
 				style={{
 					width: '100%',
@@ -238,8 +247,6 @@ const MapMenu = ({
 		return <View />;
 	}
 
-	console.log(items);
-
 	if (!items) {
 		return <MapMenuHeader info={info[id]} standalone={true} />;
 	} else {
@@ -284,9 +291,6 @@ const MapMenu = ({
 		);
 	}
 };
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	header: {
