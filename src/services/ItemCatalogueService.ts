@@ -15,7 +15,7 @@ async function updateInventory(
 ) {
 	try {
 		let data: string = (
-			await axios.post('/bots/addItem', {
+			await axios.put('/bots/purchase', {
 				botId: botId,
 				itemId: itemId,
 				quantity: quantity,

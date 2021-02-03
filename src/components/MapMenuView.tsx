@@ -83,7 +83,7 @@ const Item = ({
 					navigation?.navigate('PaymentInfo', {
 						amount: price,
 						itemId: _id,
-						quantity: -1,
+						quantity: 1,
 						botId: botId,
 					})
 				}
