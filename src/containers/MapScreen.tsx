@@ -339,7 +339,7 @@ const formatEventBotsData = (
 		let itemsSold = 0;
 		inventory.forEach((obj) => {
 			// TODO: fix item images
-			items.push({ ...obj.item, quantity: obj.quantity, botId: bot._id });
+			items.push({ ...obj.item, quantity: obj.quantity, bot: bot });
 			itemCount += obj.quantity;
 			itemsSold += obj.sales.numSold;
 		});

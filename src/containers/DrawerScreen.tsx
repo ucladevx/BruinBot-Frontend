@@ -1,17 +1,20 @@
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React, { useState } from 'react';
-
 import { Alert } from 'react-native';
+import { Ctx } from '../components/StateProvider';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootStackParamList } from '../../App';
 import DrawerMenu, { Link } from '../components/DrawerView';
 import Ham from '../assets/greenHam.jpg';
+import React, { useContext } from 'react';
 
 interface Props {
 	navigation: DrawerNavigationProp<RootStackParamList>;
 }
 
 const Drawer = ({ navigation }: Props) => {
-	const [enterpriseMode, setEnterpriseMode] = useState(true);
+	const {
+		state: { isEnterpriseMode },
+		dispatch,
+	} = useContext(Ctx);
 
 	const userHeader = {
 		// TODO: get text programatically
@@ -81,14 +84,12 @@ const Drawer = ({ navigation }: Props) => {
 		},
 	];
 
-	// TODO: This should check whether the user has organizer privileges and also should set some
-	// context field so that the rest of our app knows which mode our user is in.
-
 	const menuProps = {
-		headerProps: enterpriseMode ? enterpriseHeader : userHeader,
-		links: enterpriseMode ? enterpriseLinks : userLinks,
-		toggleState: enterpriseMode,
-		onToggleChange: (val: boolean) => setEnterpriseMode(val),
+		headerProps: isEnterpriseMode ? enterpriseHeader : userHeader,
+		links: isEnterpriseMode ? enterpriseLinks : userLinks,
+		toggleState: isEnterpriseMode,
+		onToggleChange: (mode: boolean) =>
+			dispatch({ type: 'SET_ENTERPRISE_MODE', isEnterpriseMode: mode }),
 	};
 
 	return <DrawerMenu {...menuProps} />;

@@ -177,7 +177,7 @@ const MapComponent = ({
 							/>
 						);
 					})}
-				{/* TODO: after splitting bot mode and map node mode into different 
+				{/* TODO: after splitting bot mode and map node mode into different
 						  -screen.tsx files, add this to bot mode screen
 				{lineCoords &&
 					lineCoords.map((path, idx) => {
@@ -209,7 +209,6 @@ const MapComponent = ({
 					(marker) =>
 						animatedLocations[marker._id] && (
 							<MarkerAnimated
-								tracksViewChanges={false}
 								key={marker._id}
 								coordinate={animatedLocations[marker._id]}
 								centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}

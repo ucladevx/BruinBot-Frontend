@@ -13,6 +13,8 @@ import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useRef } from 'react';
 
+import emptyInventoryRobot from '../assets/emptyInventoryRobot.png';
+
 import {
 	HeaderProps,
 	InventoryItemProps,
@@ -33,7 +35,7 @@ const Item = ({
 	quantity,
 	clickable = false,
 	navigation = undefined,
-	botId,
+	bot,
 }: InventoryItemProps) => {
 	const itemBody = (
 		<View style={styles.item} key={_id}>
@@ -72,21 +74,29 @@ const Item = ({
 					</View>
 				)}
 			</View>
-			<Text style={{ fontWeight: 'bold' }}>${price.toFixed(2)}</Text>
+			<Text style={{ fontWeight: 'bold' }}>
+				{price === 0 ? 'FREE' : '$' + price.toFixed(2)}
+			</Text>
 		</View>
 	);
 
 	if (clickable) {
 		return (
 			<TouchableOpacity
-				onPress={() =>
-					navigation?.navigate('PaymentInfo', {
-						amount: price,
-						itemId: _id,
-						quantity: 1,
-						botId: botId,
-					})
-				}
+				onPress={() => {
+					if (price !== 0) {
+						navigation?.navigate('PaymentInfo', {
+							amount: price,
+							itemId: _id,
+							quantity: 1,
+							bot: bot,
+						});
+					} else {
+						navigation?.navigate('PaymentSuccess', {
+							success: true,
+						});
+					}
+				}}
 				key={_id}
 			>
 				{itemBody}
@@ -241,29 +251,42 @@ const MapMenu = ({
 					standalone={!collapsable}
 					{...panResponder.panHandlers}
 				/>
-				<FlatList
-					contentContainerStyle={styles.list}
-					data={items[id]}
-					renderItem={({ item }) => (
-						<Item
-							_id={item._id}
-							name={item.name}
-							price={item.price}
-							quantity={item.quantity}
-							imgSrc={item.imgSrc}
-							clickable={clickable}
-							navigation={navigation}
-							botId={item.botId}
+				{items[id].length === 0 ? (
+					<View style={styles.emptyInventoryContainer}>
+						<Image
+							source={emptyInventoryRobot}
+							style={styles.emptyInventoryRobot}
 						/>
-					)}
-					keyExtractor={(item) => item._id}
-					horizontal={false}
-					numColumns={2}
-				/>
+						<Text style={styles.emptyInventoryText}>Sold Out</Text>
+					</View>
+				) : (
+					<FlatList
+						contentContainerStyle={styles.list}
+						data={items[id]}
+						renderItem={({ item }) => (
+							<Item
+								_id={item._id}
+								name={item.name}
+								price={item.price}
+								quantity={item.quantity}
+								imgSrc={item.imgSrc}
+								clickable={clickable}
+								navigation={navigation}
+								bot={item.bot}
+							/>
+						)}
+						keyExtractor={(item) => item._id}
+						horizontal={false}
+						numColumns={2}
+					/>
+				)}
 			</Animated.View>
 		);
 	}
 };
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	header: {
@@ -279,7 +302,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	container: {
-		width: Dimensions.get('window').width,
+		width: screenWidth,
 		height: inventoryHeight + BUFFER_HEIGHT,
 		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
 		backgroundColor: '#fff',
@@ -312,6 +335,23 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 		paddingRight: 10,
 		padding: 5,
+	},
+	emptyInventoryContainer: {
+		flex: 1,
+		height: screenHeight - HEADER_HEIGHT,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	emptyInventoryText: {
+		fontSize: 35,
+		fontWeight: 'bold',
+		marginTop: screenHeight * 0.01,
+		color: '#bababa',
+	},
+	emptyInventoryRobot: {
+		aspectRatio: 1,
+		width: screenWidth * 0.4,
+		height: undefined,
 	},
 });
 
