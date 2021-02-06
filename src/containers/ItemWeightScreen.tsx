@@ -1,33 +1,36 @@
+import { BASE_URL } from '../config';
+import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
 import Loading from '../components/Loading';
 import React, { useEffect, useState } from 'react';
 
 interface ItemWeightProps {
-	id: string;
+	navigation: StackNavigationProp<RootStackParamList, 'ItemWeight'>;
+	route: RouteProp<RootStackParamList, 'ItemWeight'>;
 }
 
 // TODO: Change to not be hardcoded URL after production
-const baseUrl = 'http://localhost:5000';
-
 // mocks getting the weight from the scale inside the bot
 const getWeight = () => {
 	return 10.0;
 };
 
-const ItemWeight = ({ id }: ItemWeightProps) => {
+const ItemWeight = ({ navigation, route }: ItemWeightProps) => {
 	const [weight, setWeight] = useState(0);
 	const [itemDetected, setItemDetected] = useState(false);
 	const [itemMeasured, setItemMeasured] = useState(false);
 	const [itemSubmitted, setItemSubmitted] = useState(false);
 	const submitWeight = async () => {
-		await Axios.put(baseUrl + '/items/weight', {
-			itemId: id,
+		await Axios.put(BASE_URL + 'items/weight', {
+			itemId: route.params.itemId,
 			weight: weight.toFixed(1),
 		})
-			.then(() => {
+			.then(async () => {
 				setItemSubmitted(true);
-				// TODO: Navigate back to items view
+				navigation.navigate('InventoryModification', { bot: route.params.bot });
 				//setTimeout(5000);
 			})
 			.catch((err) => {

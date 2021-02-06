@@ -46,6 +46,7 @@ const addItem = async (
 		headers: { 'Content-Type': 'multipart/form-data' },
 	});
 	await axios.post('/bots/addItem', { botId, itemId: res.data._id, quantity });
+	return res.data;
 };
 
 export default { addItem };

@@ -15,6 +15,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { Bot } from '../types/apiTypes';
 import { Ctx } from '../components/StateProvider';
+import { Item } from '../types/apiTypes';
 import { RootStackParamList } from '../../App';
 import { RouteProp } from '@react-navigation/native';
 import { styles as formStyles } from './auth/FormStyles';
@@ -89,7 +90,7 @@ const AddItem = ({ navigation, route }: AddItemProps) => {
 		} else {
 			setLoading(true);
 			try {
-				await ItemService.addItem(
+				let addedItem: Item = await ItemService.addItem(
 					itemName,
 					cost,
 					state.user!.eventId!,
@@ -97,10 +98,12 @@ const AddItem = ({ navigation, route }: AddItemProps) => {
 					bot._id,
 					quantity
 				);
-
-				let updatedBot: Bot = await BotService.getOneBot(bot._id);
 				Alert.alert('Added Item succesfully');
-				navigation.navigate('InventoryModification', { bot: updatedBot });
+				let updatedBot: Bot = await BotService.getOneBot(bot._id);
+				navigation.navigate('ItemWeight', {
+					itemId: addedItem._id,
+					bot: updatedBot,
+				});
 			} catch (err) {
 				Alert.alert('Something went wrong when submitting...');
 			} finally {
