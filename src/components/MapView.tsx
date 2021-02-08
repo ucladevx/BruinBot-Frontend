@@ -146,6 +146,7 @@ const MapComponent = ({
 	return (
 		<>
 			<MapView
+				provider="google"
 				initialCamera={initCameraView}
 				onRegionChangeComplete={(coord) => {
 					if (!coordInRegion(coord, initRegion)) {
