@@ -18,9 +18,9 @@ import { Ctx } from '../../components/StateProvider';
 import { Item } from '../../types/apiTypes';
 import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
-import { styles as formStyles } from '../Auth-bck/FormStyles';
+import { styles as formStyles } from '../Auth/FormStyles';
 import BotService from '../../services/BotService';
-import Form from '../Auth-bck/Form';
+import Form from '../Auth/Form';
 import ItemService from '../../services/ItemService';
 import Loading from '../../components/Loading';
 

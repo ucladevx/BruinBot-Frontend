@@ -13,13 +13,13 @@ import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification/InventoryModification';
 import ItemCatalogue from './src/containers/ItemCatalogue/ItemCatalogue';
 import ItemWeight from './src/containers/InventoryModification/ItemWeightScreen';
-import LoginScreen from './src/containers/Auth-bck/LoginScreen';
+import LoginScreen from './src/containers/Auth/LoginScreen';
 import MapScreen from './src/containers/Map/MapScreen';
-import PasswordResetScreen from './src/containers/Auth-bck/PasswordResetScreen';
+import PasswordResetScreen from './src/containers/Auth/PasswordResetScreen';
 import PaymentInfo from './src/containers/ItemCatalogue/PaymentInfo';
 import PaymentSuccess from './src/containers/ItemCatalogue/PaymentSuccessScreen';
 import QrScreen from './src/containers/QR/QrScreen';
-import SignupScreen from './src/containers/Auth-bck/SignupScreen';
+import SignupScreen from './src/containers/Auth/SignupScreen';
 
 export type RootStackParamList = {
 	Login: undefined;

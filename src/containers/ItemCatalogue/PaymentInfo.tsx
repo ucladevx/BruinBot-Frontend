@@ -10,7 +10,7 @@ import { Button } from 'react-native-elements';
 import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Form from '../Auth-bck/Form';
+import Form from '../Auth/Form';
 import ItemCatalogueService from './ItemCatalogueService';
 import React, { useState } from 'react';
 
