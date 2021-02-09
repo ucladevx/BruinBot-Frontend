@@ -1,9 +1,9 @@
 import { Button } from 'react-native-elements';
-import { Ctx } from '../components/StateProvider';
+import { Ctx } from '../../components/StateProvider';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
-import QrComponent from '../components/QrView';
+import QrComponent from './QrView';
 import React, { useContext } from 'react';
 import ScanGif from '../assets/scan.gif';
 

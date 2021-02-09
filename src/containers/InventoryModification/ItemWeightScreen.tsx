@@ -1,10 +1,10 @@
-import { BASE_URL } from '../config';
-import { RootStackParamList } from '../../App';
+import { BASE_URL } from '../../config';
+import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';
 import Axios from 'axios';
-import Loading from '../components/Loading';
+import Loading from '../../components/Loading';
 import React, { useEffect, useState } from 'react';
 
 interface ItemWeightProps {

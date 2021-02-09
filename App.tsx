@@ -6,20 +6,20 @@ import React, { useContext } from 'react';
 
 import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
-import { HeaderButton, NavCenter } from './src/containers/NavBarScreen';
-import AddItem from './src/containers/AddItemScreen';
-import CustomDrawer from './src/containers/DrawerScreen';
+import { HeaderButton, NavCenter } from './src/containers/Navbar/NavBarScreen';
+import AddItem from './src/containers/InventoryModification/AddItemScreen';
+import CustomDrawer from './src/containers/Navbar/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
-import InventoryModification from './src/containers/InventoryModification';
-import ItemCatalogue from './src/containers/ItemCatalogue';
-import ItemWeight from './src/containers/ItemWeightScreen';
-import LoginScreen from './src/containers/auth/LoginScreen';
-import MapScreen from './src/containers/MapScreen';
-import PasswordResetScreen from './src/containers/auth/PasswordResetScreen';
-import PaymentInfo from './src/containers/PaymentInfo';
-import PaymentSuccess from './src/containers/PaymentSuccessScreen';
-import QrScreen from './src/containers/QrScreen';
-import SignupScreen from './src/containers/auth/SignupScreen';
+import InventoryModification from './src/containers/InventoryModification/InventoryModification';
+import ItemCatalogue from './src/containers/ItemCatalogue/ItemCatalogue';
+import ItemWeight from './src/containers/InventoryModification/ItemWeightScreen';
+import LoginScreen from './src/containers/Auth/LoginScreen';
+import MapScreen from './src/containers/Map/MapScreen';
+import PasswordResetScreen from './src/containers/Auth/PasswordResetScreen';
+import PaymentInfo from './src/containers/ItemCatalogue/PaymentInfo';
+import PaymentSuccess from './src/containers/ItemCatalogue/PaymentSuccessScreen';
+import QrScreen from './src/containers/QR/QrScreen';
+import SignupScreen from './src/containers/Auth/SignupScreen';
 
 export type RootStackParamList = {
 	Login: undefined;

@@ -19,8 +19,8 @@ import {
 	HeaderProps,
 	InventoryItemProps,
 	MapMenuProps,
-} from '../types/inventoryTypes';
-import { NAV_HEIGHT } from '../constants';
+} from '../../types/inventoryTypes';
+import { NAV_HEIGHT } from '../../constants';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
