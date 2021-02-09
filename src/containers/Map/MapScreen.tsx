@@ -4,21 +4,21 @@ import * as Permissions from 'expo-permissions';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 
-import BotService from '../services/BotService';
-import Loading from '../components/Loading';
-import MapComponent from '../components/MapView';
-import MapMenu, { MapMenuHeader } from '../components/MapMenuView';
-import MapService from '../services/MapService';
+import BotService from '../../services/BotService';
+import Loading from '../../components/Loading';
+import MapComponent from './MapView';
+import MapMenu, { MapMenuHeader } from './MapMenuView';
+import MapService from './MapService';
 
-import { EventBot, MapNode, Path } from '../types/apiTypes';
-import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import { Location, MarkerData } from '../types/mapTypes';
+import { EventBot, MapNode, Path } from '../../types/apiTypes';
+import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
+import { Location, MarkerData } from './mapTypes';
 
-import { Ctx } from '../components/StateProvider';
+import { Ctx } from '../../components/StateProvider';
 import { IntentLauncher } from 'expo';
-import { MAP_REFRESH_RATE } from '../config';
+import { MAP_REFRESH_RATE } from '../../config';
 import Bot from '../assets/robot.png';
-import CampusData from '../assets/campusCoords.json';
+import CampusData from '../../assets/campusCoords.json';
 import Crane from '../assets/crane.png';
 import LocationImgA from '../assets/sampleImageLocation1.png';
 import LocationImgB from '../assets/sampleImageLocation2.png';

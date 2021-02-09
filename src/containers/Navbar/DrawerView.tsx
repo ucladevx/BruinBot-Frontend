@@ -10,8 +10,8 @@ import {
 import { Icon } from 'react-native-elements';
 import React from 'react';
 
-import { RootStackParamList } from '../../App';
-import Toggle from './Toggle';
+import { RootStackParamList } from '../../../App';
+import Toggle from '../../components/Toggle';
 
 interface HeaderProps {
 	imgSrc: ImageSourcePropType;

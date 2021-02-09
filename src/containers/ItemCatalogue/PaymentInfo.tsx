@@ -7,14 +7,14 @@ import {
 	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Form from './auth/Form';
-import ItemCatalogueService from '../services/ItemCatalogueService';
+import Form from '../Auth-bck/Form';
+import ItemCatalogueService from './ItemCatalogueService';
 import React, { useState } from 'react';
 
-import Loading from '../components/Loading';
+import Loading from '../../components/Loading';
 
 interface PaymentInfoProps {
 	navigation: StackNavigationProp<RootStackParamList, 'PaymentInfo'>;

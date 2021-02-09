@@ -1,7 +1,7 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Icon } from 'react-native-elements';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../../App';
 import Logo from '../assets/logo.png';
 import React from 'react';
 

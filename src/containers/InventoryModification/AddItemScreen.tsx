@@ -13,16 +13,16 @@ import { Button, Icon, Image, Input } from 'react-native-elements';
 import { Camera, PermissionResponse } from 'expo-camera';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { Bot } from '../types/apiTypes';
-import { Ctx } from '../components/StateProvider';
-import { Item } from '../types/apiTypes';
-import { RootStackParamList } from '../../App';
+import { Bot } from '../../types/apiTypes';
+import { Ctx } from '../../components/StateProvider';
+import { Item } from '../../types/apiTypes';
+import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
-import { styles as formStyles } from './auth/FormStyles';
-import BotService from '../services/BotService';
-import Form from './auth/Form';
-import ItemService from '../services/ItemService';
-import Loading from '../components/Loading';
+import { styles as formStyles } from '../Auth-bck/FormStyles';
+import BotService from '../../services/BotService';
+import Form from '../Auth-bck/Form';
+import ItemService from '../../services/ItemService';
+import Loading from '../../components/Loading';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;

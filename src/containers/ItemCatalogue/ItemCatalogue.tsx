@@ -1,12 +1,12 @@
 import { Alert, View } from 'react-native';
-import { Bot } from '../types/apiTypes';
-import { ItemProps, MapMenuProps } from '../types/inventoryTypes';
-import { RootStackParamList } from '../../App';
+import { Bot } from '../../types/apiTypes';
+import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
+import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Crane from '../assets/crane.png';
-import Loading from '../components/Loading';
-import MapMenu from '../components/MapMenuView';
+import Loading from '../../components/Loading';
+import MapMenu from '../Map/MapMenuView';
 import React, { useEffect, useState } from 'react';
 import Robot from '../assets/robot.png';
 import Tank from '../assets/tank.png';
