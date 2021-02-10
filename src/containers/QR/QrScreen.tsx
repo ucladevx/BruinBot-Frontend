@@ -5,7 +5,7 @@ import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import QrComponent from './QrView';
 import React, { useContext } from 'react';
-import ScanGif from '../assets/scan.gif';
+import ScanGif from '../../assets/scan.gif';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;

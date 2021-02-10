@@ -28,6 +28,10 @@
     "web": {
       "favicon": "./src/assets/favicon.png"
     },
-    "scheme": "bruinbot"
+    "scheme": "bruinbot",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["tsx", "scss", "png", "jpeg", "gif"]
+    }
   }
 }

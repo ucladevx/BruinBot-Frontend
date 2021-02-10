@@ -1,0 +1,105 @@
+/* =========
+ * Constants
+ * ========= */
+
+$font-family: 'HindVadodara_400Regular';
+$font-family-semibold: 'HindVadodara_600SemiBold';
+$font-family-bold: 'HindVadodara_700Bold';
+$semibold: 600;
+
+/* ======
+ * Colors
+ * ====== */
+
+$primary-white: #ffffff;
+$primary-gray: #e1e1e1;
+$primary-blue: #5761ea;
+$primary-black: #000000;
+
+$secondary-light-gray-1: #f7f7f7;
+$secondary-light-gray-2: #c4c4c4;
+$secondary-med-gray: #7b7b7b;
+$secondary-red: #cb1111;
+$secondary-green: #179d00;
+
+$alt-light-gray: #efeff6;
+$alt-med-gray: #dadce9;
+
+/* =======
+ * Classes
+ * ======= */
+
+.container {
+    margin: 17.5px;
+}
+
+.text-header-1 {
+    font-size: 30;
+    font-family: $font-family-bold;
+}
+
+.text-header-2 {
+    font-size: 24;
+    font-family: $font-family-semibold;
+}
+
+.text-subheader {
+    font-size: 18;
+    font-family: $font-family-semibold;
+}
+
+.text-body-1 {
+    font-size: 14;
+    font-family: $font-family-semibold;
+}
+
+.text-body-1 {
+    font-size: 14;
+    font-family: $font-family-semibold;
+}
+
+.text-body-2 {
+    font-size: 12;
+    font-family: $font-family;
+}
+
+.text-body-3 {
+    font-size: 10;
+    font-family: $font-family-semibold;
+}
+
+.primary-white {
+    color: $primary-white;
+}
+
+.primary-gray {
+    color: $primary-gray;
+}
+
+.primary-blue {
+    color: $primary-blue;
+}
+
+.primary-black {
+    color: $primary-black;
+}
+
+.secondary-light-gray-1 {
+    color: $secondary-light-gray-1;
+}
+
+.secondary-light-gray-2 {
+    color: $secondary-light-gray-2;
+}
+
+.secondary-med-gray {
+    color: $secondary-med-gray;
+}
+
+.secondary-red {
+    color: $secondary-red;
+}
+
+.secondary-green {
+    color: $secondary-green;
+}

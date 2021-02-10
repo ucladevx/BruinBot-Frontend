@@ -17,14 +17,14 @@ import { Location, MarkerData } from './mapTypes';
 import { Ctx } from '../../components/StateProvider';
 import { IntentLauncher } from 'expo';
 import { MAP_REFRESH_RATE } from '../../config';
-import Bot from '../assets/robot.png';
+import Bot from '../../assets/robot.png';
 import CampusData from '../../assets/campusCoords.json';
-import Crane from '../assets/crane.png';
-import LocationImgA from '../assets/sampleImageLocation1.png';
-import LocationImgB from '../assets/sampleImageLocation2.png';
-import LocationImgC from '../assets/sampleImageLocation3.png';
-import Marker from '../assets/marker.png';
-import Tank from '../assets/tank.png';
+import Crane from '../../assets/crane.png';
+import LocationImgA from '../../assets/sampleImageLocation1.png';
+import LocationImgB from '../../assets/sampleImageLocation2.png';
+import LocationImgC from '../../assets/sampleImageLocation3.png';
+import Marker from '../../assets/marker.png';
+import Tank from '../../assets/tank.png';
 
 const MapScreen = () => {
 	// For displaying the markers on the map

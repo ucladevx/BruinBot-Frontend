@@ -1,5 +1,13 @@
 import 'react-native-gesture-handler';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import {
+	HindVadodara_300Light,
+	HindVadodara_400Regular,
+	HindVadodara_500Medium,
+	HindVadodara_600SemiBold,
+	HindVadodara_700Bold,
+	useFonts,
+} from '@expo-google-fonts/hind-vadodara';
 import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React, { useContext } from 'react';
@@ -13,6 +21,7 @@ import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification/InventoryModification';
 import ItemCatalogue from './src/containers/ItemCatalogue/ItemCatalogue';
 import ItemWeight from './src/containers/InventoryModification/ItemWeightScreen';
+import Loading from './src/components/Loading';
 import LoginScreen from './src/containers/Auth/LoginScreen';
 import MapScreen from './src/containers/Map/MapScreen';
 import PasswordResetScreen from './src/containers/Auth/PasswordResetScreen';
@@ -57,6 +66,18 @@ const theme = {
 };
 
 export default function App() {
+	let [loaded] = useFonts({
+		HindVadodara_300Light,
+		HindVadodara_400Regular,
+		HindVadodara_500Medium,
+		HindVadodara_600SemiBold,
+		HindVadodara_700Bold,
+	});
+
+	if (!loaded) {
+		return <Loading loadingText="Loading..." />;
+	}
+
 	return (
 		<StateProvider>
 			<NavigationContainer theme={theme}>

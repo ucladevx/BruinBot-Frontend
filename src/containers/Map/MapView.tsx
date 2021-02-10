@@ -13,10 +13,10 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { MAP_MARKER_SIZE } from '../../constants';
 import { MarkerData, PropTypes } from './mapTypes';
-// import mapDest from '../assets/mapDest.png';
-import mapPinPrimary from '../assets/mapPin1.gif';
-import mapPinSecondary from '../assets/mapPin3.gif';
-import mapPinTertiary from '../assets/mapPin2.gif';
+// import mapDest from '../../assets/mapDest.png';
+import mapPinPrimary from '../../assets/mapPin1.gif';
+import mapPinSecondary from '../../assets/mapPin3.gif';
+import mapPinTertiary from '../../assets/mapPin2.gif';
 
 const MapComponent = ({
 	initRegion,

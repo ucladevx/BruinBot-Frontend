@@ -3,7 +3,7 @@ import { Ctx } from '../../components/StateProvider';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootStackParamList } from '../../../App';
 import DrawerMenu, { Link } from './DrawerView';
-import Ham from '../assets/greenHam.jpg';
+import Ham from '../../assets/greenHam.jpg';
 import React, { useContext } from 'react';
 
 interface Props {
