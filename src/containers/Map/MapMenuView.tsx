@@ -13,7 +13,7 @@ import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useRef } from 'react';
 
-import emptyInventoryRobot from '../assets/emptyInventoryRobot.png';
+import emptyInventoryRobot from '../../assets/emptyInventoryRobot.png';
 
 import {
 	HeaderProps,
