@@ -11,6 +11,7 @@ import { Icon } from 'react-native-elements';
 import React from 'react';
 
 import { RootStackParamList } from '../../../App';
+import MainStyles from '../../styles/main.scss';
 import Toggle from '../../components/Toggle';
 
 interface HeaderProps {
@@ -24,9 +25,12 @@ const MenuHeader = ({ imgSrc, title, subtitles }: HeaderProps) => {
 		<View style={styles.header}>
 			<Image source={imgSrc} style={styles.headerImage} />
 			<View>
-				<Text style={styles.headerText}>{title}</Text>
+				<Text style={MainStyles['text-header-1']}>{title}</Text>
 				{subtitles.map((sub) => (
-					<Text style={{ fontSize: 12 }} key={sub}>
+					<Text
+						style={[MainStyles['text-body-2'], MainStyles['primary-blue']]}
+						key={sub}
+					>
 						{sub}
 					</Text>
 				))}
@@ -109,10 +113,6 @@ const styles = StyleSheet.create({
 		height: 100,
 		marginRight: 15,
 		borderRadius: 5,
-	},
-	headerText: {
-		fontWeight: 'bold',
-		fontSize: 17,
 	},
 	menuList: {
 		backgroundColor: '#fff',

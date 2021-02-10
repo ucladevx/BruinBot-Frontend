@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>
-import Border from '../assets/qr2_from_pngtree.png';
+import Border from '../../assets/qr2_from_pngtree.png';
 
 import BotService from '../../services/BotService';
 

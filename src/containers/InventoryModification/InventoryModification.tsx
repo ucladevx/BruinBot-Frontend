@@ -5,7 +5,7 @@ import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
 import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Crane from '../assets/crane.png';
+import Crane from '../../assets/crane.png';
 import MapMenu from '../Map/MapMenuView';
 import React from 'react';
 
