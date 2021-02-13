@@ -40,6 +40,9 @@ const MapScreen = () => {
 		null
 	);
 
+	// Path between selected Bot and selected Location
+	const [paths, setPaths] = useState<Location[][] | null>(null);
+
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
 
@@ -228,7 +231,7 @@ const MapScreen = () => {
 						}}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
-							setSelectedMarker(marker);
+							setSelectedMarker(marker);	
 						}}
 					/>
 				</View>

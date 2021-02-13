@@ -197,7 +197,7 @@ const MapComponent = ({
 							</Marker>
 						);
 					})} */}
-				{selected && centralMarker && (
+				{/*{selected && centralMarker && (
 					<Polyline
 						coordinates={[selected.location, centralMarker.location]}
 						strokeColor="white"
@@ -205,7 +205,7 @@ const MapComponent = ({
 						lineJoin="bevel"
 						lineDashPattern={[10]}
 					/>
-				)}
+				)}*/}
 				{markers.map(
 					(marker) =>
 						animatedLocations[marker._id] && (
