@@ -134,18 +134,15 @@ const QrComponent = ({ navigation }: Props) => {
 									}
 							  }
 					}
-					style={[styles.scanner]}
+					style={styles.scanner}
 				>
 					<Image style={styles.qr} source={Border} />
 					<View style={styles.label}>
-						<Image
-							style={{ height: 18, width: 20, marginRight: 16 }}
-							source={ScanIcon}
-						/>
+						<Image style={styles.icon} source={ScanIcon} />
 						<Text
 							style={[MainStyles['primary-white'], MainStyles['text-body-1']]}
 						>
-							Scan the Bruinbot's QR code
+							Scan the Bruinbot&apos;s QR code
 						</Text>
 					</View>
 				</BarCodeScanner>
@@ -165,8 +162,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		width: SCREEN_WIDTH,
 		height: SCREEN_HEIGHT,
-		borderRadius: 10,
-		overflow: 'hidden',
 	},
 	qr: {
 		width: QR_SIZE,
@@ -181,6 +176,11 @@ const styles = StyleSheet.create({
 		height: 44,
 		backgroundColor: 'rgba(0, 0, 0, 0.4)',
 		borderRadius: 18,
+	},
+	icon: {
+		height: 18,
+		width: 20,
+		marginRight: 16,
 	},
 });
 
