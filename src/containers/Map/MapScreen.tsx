@@ -66,11 +66,10 @@ const MapScreen = () => {
 		try {
 			const userLocation: Location = await findUserLocation();
 			const data = await BotService.getEventBots(state.user!.eventId!);
-			const {
-				botArray,
-				botHeaderInfo,
-				botItems,
-			} = formatEventBotsData(data, userLocation);
+			const { botArray, botHeaderInfo, botItems } = formatEventBotsData(
+				data,
+				userLocation
+			);
 
 			setMarkers(botArray);
 			setHeaderInfo(botHeaderInfo);
@@ -231,7 +230,7 @@ const MapScreen = () => {
 						}}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
-							setSelectedMarker(marker);	
+							setSelectedMarker(marker);
 						}}
 					/>
 				</View>
@@ -369,25 +368,27 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeMarkers: { [key: string]: MarkerData } = {};
 	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
 
-	apiData.filter(node => node.name).forEach((node, idx) => {
-		// TODO: figure out what to name intermediate checkpoints
-		let name = node.name
-			? node.name
-			: 'Checkpoint ' +
-			  String.fromCharCode(65 + Math.floor(Math.random() * 26));
-		mapNodeMarkers[node._id] = {
-			_id: node._id,
-			name: name,
-			location: node.location,
-		};
+	apiData
+		.filter((node) => node.name)
+		.forEach((node, idx) => {
+			// TODO: figure out what to name intermediate checkpoints
+			let name = node.name
+				? node.name
+				: 'Checkpoint ' +
+				  String.fromCharCode(65 + Math.floor(Math.random() * 26));
+			mapNodeMarkers[node._id] = {
+				_id: node._id,
+				name: name,
+				location: node.location,
+			};
 
-		mapNodeHeaderInfo[node._id] = {
-			topLeft: name,
-			topRight: node.distance.toFixed(0).toString() + 'm away',
-			bottomRight: node.eta.toFixed(1).toString() + ' minutes',
-			imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
-		};
-	});
+			mapNodeHeaderInfo[node._id] = {
+				topLeft: name,
+				topRight: node.distance.toFixed(0).toString() + 'm away',
+				bottomRight: node.eta.toFixed(1).toString() + ' minutes',
+				imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
+			};
+		});
 	return { mapNodeArray: mapNodeMarkers, mapNodeHeaderInfo };
 };
 

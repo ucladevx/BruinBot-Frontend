@@ -1,5 +1,5 @@
 import { Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
+import MainStyles from '../../styles/main.scss';
 import MapView, {
 	AnimatedRegion,
 	LatLng,
@@ -14,9 +14,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MAP_MARKER_SIZE } from '../../constants';
 import { MarkerData, PropTypes } from './mapTypes';
 // import mapDest from '../../assets/mapDest.png';
+import hamburgerIcon from '../../assets/ICON_hamburger_menu.png';
+import helpIcon from '../../assets/ICON_help.png';
 import mapPinPrimary from '../../assets/mapPin1.gif';
 import mapPinSecondary from '../../assets/mapPin3.gif';
 import mapPinTertiary from '../../assets/mapPin2.gif';
+import recenterIcon from '../../assets/ICON_recenter.png';
+import reloadIcon from '../../assets/ICON_reload.png';
 
 const MapComponent = ({
 	initRegion,
@@ -172,7 +176,7 @@ const MapComponent = ({
 							<Polyline
 								key={'Path' + idx}
 								coordinates={path}
-								strokeColor="white"
+								strokeColor="white" //TODO: change color here
 								strokeWidth={4}
 								lineJoin="bevel"
 							/>
@@ -197,7 +201,7 @@ const MapComponent = ({
 							</Marker>
 						);
 					})} */}
-				{/*{selected && centralMarker && (
+				{selected && centralMarker && (
 					<Polyline
 						coordinates={[selected.location, centralMarker.location]}
 						strokeColor="white"
@@ -205,7 +209,7 @@ const MapComponent = ({
 						lineJoin="bevel"
 						lineDashPattern={[10]}
 					/>
-				)}*/}
+				)}
 				{markers.map(
 					(marker) =>
 						animatedLocations[marker._id] && (
@@ -247,14 +251,20 @@ const MapComponent = ({
 					</Marker>
 				)}
 			</MapView>
+			{/*<TouchableOpacity style={{...styles.button, ...styles.smallerButton, top: '7.9%', left: 18,}}>
+				<Image source={hamburgerIcon} style={{height: 10, width:16}} />
+			</TouchableOpacity>
+			<TouchableOpacity style={{...styles.button, ...styles.smallerButton, top: '7.9%', right: 18}}>
+				<Image source={helpIcon} style={styles.icon} />
+				</TouchableOpacity>*/}
 			<TouchableOpacity
-				style={{ ...styles.button, marginBottom: 60 }}
+				style={{ ...styles.button, marginBottom: 55 }}
 				onPress={() => refresh()}
 			>
-				<Icon name="ios-sync" type="ionicon" size={30} color="#555" />
+				<Image source={reloadIcon} style={styles.icon} />
 			</TouchableOpacity>
-			<TouchableOpacity style={styles.button}>
-				<Icon name="ios-navigate" type="ionicon" size={30} color="#555" />
+			<TouchableOpacity style={{ ...styles.button }}>
+				<Image source={recenterIcon} style={styles.icon} />
 			</TouchableOpacity>
 		</>
 	);
@@ -274,18 +284,24 @@ const styles = StyleSheet.create({
 		width: Dimensions.get('window').width,
 		height: Dimensions.get('window').height,
 	},
-	button: {
+	icon: {
 		position: 'absolute',
-		bottom: 30,
-		right: 8,
-		width: 50,
-		height: 50,
+		height: 18,
+		width: 18,
+	},
+	button: {
+		bottom: '9.8%',
+		right: 18,
+		width: 48,
+		height: 48,
+		position: 'absolute',
 		borderRadius: 60,
-		backgroundColor: '#fff',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 1,
+		backgroundColor: MainStyles['primary-white']['color'],
+		shadowOffset: { width: 0, height: 4 },
+		shadowRadius: 10,
+		elevation: 2,
 		shadowColor: '#000',
-		shadowOpacity: 0.3,
+		shadowOpacity: 0.25,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
