@@ -9,12 +9,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 // Credit: <a href='https://pngtree.com/so/simple'>simple png from pngtree.com</a>
-import Border from '../../assets/qr2_from_pngtree.png';
+import Border from '../../assets/qrBorder.png';
+import MainStyles from '../../styles/main.scss';
+import ScanIcon from '../../assets/scanIcon.png';
 
 import BotService from '../../services/BotService';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const QR_SIZE = SCREEN_WIDTH * 0.5;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const QR_SIZE = 230;
 
 interface Props {
 	navigation: StackNavigationProp<RootStackParamList, 'Qr'>;
@@ -131,9 +134,17 @@ const QrComponent = ({ navigation }: Props) => {
 									}
 							  }
 					}
-					style={[styles.scanner]}
+					style={styles.scanner}
 				>
 					<Image style={styles.qr} source={Border} />
+					<View style={styles.label}>
+						<Image style={styles.icon} source={ScanIcon} />
+						<Text
+							style={[MainStyles['primary-white'], MainStyles['text-body-1']]}
+						>
+							Scan the Bruinbot&apos;s QR code
+						</Text>
+					</View>
 				</BarCodeScanner>
 			)}
 		</View>
@@ -142,24 +153,34 @@ const QrComponent = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		textAlign: 'center',
+		position: 'absolute',
 	},
 	scanner: {
+		position: 'absolute',
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: SCREEN_WIDTH - 30,
-		borderRadius: 10,
-		overflow: 'hidden',
+		width: SCREEN_WIDTH,
+		height: SCREEN_HEIGHT,
 	},
 	qr: {
-		marginTop: '20%',
-		marginBottom: '20%',
 		width: QR_SIZE,
 		height: QR_SIZE,
+	},
+	label: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: 41,
+		width: 282,
+		height: 44,
+		backgroundColor: 'rgba(0, 0, 0, 0.4)',
+		borderRadius: 18,
+	},
+	icon: {
+		height: 18,
+		width: 20,
+		marginRight: 16,
 	},
 });
 
