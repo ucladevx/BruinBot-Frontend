@@ -5,7 +5,6 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 } from 'react-native';
-import { NAV_HEIGHT } from '../../constants';
 import { RootStackParamList } from '../../../App';
 import Back from '../../assets/back.png';
 import Help from '../../assets/help.png';
