@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 import * as Loc from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import { Alert, Platform, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 
 import BotService from '../../services/BotService';
@@ -314,6 +314,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		alignItems: 'center',
 		justifyContent: 'center',
+		width: Dimensions.get('window').width,
+		height: Dimensions.get('window').height,
 	},
 });
 

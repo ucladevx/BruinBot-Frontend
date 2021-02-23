@@ -1,8 +1,16 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { Icon } from 'react-native-elements';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+	Image,
+	ImageSourcePropType,
+	StyleSheet,
+	TouchableOpacity,
+} from 'react-native';
+import { NAV_HEIGHT } from '../../constants';
 import { RootStackParamList } from '../../../App';
+import Back from '../../assets/back.png';
+import Help from '../../assets/help.png';
 import Logo from '../../assets/logo.png';
+import Menu from '../../assets/menu.png';
 import React from 'react';
 
 export const NavCenter = () => <Image style={styles.logo} source={Logo} />;
@@ -14,8 +22,18 @@ interface Props {
 
 interface ButtonConfig {
 	action(): void;
-	icon: string;
+	icon: ImageSourcePropType;
 }
+
+export const HelpButton = () => {
+	const pressHandler = () => {};
+
+	return (
+		<TouchableOpacity onPress={pressHandler} style={styles.buttonContainer}>
+			<Image source={Help} style={{ height: 18 }} resizeMode="contain" />
+		</TouchableOpacity>
+	);
+};
 
 export const HeaderButton = ({ navigation, screen }: Props) => {
 	const defaultConfig: ButtonConfig = {
@@ -24,17 +42,17 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 				navigation.goBack();
 			}
 		},
-		icon: 'ios-arrow-back',
+		icon: Back,
 	};
 
 	const customConfig: { [screen: string]: ButtonConfig } = {
 		Map: {
 			action: () => navigation.openDrawer(),
-			icon: 'ios-menu',
+			icon: Menu,
 		},
 		Qr: {
 			action: () => navigation.openDrawer(),
-			icon: 'ios-menu',
+			icon: Menu,
 		},
 	};
 
@@ -47,11 +65,11 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 	};
 
 	return (
-		<TouchableOpacity onPress={pressHandler}>
-			<Icon
-				style={styles.buttonIcon}
-				type="ionicon"
-				name={customConfig[screen]?.icon || defaultConfig.icon}
+		<TouchableOpacity onPress={pressHandler} style={styles.buttonContainer}>
+			<Image
+				source={customConfig[screen]?.icon || defaultConfig.icon}
+				style={{ width: 18 }}
+				resizeMode="contain"
 			/>
 		</TouchableOpacity>
 	);
@@ -62,7 +80,18 @@ const styles = StyleSheet.create({
 		width: 30,
 		height: 30,
 	},
-	buttonIcon: {
-		marginLeft: 20,
+	buttonContainer: {
+		marginTop: 26,
+		marginHorizontal: 17.5,
+		height: 36,
+		width: 36,
+		borderRadius: 36,
+		backgroundColor: '#fff',
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 1,
+		shadowColor: '#000',
+		shadowOpacity: 0.3,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
