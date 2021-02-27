@@ -32,14 +32,6 @@ const Drawer = ({ navigation }: Props) => {
 
 	const userLinks: Link[] = [
 		{
-			text: 'Scan a bot',
-			route: 'Qr',
-			iconName: 'md-qr-scanner',
-			onPress: () => {
-				navigation.navigate('Qr');
-			},
-		},
-		{
 			text: 'Settings',
 			route: 'Settings',
 			iconName: 'md-settings',
@@ -50,22 +42,6 @@ const Drawer = ({ navigation }: Props) => {
 	];
 
 	const enterpriseLinks: Link[] = [
-		{
-			text: 'Scan a bot',
-			route: 'Qr',
-			iconName: 'md-qr-scanner',
-			onPress: () => {
-				navigation.navigate('Qr');
-			},
-		},
-		{
-			text: 'Bruinbot Map',
-			route: 'Map',
-			iconName: 'md-map',
-			onPress: () => {
-				navigation.navigate('Map');
-			},
-		},
 		{
 			text: 'Event Statistics',
 			route: 'Dashboard',
