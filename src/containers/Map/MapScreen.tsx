@@ -335,7 +335,7 @@ const formatEventBotsData = (
 			// TODO: fix item images
 			items.push({ ...obj.item, quantity: obj.quantity, bot: bot });
 			itemCount += obj.quantity;
-			//itemsSold += obj.sales.numSold;
+			itemsSold += obj.sales.numSold;
 		});
 
 		const distance = userLocation
