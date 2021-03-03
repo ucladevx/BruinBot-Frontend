@@ -2,6 +2,8 @@ import Axios from 'axios';
 
 import { BASE_URL } from '../../config';
 import { MapNode, Path } from '../../types/apiTypes';
+import { Location } from './mapTypes';
+
 
 const axios = Axios.create({
 	baseURL: BASE_URL,
@@ -35,4 +37,23 @@ async function getMapPaths() {
 	}
 }
 
-export default { getMapNodes, getMapPaths };
+async function getPathBetween(loc1: Location, loc2: Location) {
+	try {
+		const data: Location[] = (
+			await axios.get('paths/pathBetween', {
+				params: {
+					lat1: loc1.latitude,
+					lon1: loc1.longitude,
+					lat2: loc2.latitude,
+					lon2: loc2.longitude,
+				},
+			})
+		).data;
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export default { getMapNodes, getMapPaths, getPathBetween };

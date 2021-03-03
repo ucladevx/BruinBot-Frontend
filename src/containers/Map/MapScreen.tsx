@@ -40,6 +40,9 @@ const MapScreen = () => {
 		null
 	);
 
+	//Ordered list of locations for the bot to travel to
+	const [botRoute, setBotRoute] = useState<MarkerData[] | null>(null);
+
 	// Path between selected Bot and selected Location
 	const [paths, setPaths] = useState<Location[][] | null>(null);
 
@@ -60,6 +63,49 @@ const MapScreen = () => {
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const { state } = useContext(Ctx);
+
+	async function addToRoute(marker: MarkerData){
+		console.log("adding marker " + marker.name);
+		let curRoute = botRoute ? botRoute : [];
+		if (curRoute.indexOf(marker) > -1){
+			await removeFromRoute(marker);
+		} else {
+			if (curRoute.length === 0 && selectedBotForOrder){
+				let curPaths = paths ? paths : [];
+				let newPath = await MapService.getPathBetween(selectedBotForOrder.location, marker.location); 
+				curPaths.push(newPath);
+				setPaths(curPaths);
+			} else if (curRoute) {
+				let curPaths = paths ? paths : [];
+				let newPath = await MapService.getPathBetween(curRoute[curRoute.length-1].location, marker.location); 
+				curPaths.push(newPath);
+				setPaths(curPaths);
+			}
+			curRoute.push(marker);
+			setBotRoute(curRoute);
+		}
+	}
+
+	async function removeFromRoute(marker: MarkerData){
+		console.log("adding marker " + marker.name);
+		let curRoute = botRoute ? botRoute : [];
+		let curPaths = paths ? paths : [];
+		let index: number = curRoute.indexOf(marker);
+		if (index === curRoute.length - 1){
+			curPaths.splice(index, 1);
+		} else {
+			let destMarker: MarkerData = curRoute[index + 1];
+			if (!selectedBotForOrder){
+				return; //BIG ERROR
+			}
+			let startMarker: MarkerData = (index > 0) ? curRoute[index -1] : selectedBotForOrder;
+			let newPath = await MapService.getPathBetween(startMarker.location, destMarker.location); 
+			curPaths.splice(index, 2, newPath);
+		}
+		curRoute.splice(index, 1);
+		setPaths(curPaths);
+		setBotRoute(curRoute);
+	}
 
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
@@ -221,7 +267,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={[]}
+						lineCoords={paths ? paths : []}
 						refresh={() => {
 							setMapNodes(
 								selectedBotForOrder.location.latitude,
@@ -231,6 +277,7 @@ const MapScreen = () => {
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
 							setSelectedMarker(marker);
+							addToRoute(marker);
 						}}
 					/>
 				</View>
