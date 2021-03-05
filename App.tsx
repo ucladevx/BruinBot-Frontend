@@ -147,7 +147,7 @@ const Home = () => {
 		// TODO: fix `any` in drawerContent props
 		<>
 			<StatusBar barStyle="dark-content" />
-			<Stack.Navigator 
+			<Stack.Navigator
 				drawerContent={(props: any) => <CustomDrawer {...props} />}
 				screenOptions={({ route, navigation }) => {
 					// avoid missing displayName warning
@@ -161,8 +161,8 @@ const Home = () => {
 						headerRight: HeaderRight,
 						headerTitle: '',
 						headerTintColor: '#000',
-						headerStyle: { 
-              position: 'absolute',
+						headerStyle: {
+							position: 'absolute',
 							left: 0,
 							right: 0,
 							backgroundColor: 'transparent',

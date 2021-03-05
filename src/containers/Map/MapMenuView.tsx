@@ -241,7 +241,7 @@ const MapMenu = ({
 				...styles.container,
 				transform: [{ translateY: translateY.value }],
 		  }
-		: { ...styles.container };
+		: { ...styles.container, top: NAV_HEIGHT };
 
 	if (!id.length || !info[id]) {
 		// invalid id, return empty view
