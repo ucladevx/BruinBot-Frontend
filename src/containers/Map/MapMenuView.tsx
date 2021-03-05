@@ -27,7 +27,7 @@ const BUFFER_HEIGHT = 30;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const inventoryHeight = screenHeight - (NAV_HEIGHT + 10);
+const inventoryHeight = screenHeight - (NAV_HEIGHT + 20);
 
 const Item = ({
 	_id,
