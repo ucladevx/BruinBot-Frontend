@@ -16,6 +16,7 @@ import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import { HeaderButton, HelpButton } from './src/containers/Navbar/NavBarScreen';
 import AddItem from './src/containers/InventoryModification/AddItemScreen';
+import BottomBar from './src/containers/Navbar/BottomBarNavigator';
 import CustomDrawer from './src/containers/Navbar/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
 import InventoryModification from './src/containers/InventoryModification/InventoryModification';
@@ -23,7 +24,6 @@ import ItemCatalogue from './src/containers/ItemCatalogue/ItemCatalogue';
 import ItemWeight from './src/containers/InventoryModification/ItemWeightScreen';
 import Loading from './src/components/Loading';
 import LoginScreen from './src/containers/Auth/LoginScreen';
-import MapScreen from './src/containers/Map/MapScreen';
 import PasswordResetScreen from './src/containers/Auth/PasswordResetScreen';
 import PaymentInfo from './src/containers/ItemCatalogue/PaymentInfo';
 import PaymentSuccess from './src/containers/ItemCatalogue/PaymentSuccessScreen';
@@ -99,11 +99,6 @@ const Home = () => {
 				<Stack.Screen name="Signup" component={SignupScreen} />
 				<Stack.Screen name="PasswordReset" component={PasswordResetScreen} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
-				<Stack.Screen
-					name="Map"
-					component={MapScreen}
-					options={{ unmountOnBlur: true }}
-				/>
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
@@ -116,11 +111,19 @@ const Home = () => {
 			<>
 				<Stack.Screen
 					name="Map"
-					component={MapScreen}
-					options={{ unmountOnBlur: true }}
+					component={BottomBar}
+					options={{
+						unmountOnBlur: true,
+					}}
 				/>
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
-				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen
+					name="Qr"
+					component={BottomBar}
+					options={{
+						unmountOnBlur: true,
+					}}
+				/>
 				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen
@@ -144,7 +147,7 @@ const Home = () => {
 		// TODO: fix `any` in drawerContent props
 		<>
 			<StatusBar barStyle="dark-content" />
-			<Stack.Navigator
+			<Stack.Navigator 
 				drawerContent={(props: any) => <CustomDrawer {...props} />}
 				screenOptions={({ route, navigation }) => {
 					// avoid missing displayName warning
@@ -158,7 +161,16 @@ const Home = () => {
 						headerRight: HeaderRight,
 						headerTitle: '',
 						headerTintColor: '#000',
-						headerStyle: { backgroundColor: 'transparent' },
+						headerStyle: { 
+              position: 'absolute',
+							left: 0,
+							right: 0,
+							backgroundColor: 'transparent',
+							elevation: 0, // remove shadow on Android
+							shadowOpacity: 0, // remove shadow on iOS
+							borderBottomWidth: 0,
+							zIndex: 100,
+						},
 					};
 				}}
 			>

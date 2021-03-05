@@ -24,6 +24,7 @@ import { NAV_HEIGHT } from '../../constants';
 
 const HEADER_HEIGHT = 150;
 const BUFFER_HEIGHT = 30;
+const BOTTOM_HEIGHT = 50;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -193,7 +194,7 @@ const MapMenu = ({
 	navigation = undefined,
 	button,
 }: MapMenuProps) => {
-	const openOffset = -inventoryHeight + HEADER_HEIGHT;
+	const openOffset = -inventoryHeight + HEADER_HEIGHT + BOTTOM_HEIGHT;
 	const collapsedOffset = 0;
 
 	const translateY: WrapValue = {
