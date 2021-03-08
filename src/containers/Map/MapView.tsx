@@ -1,4 +1,5 @@
-import { Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Dimensions, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Button } from 'react-native-elements';
 import MainStyles from '../../styles/main.scss';
 import MapView, {
 	AnimatedRegion,
@@ -8,17 +9,35 @@ import MapView, {
 	Polygon,
 	Polyline,
 	Region,
+	Callout,
 } from 'react-native-maps';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { MAP_MARKER_SIZE } from '../../constants';
-import { MarkerData, PropTypes } from './mapTypes';
+import { MarkerData, PropTypes, CalloutProps } from './mapTypes';
 // import mapDest from '../../assets/mapDest.png';
+import mapNodeUnselected from '../../assets/pin.png';
+import mapNodeSelected from '../../assets/pin2.png';
 import mapPinPrimary from '../../assets/mapPin1.gif';
 import mapPinSecondary from '../../assets/mapPin3.gif';
 import mapPinTertiary from '../../assets/mapPin2.gif';
 import recenterIcon from '../../assets/ICON_recenter.png';
 import reloadIcon from '../../assets/ICON_reload.png';
+import { exp } from 'react-native-reanimated';
+
+const MapNodeCallout = ({marker, onButtonPress}: CalloutProps) => {
+	const text: string = marker.type === "mapnodeX" ? "Save Point" : "Remove Point";
+	return (
+		<>
+		<Text> {marker.name} </Text>
+		<Button
+			onPress={() => onButtonPress(marker)}
+			title={text}
+			style={styles.buttonP}>
+		</Button>
+		</>
+	)
+}
 
 const MapComponent = ({
 	initRegion,
@@ -31,6 +50,7 @@ const MapComponent = ({
 	onSelect,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
+	//console.log(markers)
 
 	// Adds a new object to the MapComponent's state that keeps track of
 	// AnimatedRegion objects to be used to locate markers on the map
@@ -145,7 +165,7 @@ const MapComponent = ({
 		}
 	}, [markers, animatedLocations]);
 
-	console.log(lineCoords);
+	//console.log(lineCoords);
 	return (
 		<>
 			<MapView
@@ -209,7 +229,8 @@ const MapComponent = ({
 						lineDashPattern={[10]}
 					/>
 				)*/}
-				{markers.map(
+				{
+				markers.map(
 					(marker) =>
 						animatedLocations[marker._id] && (
 							<MarkerAnimated
@@ -217,21 +238,47 @@ const MapComponent = ({
 								coordinate={animatedLocations[marker._id]}
 								centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
 								title={marker.name}
-								onPress={() => onSelect(marker)}
+								onPress={() => {if (marker.type === "bot") onSelect(marker)}}
 							>
-								{selected && marker._id === selected._id ? (
+								{marker.type === "bot" ? (
+									selected && marker._id === selected._id ? (
 									<Image
 										source={mapPinSecondary}
 										style={styles.pin}
 										resizeMode="contain"
-									/>
-								) : (
+									/>				
+									) : (
 									<Image
 										source={mapPinPrimary}
 										style={styles.pin}
 										resizeMode="contain"
 									/>
-								)}
+								)) : (
+									<>
+									{selected && marker._id === selected._id ? (
+									<>
+									<Image
+										source={mapNodeSelected}
+										style={styles.pin}
+										resizeMode="contain"
+									/>
+									<Callout style={styles.callout}>
+										<MapNodeCallout marker={marker} onButtonPress={onSelect}/>
+									</Callout>
+									</>
+									) : (
+										<>
+										<Image
+										source={mapNodeUnselected}
+										style={styles.pin}
+										resizeMode="contain"
+									/>
+									<Callout>
+										<MapNodeCallout marker={marker} onButtonPress={onSelect}/>
+									</Callout>
+									</>
+									)}
+									</>)}
 							</MarkerAnimated>
 						)
 				)}
@@ -313,7 +360,20 @@ const styles = StyleSheet.create({
 	},
 	pin: {
 		height: MAP_MARKER_SIZE,
+		width: 32
 	},
+	buttonP: {
+		width: 175,
+		height: 36,
+		borderRadius: 18,
+	},
+	callout: {
+		width: 207,
+		height: 117,
+		borderRadius: 18,
+		fontSize: 12,
+	}
+
 });
 
 export default MapComponent;

@@ -10,6 +10,11 @@ export interface MarkerData {
 	_id: string;
 	name: string;
 	location: Location;
+	type: string;
+}
+export interface CalloutProps {
+	marker: MarkerData;
+	onButtonPress(marker: MarkerData): any;
 }
 export interface PropTypes {
 	initRegion: Region;

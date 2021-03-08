@@ -42,6 +42,7 @@ const MapScreen = () => {
 
 	//Ordered list of locations for the bot to travel to
 	const [botRoute, setBotRoute] = useState<MarkerData[] | null>(null);
+	const [rerender, setRerender] = useState<boolean>(true);
 
 	// Path between selected Bot and selected Location
 	const [paths, setPaths] = useState<Location[][] | null>(null);
@@ -84,6 +85,8 @@ const MapScreen = () => {
 			curRoute.push(marker);
 			setBotRoute(curRoute);
 		}
+		let curValue: boolean = !rerender;
+		setRerender(curValue);
 	}
 
 	async function removeFromRoute(marker: MarkerData){
@@ -255,6 +258,7 @@ const MapScreen = () => {
 	}
 
 	if (showMapNodes && selectedBotForOrder) {
+		let a:boolean = rerender;
 		return (
 			<>
 				<View style={styles.container}>
@@ -373,7 +377,7 @@ const formatEventBotsData = (
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
-		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location } }; // clone location
+		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location }, type: "bot" }; // clone location
 
 		const items: ItemProps[] = [];
 		let itemCount = 0;
@@ -427,6 +431,7 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 				_id: node._id,
 				name: name,
 				location: node.location,
+				type: "mapnodeX"
 			};
 
 			mapNodeHeaderInfo[node._id] = {
