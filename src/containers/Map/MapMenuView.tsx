@@ -28,7 +28,7 @@ const BOTTOM_HEIGHT = 50;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const inventoryHeight = screenHeight - (NAV_HEIGHT + 10);
+const inventoryHeight = screenHeight - (NAV_HEIGHT + 20);
 
 const Item = ({
 	_id,
@@ -241,7 +241,7 @@ const MapMenu = ({
 				...styles.container,
 				transform: [{ translateY: translateY.value }],
 		  }
-		: { ...styles.container };
+		: { ...styles.container, top: NAV_HEIGHT };
 
 	if (!id.length || !info[id]) {
 		// invalid id, return empty view

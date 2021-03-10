@@ -16,6 +16,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Bot } from '../../types/apiTypes';
 import { Ctx } from '../../components/StateProvider';
 import { Item } from '../../types/apiTypes';
+import { NAV_HEIGHT } from '../../constants';
 import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { styles as formStyles } from '../Auth/FormStyles';
@@ -139,7 +140,7 @@ const AddItem = ({ navigation, route }: AddItemProps) => {
 									setCamera(ref);
 								}}
 							/>
-							{/* The circle icon must be above the image picker icon so it doesn't block 
+							{/* The circle icon must be above the image picker icon so it doesn't block
 							the image picker's click handler  */}
 							<Icon
 								name="ios-radio-button-on"
@@ -271,6 +272,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: screenWidth,
 		alignSelf: 'center',
+		marginTop: -NAV_HEIGHT,
 	},
 });
 

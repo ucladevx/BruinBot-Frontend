@@ -14,7 +14,7 @@ import React, { useContext } from 'react';
 
 import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
-import { HeaderButton, NavCenter } from './src/containers/Navbar/NavBarScreen';
+import { HeaderButton, HelpButton } from './src/containers/Navbar/NavBarScreen';
 import AddItem from './src/containers/InventoryModification/AddItemScreen';
 import BottomBar from './src/containers/Navbar/BottomBarNavigator';
 import CustomDrawer from './src/containers/Navbar/DrawerScreen';
@@ -61,7 +61,7 @@ const theme = {
 	...DefaultTheme,
 	colors: {
 		...DefaultTheme.colors,
-		background: 'rgb(250, 250, 250)',
+		background: 'rgb(255, 255, 255)',
 	},
 };
 
@@ -150,19 +150,26 @@ const Home = () => {
 			<Stack.Navigator
 				drawerContent={(props: any) => <CustomDrawer {...props} />}
 				screenOptions={({ route, navigation }) => {
+					// avoid missing displayName warning
 					const HeaderLeft = () => (
-						// avoid missing displayName warning
 						<HeaderButton navigation={navigation} screen={route.name} />
 					);
+					const HeaderRight = () => <HelpButton />;
 					return {
 						headerShown: true,
 						headerLeft: HeaderLeft,
-						headerTitle: NavCenter,
+						headerRight: HeaderRight,
+						headerTitle: '',
 						headerTintColor: '#000',
 						headerStyle: {
 							position: 'absolute',
 							left: 0,
 							right: 0,
+							backgroundColor: 'transparent',
+							elevation: 0, // remove shadow on Android
+							shadowOpacity: 0, // remove shadow on iOS
+							borderBottomWidth: 0,
+							zIndex: 100,
 						},
 					};
 				}}

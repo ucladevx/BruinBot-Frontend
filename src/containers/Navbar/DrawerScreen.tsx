@@ -10,7 +10,9 @@ interface Props {
 	navigation: DrawerNavigationProp<RootStackParamList>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Drawer = ({ navigation }: Props) => {
+	// navigation prop will be used in the future
 	const {
 		state: { isEnterpriseMode },
 		dispatch,

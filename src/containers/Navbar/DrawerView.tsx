@@ -25,7 +25,12 @@ const MenuHeader = ({ imgSrc, title, subtitles }: HeaderProps) => {
 		<View style={styles.header}>
 			<Image source={imgSrc} style={styles.headerImage} />
 			<View>
-				<Text style={MainStyles['text-header-1']}>{title}</Text>
+				<Text
+					style={[MainStyles['text-header-2'], { width: '90%' }]}
+					numberOfLines={1}
+				>
+					{title}
+				</Text>
 				{subtitles.map((sub) => (
 					<Text
 						style={[MainStyles['text-body-2'], MainStyles['primary-blue']]}
@@ -107,6 +112,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#eee',
 		flexDirection: 'row',
 		alignItems: 'center',
+		overflow: 'hidden',
 	},
 	headerImage: {
 		width: 100,
