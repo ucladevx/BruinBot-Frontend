@@ -39,7 +39,7 @@ const Drawer = ({ navigation }: Props) => {
 		},
 		state.user
 			? {
-					text: 'Sign Out',
+					text: 'Log Out',
 					route: 'Login',
 					iconName: 'person-outline',
 					onPress: () => {
@@ -56,7 +56,7 @@ const Drawer = ({ navigation }: Props) => {
 					},
 			  }
 			: {
-					text: 'Sign In',
+					text: 'Log In',
 					route: 'Login',
 					iconName: 'md-contact',
 					onPress: () => {
@@ -84,7 +84,7 @@ const Drawer = ({ navigation }: Props) => {
 			},
 		},
 		{
-			text: 'Sign Out',
+			text: 'Log Out',
 			route: 'Login',
 			iconName: 'md-contact',
 			onPress: () => {
