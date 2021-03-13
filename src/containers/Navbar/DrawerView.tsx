@@ -1,3 +1,4 @@
+import { Ctx } from '../../components/StateProvider';
 import {
 	FlatList,
 	Image,
@@ -8,7 +9,7 @@ import {
 	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { RootStackParamList } from '../../../App';
 import MainStyles from '../../styles/main.scss';
@@ -64,6 +65,8 @@ const Drawer = ({
 	toggleState,
 	onToggleChange,
 }: DrawerProps) => {
+	const { state } = useContext(Ctx);
+
 	const linkList = (
 		<FlatList
 			style={styles.menuList}
@@ -95,12 +98,19 @@ const Drawer = ({
 		<>
 			<MenuHeader {...headerProps} />
 			{linkList}
-			<Toggle
-				state={toggleState}
-				onChange={() => onToggleChange(!toggleState)}
-				disabledIcon="md-person"
-				enabledIcon="md-people"
-			/>
+			{
+				// TODO: In addition to checking if user is logged in, if a user is logged in, check for the enterprise flag
+			}
+			{state.user ? (
+				<Toggle
+					state={toggleState}
+					onChange={() => onToggleChange(!toggleState)}
+					disabledIcon="md-person"
+					enabledIcon="md-people"
+				/>
+			) : (
+				<></>
+			)}
 		</>
 	);
 };

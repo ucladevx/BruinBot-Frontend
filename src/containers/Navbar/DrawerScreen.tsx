@@ -12,11 +12,7 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Drawer = ({ navigation }: Props) => {
-	// navigation prop will be used in the future
-	const {
-		state: { isEnterpriseMode },
-		dispatch,
-	} = useContext(Ctx);
+	const { state, dispatch } = useContext(Ctx);
 
 	const userHeader = {
 		// TODO: get text programatically
@@ -36,18 +32,45 @@ const Drawer = ({ navigation }: Props) => {
 		{
 			text: 'Settings',
 			route: 'Settings',
-			iconName: 'md-settings',
+			iconName: 'md-contact',
 			onPress: () => {
 				Alert.alert('Event settings page in development');
 			},
 		},
+		state.user
+			? {
+					text: 'Sign Out',
+					route: 'Login',
+					iconName: 'person-outline',
+					onPress: () => {
+						() =>
+							state.firebase
+								.auth()
+								.signOut()
+								.then(() => {
+									dispatch({
+										type: 'SET_USER',
+										user: null,
+									});
+								});
+					},
+			  }
+			: {
+					text: 'Sign In',
+					route: 'Login',
+					iconName: 'md-contact',
+					onPress: () => {
+						navigation.navigate('Login');
+					},
+			  },
 	];
 
+	/* when in enterprise mode, user will already have been logged in since enterprise mode is only available if the user is an enterprise user, which is why there is only a sign out */
 	const enterpriseLinks: Link[] = [
 		{
 			text: 'Event Statistics',
 			route: 'Dashboard',
-			iconName: 'md-stats',
+			iconName: 'person-circle-outline',
 			onPress: () => {
 				Alert.alert('Event stats page in development');
 			},
@@ -60,12 +83,33 @@ const Drawer = ({ navigation }: Props) => {
 				Alert.alert('Event settings page in development');
 			},
 		},
+		{
+			text: 'Sign Out',
+			route: 'Login',
+			iconName: 'md-contact',
+			onPress: () => {
+				() =>
+					state.firebase
+						.auth()
+						.signOut()
+						.then(() => {
+							dispatch({
+								type: 'SET_ENTERPRISE_MODE',
+								isEnterpriseMode: false,
+							});
+							dispatch({
+								type: 'SET_USER',
+								user: null,
+							});
+						});
+			},
+		},
 	];
 
 	const menuProps = {
-		headerProps: isEnterpriseMode ? enterpriseHeader : userHeader,
-		links: isEnterpriseMode ? enterpriseLinks : userLinks,
-		toggleState: isEnterpriseMode,
+		headerProps: state.isEnterpriseMode ? enterpriseHeader : userHeader,
+		links: state.isEnterpriseMode ? enterpriseLinks : userLinks,
+		toggleState: state.isEnterpriseMode,
 		onToggleChange: (mode: boolean) =>
 			dispatch({ type: 'SET_ENTERPRISE_MODE', isEnterpriseMode: mode }),
 	};
