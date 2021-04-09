@@ -19,6 +19,7 @@ import AddItem from './src/containers/InventoryModification/AddItemScreen';
 import BottomBar from './src/containers/Navbar/BottomBarNavigator';
 import CustomDrawer from './src/containers/Navbar/DrawerScreen';
 import DashboardScreen from './src/containers/DashboardScreen';
+import EmailList from './src/containers/ItemCatalogue/EmailList';
 import InventoryModification from './src/containers/InventoryModification/InventoryModification';
 import ItemCatalogue from './src/containers/ItemCatalogue/ItemCatalogue';
 import ItemWeight from './src/containers/InventoryModification/ItemWeightScreen';
@@ -50,6 +51,7 @@ export type RootStackParamList = {
 		quantity: number;
 		amount: number;
 	};
+	EmailList: undefined;
 	Dashboard: { bot: Bot };
 	PaymentSuccess: { success: boolean };
 	Settings: undefined;
@@ -101,6 +103,7 @@ const Home = () => {
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
+				<Stack.Screen name="EmailList" component={EmailList} />
 				<Stack.Screen name="PaymentSuccess" component={PaymentSuccess} />
 			</>
 		);

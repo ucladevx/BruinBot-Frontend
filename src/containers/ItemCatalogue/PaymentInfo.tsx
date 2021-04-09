@@ -7,12 +7,13 @@ import {
 	View,
 } from 'react-native';
 import { Button } from 'react-native-elements';
+import { Ctx } from '../../components/StateProvider';
 import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from '../Auth/Form';
 import ItemCatalogueService from './ItemCatalogueService';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import Loading from '../../components/Loading';
 
@@ -25,6 +26,8 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
+	const { state } = useContext(Ctx);
+
 	const [cardNumber, setCardNumber] = useState('');
 	const [expiryDate, setExpiryDate] = useState('');
 	const [cvv, setCVV] = useState('');
@@ -95,9 +98,13 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 			setLoading(false);
 			console.log('Success');
 			// TODO: after implementing Stripe API, if success is false, make sure to enable button again
-			navigation.navigate('PaymentSuccess', {
-				success: true,
-			});
+			if (state.user) {
+				navigation.navigate('PaymentSuccess', {
+					success: true,
+				});
+			} else {
+				navigation.navigate('EmailList');
+			}
 		}, 5000);
 	};
 
