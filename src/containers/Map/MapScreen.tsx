@@ -26,9 +26,7 @@ import LocationImgC from '../../assets/sampleImageLocation3.png';
 import Marker from '../../assets/marker.png';
 import Tank from '../../assets/tank.png';
 
-const MapScreen = (
-	{ botSelected } : MapScreenProps
-) => {
+const MapScreen = ({ botSelected }: MapScreenProps) => {
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -56,7 +54,7 @@ const MapScreen = (
 	const [showMapNodes, setShowMapNodes] = useState(false);
 
 	// Bot that was selected to send to some map node, used when showing map nodes
-	const botS : MarkerData | null = botSelected ? botSelected : null;
+	const botS: MarkerData | null = botSelected ? botSelected : null;
 	const [
 		selectedBotForOrder,
 		setSelectedBotForOrder,
@@ -68,53 +66,63 @@ const MapScreen = (
 	const [loading, setLoading] = useState<boolean>(false);
 	const { state } = useContext(Ctx);
 
-	async function addToRoute(marker: MarkerData){
-		console.log("adding marker " + marker.name);
+	async function addToRoute(marker: MarkerData) {
+		console.log('adding marker ' + marker.name);
 		let curRoute = botRoute ? botRoute : [];
-		if (curRoute.indexOf(marker) > -1){
+		if (curRoute.indexOf(marker) > -1) {
 			await removeFromRoute(marker);
 		} else {
-			if (curRoute.length === 0 && selectedBotForOrder){
+			if (curRoute.length === 0 && selectedBotForOrder) {
 				let curPaths = paths ? paths : [];
-				let newPath = await MapService.getPathBetween(selectedBotForOrder.location, marker.location); 
+				let newPath = await MapService.getPathBetween(
+					selectedBotForOrder.location,
+					marker.location
+				);
 				curPaths.push(newPath);
 				setPaths(curPaths);
 			} else if (curRoute) {
 				let curPaths = paths ? paths : [];
-				let newPath = await MapService.getPathBetween(curRoute[curRoute.length-1].location, marker.location); 
+				let newPath = await MapService.getPathBetween(
+					curRoute[curRoute.length - 1].location,
+					marker.location
+				);
 				curPaths.push(newPath);
 				setPaths(curPaths);
 			}
 			curRoute.push(marker);
-			marker.type = "" + curRoute.length;
+			marker.type = '' + curRoute.length;
 			setBotRoute(curRoute);
 		}
 		let curValue: boolean = !rerender;
 		setRerender(curValue);
 	}
 
-	async function removeFromRoute(marker: MarkerData){
-		console.log("adding marker " + marker.name);
+	async function removeFromRoute(marker: MarkerData) {
+		console.log('adding marker ' + marker.name);
 		let curRoute = botRoute ? botRoute : [];
 		let curPaths = paths ? paths : [];
 		let index: number = curRoute.indexOf(marker);
-		if (index === curRoute.length - 1){
+		if (index === curRoute.length - 1) {
 			curPaths.splice(index, 1);
 		} else {
 			let destMarker: MarkerData = curRoute[index + 1];
-			if (!selectedBotForOrder){
+			if (!selectedBotForOrder) {
 				return; //BIG ERROR
 			}
-			let startMarker: MarkerData = (index > 0) ? curRoute[index -1] : selectedBotForOrder;
-			let newPath = await MapService.getPathBetween(startMarker.location, destMarker.location); 
+			let startMarker: MarkerData =
+				index > 0 ? curRoute[index - 1] : selectedBotForOrder;
+			let newPath = await MapService.getPathBetween(
+				startMarker.location,
+				destMarker.location
+			);
 			curPaths.splice(index, 2, newPath);
 		}
 		curRoute.splice(index, 1);
 		setPaths(curPaths);
-		for (let i = 0; i < curRoute.length; i++){
-			curRoute[i].type = "" + (i+1);
+		for (let i = 0; i < curRoute.length; i++) {
+			curRoute[i].type = '' + (i + 1);
 		}
-		marker.type = "mapnode"
+		marker.type = 'mapnode';
 		setBotRoute(curRoute);
 	}
 
@@ -266,7 +274,7 @@ const MapScreen = (
 	}
 
 	if (showMapNodes && selectedBotForOrder) {
-		let a:boolean = rerender;
+		let a: boolean = rerender;
 		return (
 			<>
 				<View style={styles.container}>
@@ -339,7 +347,7 @@ const MapScreen = (
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
-						onNodeSelect={()=>{}}
+						onNodeSelect={() => {}}
 					/>
 				</View>
 				{selectedMarker && (
@@ -389,7 +397,11 @@ const formatEventBotsData = (
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
-		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location }, type: "bot" }; // clone location
+		botMarkers[bot._id] = {
+			...trimBot,
+			location: { ...trimBot.location },
+			type: 'bot',
+		}; // clone location
 
 		const items: ItemProps[] = [];
 		let itemCount = 0;
@@ -443,7 +455,7 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 				_id: node._id,
 				name: name,
 				location: node.location,
-				type: "mapnode"
+				type: 'mapnode',
 			};
 
 			mapNodeHeaderInfo[node._id] = {

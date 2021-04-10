@@ -1,46 +1,52 @@
-import { Dimensions, Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { Button } from 'react-native-elements';
+import {
+	Dimensions,
+	Image,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+} from 'react-native';
 import MainStyles from '../../styles/main.scss';
 import MapView, {
 	AnimatedRegion,
+	Callout,
 	LatLng,
 	Marker,
 	MarkerAnimated,
 	Polygon,
 	Polyline,
 	Region,
-	Callout,
 } from 'react-native-maps';
-import React, { useEffect, useRef, useState, version } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
+import { CalloutProps, MarkerData, PropTypes } from './mapTypes';
 import { MAP_MARKER_SIZE } from '../../constants';
-import { MarkerData, PropTypes, CalloutProps } from './mapTypes';
-import { styles as formStyles } from '../Auth/FormStyles';
+//import { styles as formStyles } from '../Auth/FormStyles';
 // import mapDest from '../../assets/mapDest.png';
-import mapNodeUnselected from '../../assets/pin.png';
+//import { exp } from 'react-native-reanimated';
 import mapNodeSelected from '../../assets/pin2.png';
+import mapNodeUnselected from '../../assets/pin.png';
 import mapPinPrimary from '../../assets/mapPin1.gif';
 import mapPinSecondary from '../../assets/mapPin3.gif';
 import mapPinTertiary from '../../assets/mapPin2.gif';
 import recenterIcon from '../../assets/ICON_recenter.png';
 import reloadIcon from '../../assets/ICON_reload.png';
-import { exp } from 'react-native-reanimated';
 
-const MapNodeCallout = ({marker, onButtonPress}: CalloutProps) => {
-	const text: string = marker.type === "mapnode" ? "Save Point" : "Remove Point";
+const MapNodeCallout = ({ marker, onButtonPress }: CalloutProps) => {
+	const text: string =
+		marker.type === 'mapnode' ? 'Save Point' : 'Remove Point';
 	return (
 		<>
-		<Text style={styles.calloutText}> {marker.name} </Text>
-		<Button
-			onPress={() => onButtonPress(marker)}
-			title={text}
-			style={styles.buttonP}
-			containerStyle={styles.buttonPContainer}
-		>
-		</Button>
+			<Text style={styles.calloutText}> {marker.name} </Text>
+			<Button
+				onPress={() => onButtonPress(marker)}
+				title={text}
+				style={styles.buttonP}
+				containerStyle={styles.buttonPContainer}
+			></Button>
 		</>
-	)
-}
+	);
+};
 
 const MapComponent = ({
 	initRegion,
@@ -55,7 +61,9 @@ const MapComponent = ({
 	isMapPath,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
-	const doneButtonBackgroundColor = isMapPath ? MainStyles['primary-blue']['color'] : MainStyles['primary-gray']['color'];
+	const doneButtonBackgroundColor = isMapPath
+		? MainStyles['primary-blue']['color']
+		: MainStyles['primary-gray']['color'];
 	//console.log(markers)
 
 	// Adds a new object to the MapComponent's state that keeps track of
@@ -201,7 +209,7 @@ const MapComponent = ({
 							<Polyline
 								key={'Path' + idx}
 								coordinates={path}
-								strokeColor= {MainStyles['primary-blue']['color']} 
+								strokeColor={MainStyles['primary-blue']['color']}
 								strokeWidth={4}
 								lineJoin="bevel"
 							/>
@@ -235,8 +243,7 @@ const MapComponent = ({
 						lineDashPattern={[10]}
 					/>
 				)*/}
-				{
-				markers.map(
+				{markers.map(
 					(marker) =>
 						animatedLocations[marker._id] && (
 							<MarkerAnimated
@@ -244,43 +251,60 @@ const MapComponent = ({
 								coordinate={animatedLocations[marker._id]}
 								centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
 								title={marker.name}
-								onPress={() => {onSelect(marker)}
-								}
+								onPress={() => {
+									onSelect(marker);
+								}}
 							>
-								{marker.type === "bot" ? (
+								{marker.type === 'bot' ? (
 									selected && marker._id === selected._id ? (
-									<Image
-										source={mapPinSecondary}
-										style={styles.pin}
-										resizeMode="contain"
-									/>				
+										<Image
+											source={mapPinSecondary}
+											style={styles.pin}
+											resizeMode="contain"
+										/>
 									) : (
-									<Image
-										source={mapPinPrimary}
-										style={styles.pin}
-										resizeMode="contain"
-									/>
-								)) : (			
+										<Image
+											source={mapPinPrimary}
+											style={styles.pin}
+											resizeMode="contain"
+										/>
+									)
+								) : (
 									<>
-									{(marker.type === "mapnode" ? (		
-									<>
-									<Image
-										source={ selected && marker._id === selected._id ? 
-											(mapNodeSelected) : (mapNodeUnselected)
-										}
-										style={styles.pin}
-										resizeMode="contain"
-									/> 
-									</>) : (
-									<>
-										<TouchableOpacity style={styles.circle}>
-											<Text style={styles.mapNodeNumber}> {marker.type} </Text>
-										</TouchableOpacity>
-									</>
-									))}
-									<Callout style={styles.callout} tooltip={false} onPress={()=>{onNodeSelect(marker)}}>
-										<MapNodeCallout marker={marker} onButtonPress={onNodeSelect}/>
-									</Callout>
+										{marker.type === 'mapnode' ? (
+											<>
+												<Image
+													source={
+														selected && marker._id === selected._id
+															? mapNodeSelected
+															: mapNodeUnselected
+													}
+													style={styles.pin}
+													resizeMode="contain"
+												/>
+											</>
+										) : (
+											<>
+												<TouchableOpacity style={styles.circle}>
+													<Text style={styles.mapNodeNumber}>
+														{' '}
+														{marker.type}{' '}
+													</Text>
+												</TouchableOpacity>
+											</>
+										)}
+										<Callout
+											style={styles.callout}
+											tooltip={false}
+											onPress={() => {
+												onNodeSelect(marker);
+											}}
+										>
+											<MapNodeCallout
+												marker={marker}
+												onButtonPress={onNodeSelect}
+											/>
+										</Callout>
 									</>
 								)}
 							</MarkerAnimated>
@@ -288,28 +312,31 @@ const MapComponent = ({
 				)}
 				{centralMarker && (
 					<>
-					<Marker
-						tracksViewChanges={false}
-						coordinate={centralMarker.location}
-						centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
-						title={centralMarker.name}
-					>
-						<Image
-							source={mapPinTertiary}
-							style={styles.pin}
-							resizeMode="contain"
-						/>
-					</Marker>
+						<Marker
+							tracksViewChanges={false}
+							coordinate={centralMarker.location}
+							centerOffset={{ x: 0, y: -MAP_MARKER_SIZE / 2 + 5 }}
+							title={centralMarker.name}
+						>
+							<Image
+								source={mapPinTertiary}
+								style={styles.pin}
+								resizeMode="contain"
+							/>
+						</Marker>
 					</>
 				)}
 			</MapView>
 			{centralMarker && (
 				<Button
-				title="Done"
-				buttonStyle={{...styles.doneButton, backgroundColor: doneButtonBackgroundColor}}
-				containerStyle={styles.buttonContainer}
-				onPress={() => {}}
-			/>
+					title="Done"
+					buttonStyle={{
+						...styles.doneButton,
+						backgroundColor: doneButtonBackgroundColor,
+					}}
+					containerStyle={styles.buttonContainer}
+					onPress={() => {}}
+				/>
 			)}
 			{/*<TouchableOpacity style={{...styles.button, ...styles.smallerButton, top: '7.9%', left: 18,}}>
 				<Image source={hamburgerIcon} style={{height: 10, width:16}} />
@@ -379,7 +406,7 @@ const styles = StyleSheet.create({
 	},
 	pin: {
 		height: MAP_MARKER_SIZE,
-		width: 32
+		width: 32,
 	},
 	buttonP: {
 		height: 36,
@@ -403,14 +430,14 @@ const styles = StyleSheet.create({
 		height: MAP_MARKER_SIZE - 10,
 		width: MAP_MARKER_SIZE - 10,
 		backgroundColor: 'black',
-		borderRadius: MAP_MARKER_SIZE/2,
+		borderRadius: MAP_MARKER_SIZE / 2,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	mapNodeNumber: {
 		color: 'white',
 		fontSize: 17,
-		fontWeight: "600"
+		fontWeight: '600',
 	},
 	doneButton: {
 		height: 50,
