@@ -12,7 +12,7 @@ import MapService from './MapService';
 
 import { EventBot, MapNode, Path } from '../../types/apiTypes';
 import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
-import { Location, MarkerData } from './mapTypes';
+import { Location, MapScreenProps, MarkerData } from './mapTypes';
 
 import { Ctx } from '../../components/StateProvider';
 import { IntentLauncher } from 'expo';
@@ -26,7 +26,9 @@ import LocationImgC from '../../assets/sampleImageLocation3.png';
 import Marker from '../../assets/marker.png';
 import Tank from '../../assets/tank.png';
 
-const MapScreen = () => {
+const MapScreen = (
+	{ botSelected } : MapScreenProps
+) => {
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -54,10 +56,11 @@ const MapScreen = () => {
 	const [showMapNodes, setShowMapNodes] = useState(false);
 
 	// Bot that was selected to send to some map node, used when showing map nodes
+	const botS : MarkerData | null = botSelected ? botSelected : null;
 	const [
 		selectedBotForOrder,
 		setSelectedBotForOrder,
-	] = useState<MarkerData | null>(null);
+	] = useState<MarkerData | null>(botS);
 
 	const [hasLocationPermission, setLocationPermission] = useState('null');
 	const [alert, setAlert] = useState(false);
@@ -83,6 +86,7 @@ const MapScreen = () => {
 				setPaths(curPaths);
 			}
 			curRoute.push(marker);
+			marker.type = "" + curRoute.length;
 			setBotRoute(curRoute);
 		}
 		let curValue: boolean = !rerender;
@@ -107,6 +111,10 @@ const MapScreen = () => {
 		}
 		curRoute.splice(index, 1);
 		setPaths(curPaths);
+		for (let i = 0; i < curRoute.length; i++){
+			curRoute[i].type = "" + (i+1);
+		}
+		marker.type = "mapnode"
 		setBotRoute(curRoute);
 	}
 
@@ -281,8 +289,11 @@ const MapScreen = () => {
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => {
 							setSelectedMarker(marker);
+						}}
+						onNodeSelect={(marker: MarkerData) => {
 							addToRoute(marker);
 						}}
+						isMapPath={!botRoute || botRoute.length === 0 ? false : true}
 					/>
 				</View>
 				{selectedMarker && (
@@ -328,6 +339,7 @@ const MapScreen = () => {
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
+						onNodeSelect={()=>{}}
 					/>
 				</View>
 				{selectedMarker && (
@@ -431,7 +443,7 @@ const formatMapNodesData = (apiData: MapNode[]) => {
 				_id: node._id,
 				name: name,
 				location: node.location,
-				type: "mapnodeX"
+				type: "mapnode"
 			};
 
 			mapNodeHeaderInfo[node._id] = {
