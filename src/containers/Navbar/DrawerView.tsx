@@ -1,4 +1,3 @@
-import { Ctx } from '../../components/StateProvider';
 import {
 	FlatList,
 	Image,
@@ -9,11 +8,10 @@ import {
 	View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { RootStackParamList } from '../../../App';
 import MainStyles from '../../styles/main.scss';
-import Toggle from '../../components/Toggle';
 
 interface HeaderProps {
 	imgSrc: ImageSourcePropType;
@@ -59,14 +57,8 @@ interface DrawerProps {
 	onToggleChange(val: boolean): void;
 }
 
-const Drawer = ({
-	headerProps,
-	links,
-	toggleState,
-	onToggleChange,
-}: DrawerProps) => {
-	const { state } = useContext(Ctx);
-
+// if we use the toggle in the future, make sure to pass in toggleState and onToggleChange in the props
+const Drawer = ({ headerProps, links }: DrawerProps) => {
 	const linkList = (
 		<FlatList
 			style={styles.menuList}
@@ -98,22 +90,20 @@ const Drawer = ({
 		<>
 			<MenuHeader {...headerProps} />
 			{linkList}
-			{
-				// TODO: In addition to checking if user is logged in, if a user is logged in, check for the enterprise flag
-			}
-			{state.user ? (
-				<Toggle
+		</>
+	);
+};
+
+/*
+	TODO: In addition to checking if user is logged in, if a user is logged in, check for the enterprise flag
+Toggle for future use when we need
+<Toggle
 					state={toggleState}
 					onChange={() => onToggleChange(!toggleState)}
 					disabledIcon="md-person"
 					enabledIcon="md-people"
 				/>
-			) : (
-				<></>
-			)}
-		</>
-	);
-};
+				*/
 
 const styles = StyleSheet.create({
 	header: {
