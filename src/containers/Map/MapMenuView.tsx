@@ -307,9 +307,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	container: {
-		width: screenWidth,
+		width: screenWidth - 17 * 2,
 		height: inventoryHeight + BUFFER_HEIGHT,
 		marginBottom: -inventoryHeight - BUFFER_HEIGHT + HEADER_HEIGHT,
+		marginLeft: 17,
+		borderRadius: 10,
 		backgroundColor: '#fff',
 		overflow: 'scroll',
 	},

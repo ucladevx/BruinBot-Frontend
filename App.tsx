@@ -15,6 +15,7 @@ import React, { useContext } from 'react';
 import { Bot } from './src/types/apiTypes';
 import { Ctx, StateProvider } from './src/components/StateProvider';
 import { HeaderButton, HelpButton } from './src/containers/Navbar/NavBarScreen';
+import { MarkerData } from './src/containers/Map/mapTypes';
 import AddItem from './src/containers/InventoryModification/AddItemScreen';
 import BottomBar from './src/containers/Navbar/BottomBarNavigator';
 import CustomDrawer from './src/containers/Navbar/DrawerScreen';
@@ -28,6 +29,7 @@ import PasswordResetScreen from './src/containers/Auth/PasswordResetScreen';
 import PaymentInfo from './src/containers/ItemCatalogue/PaymentInfo';
 import PaymentSuccess from './src/containers/ItemCatalogue/PaymentSuccessScreen';
 import QrScreen from './src/containers/QR/QrScreen';
+import SelectMarkerScreen from './src/containers/Map/SelectMarkerScreen';
 import SignupScreen from './src/containers/Auth/SignupScreen';
 
 export type RootStackParamList = {
@@ -36,6 +38,7 @@ export type RootStackParamList = {
 	PasswordReset: undefined;
 	Blank: undefined;
 	Map: undefined;
+	SelectMarker: { markers: MarkerData[] };
 	InventoryModification: { bot: Bot };
 	AddItem: { bot: Bot };
 	ItemWeight: {
@@ -124,6 +127,7 @@ const Home = () => {
 						unmountOnBlur: true,
 					}}
 				/>
+				<Stack.Screen name="SelectMarker" component={SelectMarkerScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen

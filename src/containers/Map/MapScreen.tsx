@@ -2,8 +2,10 @@ import * as Linking from 'expo-linking';
 import * as Loc from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useEffect, useState } from 'react';
 
+import { RootStackParamList } from '../../../App';
 import BotService from '../../services/BotService';
 import Loading from '../../components/Loading';
 import MapComponent from './MapView';
@@ -26,7 +28,11 @@ import LocationImgC from '../../assets/sampleImageLocation3.png';
 import Marker from '../../assets/marker.png';
 import Tank from '../../assets/tank.png';
 
-const MapScreen = () => {
+interface Props {
+	navigation: StackNavigationProp<RootStackParamList, 'Map'>;
+}
+
+const MapScreen = ({ navigation }: Props) => {
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -292,13 +298,17 @@ const MapScreen = () => {
 						button={{
 							title: 'Order',
 							onButton: () => {
+								navigation.navigate('SelectMarker', {
+									markers: Object.values(markers),
+								});
+
 								// TODO: add check for if bot is "InTransit"
-								setSelectedBotForOrder(selectedMarker);
-								setMapNodes(
-									selectedMarker.location.latitude,
-									selectedMarker.location.longitude
-								);
-								setShowMapNodes(true);
+								// setSelectedBotForOrder(selectedMarker);
+								// setMapNodes(
+								// 	selectedMarker.location.latitude,
+								// 	selectedMarker.location.longitude
+								// );
+								// setShowMapNodes(true);
 							},
 						}}
 					/>
