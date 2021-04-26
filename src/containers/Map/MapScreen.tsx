@@ -42,7 +42,6 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 
 	//Ordered list of locations for the bot to travel to
 	const [botRoute, setBotRoute] = useState<MarkerData[] | null>(null);
-	const [rerender, setRerender] = useState<boolean>(true);
 
 	// Path between selected Bot and selected Location
 	const [paths, setPaths] = useState<Location[][] | null>(null);
@@ -78,32 +77,30 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 					selectedBotForOrder.location,
 					marker.location
 				);
-				curPaths.push(newPath);
+				curPaths = curPaths.concat([newPath]);
 				setPaths(curPaths);
-			} else if (curRoute) {
+			} else if (curRoute.length) {
 				let curPaths = paths ? paths : [];
 				let newPath = await MapService.getPathBetween(
 					curRoute[curRoute.length - 1].location,
 					marker.location
 				);
-				curPaths.push(newPath);
+				curPaths = curPaths.concat([newPath]);
 				setPaths(curPaths);
 			}
-			curRoute.push(marker);
+			curRoute = curRoute.concat([marker]);
 			marker.type = '' + curRoute.length;
 			setBotRoute(curRoute);
 		}
-		let curValue: boolean = !rerender;
-		setRerender(curValue);
 	}
 
 	async function removeFromRoute(marker: MarkerData) {
-		console.log('adding marker ' + marker.name);
+		console.log('removing marker ' + marker.name);
 		let curRoute = botRoute ? botRoute : [];
 		let curPaths = paths ? paths : [];
 		let index: number = curRoute.indexOf(marker);
 		if (index === curRoute.length - 1) {
-			curPaths.splice(index, 1);
+			curPaths = curPaths.slice(0, index).concat(curPaths.slice(index + 1));
 		} else {
 			let destMarker: MarkerData = curRoute[index + 1];
 			if (!selectedBotForOrder) {
@@ -115,9 +112,12 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 				startMarker.location,
 				destMarker.location
 			);
-			curPaths.splice(index, 2, newPath);
+			curPaths = curPaths
+				.slice(0, index)
+				.concat([newPath])
+				.concat(curPaths.slice(index + 2));
 		}
-		curRoute.splice(index, 1);
+		curRoute = curRoute.slice(0, index).concat(curRoute.slice(index + 1));
 		setPaths(curPaths);
 		for (let i = 0; i < curRoute.length; i++) {
 			curRoute[i].type = '' + (i + 1);
@@ -274,7 +274,6 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 	}
 
 	if (showMapNodes && selectedBotForOrder) {
-		let a: boolean = rerender;
 		return (
 			<>
 				<View style={styles.container}>

@@ -21,9 +21,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { CalloutProps, MarkerData, PropTypes } from './mapTypes';
 import { MAP_MARKER_SIZE } from '../../constants';
-//import { styles as formStyles } from '../Auth/FormStyles';
-// import mapDest from '../../assets/mapDest.png';
-//import { exp } from 'react-native-reanimated';
 import mapNodeSelected from '../../assets/pin2.png';
 import mapNodeUnselected from '../../assets/pin.png';
 import mapPinPrimary from '../../assets/mapPin1.gif';
@@ -215,34 +212,6 @@ const MapComponent = ({
 							/>
 						);
 					})}
-				{/* TODO: after splitting bot mode and map node mode into different
-						  -screen.tsx files, add this to bot mode screen
-				{lineCoords &&
-					lineCoords.map((path, idx) => {
-						return (
-							<Marker
-								key={idx}
-								tracksViewChanges={false}
-								coordinate={path[path.length - 1]}
-								centerOffset={{ x: 0, y: 0 }}
-							>
-								<Image
-									source={mapDest}
-									style={{ height: MAP_MARKER_SIZE * 0.7 }}
-									resizeMode="contain"
-								/>
-							</Marker>
-						);
-					})} */}
-				{/*selected && centralMarker && (
-					<Polyline
-						coordinates={[selected.location, centralMarker.location]}
-						strokeColor="white"
-						strokeWidth={4}
-						lineJoin="bevel"
-						lineDashPattern={[10]}
-					/>
-				)*/}
 				{markers.map(
 					(marker) =>
 						animatedLocations[marker._id] && (
