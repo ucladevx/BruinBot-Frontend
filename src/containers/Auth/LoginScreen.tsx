@@ -84,6 +84,10 @@ const LoginScreen = ({ navigation }: Props) => {
 									uid: user.uid,
 								},
 							});
+							dispatch({
+								type: 'SET_ENTERPRISE_MODE',
+								isEnterpriseMode: userData.eventId !== null,
+							});
 						})
 						.catch((error: FirebaseError | any) => {
 							if (error.type === 'FirebaseError')

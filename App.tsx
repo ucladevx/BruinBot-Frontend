@@ -141,7 +141,20 @@ const Home = () => {
 			</>
 		) : (
 			<>
-				<Stack.Screen name="Qr" component={QrScreen} />
+				<Stack.Screen
+					name="Qr"
+					component={BottomBar}
+					options={{
+						unmountOnBlur: true,
+					}}
+				/>
+				<Stack.Screen
+					name="Map"
+					component={BottomBar}
+					options={{
+						unmountOnBlur: true,
+					}}
+				/>
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
 				<Stack.Screen name="PaymentInfo" component={PaymentInfo} />
