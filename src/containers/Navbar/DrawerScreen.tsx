@@ -32,7 +32,7 @@ const Drawer = ({ navigation }: Props) => {
 		{
 			text: 'Settings',
 			route: 'Settings',
-			iconName: 'md-contact',
+			iconName: 'md-settings',
 			onPress: () => {
 				Alert.alert('Event settings page in development');
 			},
@@ -41,19 +41,17 @@ const Drawer = ({ navigation }: Props) => {
 			? {
 					text: 'Log Out',
 					route: 'Login',
-					iconName: 'person-outline',
-					onPress: () => {
-						() =>
-							state.firebase
-								.auth()
-								.signOut()
-								.then(() => {
-									dispatch({
-										type: 'SET_USER',
-										user: null,
-									});
+					iconName: 'md-contact',
+					onPress: () =>
+						state.firebase
+							.auth()
+							.signOut()
+							.then(() => {
+								dispatch({
+									type: 'SET_USER',
+									user: null,
 								});
-					},
+							}),
 			  }
 			: {
 					text: 'Log In',
@@ -70,7 +68,7 @@ const Drawer = ({ navigation }: Props) => {
 		{
 			text: 'Event Statistics',
 			route: 'Dashboard',
-			iconName: 'person-circle-outline',
+			iconName: 'md-stats',
 			onPress: () => {
 				Alert.alert('Event stats page in development');
 			},
@@ -87,22 +85,20 @@ const Drawer = ({ navigation }: Props) => {
 			text: 'Log Out',
 			route: 'Login',
 			iconName: 'md-contact',
-			onPress: () => {
-				() =>
-					state.firebase
-						.auth()
-						.signOut()
-						.then(() => {
-							dispatch({
-								type: 'SET_ENTERPRISE_MODE',
-								isEnterpriseMode: false,
-							});
-							dispatch({
-								type: 'SET_USER',
-								user: null,
-							});
+			onPress: () =>
+				state.firebase
+					.auth()
+					.signOut()
+					.then(() => {
+						dispatch({
+							type: 'SET_ENTERPRISE_MODE',
+							isEnterpriseMode: false,
 						});
-			},
+						dispatch({
+							type: 'SET_USER',
+							user: null,
+						});
+					}),
 		},
 	];
 
