@@ -10,6 +10,11 @@ export interface MarkerData {
 	_id: string;
 	name: string;
 	location: Location;
+	type: string;
+}
+export interface CalloutProps {
+	marker: MarkerData;
+	onButtonPress(marker: MarkerData): any;
 }
 export interface PropTypes {
 	initRegion: Region;
@@ -21,6 +26,7 @@ export interface PropTypes {
 	mapNodes?: MarkerData[];
 	refresh(): any;
 	selected?: MarkerData;
+	isMapPath?: boolean;
 
 	/**
 	 * Function for when a marker is selected
@@ -30,4 +36,9 @@ export interface PropTypes {
 	 * @param lon Longitude of bot
 	 */
 	onSelect(marker: MarkerData): any;
+	onNodeSelect(marker: MarkerData): any;
+}
+
+export interface MapScreenProps {
+	botSelected?: MarkerData;
 }

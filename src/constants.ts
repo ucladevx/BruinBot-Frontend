@@ -1,4 +1,4 @@
 const NAV_HEIGHT = 90;
-const MAP_MARKER_SIZE = 50;
+const MAP_MARKER_SIZE = 42;
 
 export { NAV_HEIGHT, MAP_MARKER_SIZE };

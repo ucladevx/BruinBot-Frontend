@@ -12,7 +12,7 @@ import MapService from './MapService';
 
 import { EventBot, MapNode, Path } from '../../types/apiTypes';
 import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
-import { Location, MarkerData } from './mapTypes';
+import { Location, MapScreenProps, MarkerData } from './mapTypes';
 
 import { Ctx } from '../../components/StateProvider';
 import { IntentLauncher } from 'expo';
@@ -26,7 +26,7 @@ import LocationImgC from '../../assets/sampleImageLocation3.png';
 import Marker from '../../assets/marker.png';
 import Tank from '../../assets/tank.png';
 
-const MapScreen = () => {
+const MapScreen = ({ botSelected }: MapScreenProps) => {
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -39,9 +39,12 @@ const MapScreen = () => {
 	const [inventories, setInventories] = useState<MapMenuProps['items'] | null>(
 		null
 	);
-	// If markers are bots, these these contain the paths of each non-idle bot
-	// else, if markers are map ndoes, contains all of the possible paths
-	const [botPaths, setBotPaths] = useState<Location[][] | null>(null);
+
+	//Ordered list of locations for the bot to travel to
+	const [botRoute, setBotRoute] = useState<MarkerData[] | null>(null);
+
+	// Path between selected Bot and selected Location
+	const [paths, setPaths] = useState<Location[][] | null>(null);
 
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
@@ -50,10 +53,11 @@ const MapScreen = () => {
 	const [showMapNodes, setShowMapNodes] = useState(false);
 
 	// Bot that was selected to send to some map node, used when showing map nodes
+	const botS: MarkerData | null = botSelected ? botSelected : null;
 	const [
 		selectedBotForOrder,
 		setSelectedBotForOrder,
-	] = useState<MarkerData | null>(null);
+	] = useState<MarkerData | null>(botS);
 
 	const [hasLocationPermission, setLocationPermission] = useState('null');
 	const [alert, setAlert] = useState(false);
@@ -61,25 +65,84 @@ const MapScreen = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const { state } = useContext(Ctx);
 
+	async function addToRoute(marker: MarkerData) {
+		console.log('adding marker ' + marker.name);
+		let curRoute = botRoute ? botRoute : [];
+		if (curRoute.indexOf(marker) > -1) {
+			await removeFromRoute(marker);
+		} else {
+			if (curRoute.length === 0 && selectedBotForOrder) {
+				let curPaths = paths ? paths : [];
+				let newPath = await MapService.getPathBetween(
+					selectedBotForOrder.location,
+					marker.location
+				);
+				curPaths = curPaths.concat([newPath]);
+				setPaths(curPaths);
+			} else if (curRoute.length) {
+				let curPaths = paths ? paths : [];
+				let newPath = await MapService.getPathBetween(
+					curRoute[curRoute.length - 1].location,
+					marker.location
+				);
+				curPaths = curPaths.concat([newPath]);
+				setPaths(curPaths);
+			}
+			curRoute = curRoute.concat([marker]);
+			marker.type = '' + curRoute.length;
+			setBotRoute(curRoute);
+		}
+	}
+
+	async function removeFromRoute(marker: MarkerData) {
+		console.log('removing marker ' + marker.name);
+		let curRoute = botRoute ? botRoute : [];
+		let curPaths = paths ? paths : [];
+		let index: number = curRoute.indexOf(marker);
+		if (index === curRoute.length - 1) {
+			curPaths = curPaths.slice(0, index).concat(curPaths.slice(index + 1));
+		} else {
+			let destMarker: MarkerData = curRoute[index + 1];
+			if (!selectedBotForOrder) {
+				return; //BIG ERROR
+			}
+			let startMarker: MarkerData =
+				index > 0 ? curRoute[index - 1] : selectedBotForOrder;
+			let newPath = await MapService.getPathBetween(
+				startMarker.location,
+				destMarker.location
+			);
+			curPaths = curPaths
+				.slice(0, index)
+				.concat([newPath])
+				.concat(curPaths.slice(index + 2));
+		}
+		curRoute = curRoute.slice(0, index).concat(curRoute.slice(index + 1));
+		setPaths(curPaths);
+		for (let i = 0; i < curRoute.length; i++) {
+			curRoute[i].type = '' + (i + 1);
+		}
+		marker.type = 'mapnode';
+		setBotRoute(curRoute);
+	}
+
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
 			const userLocation: Location = await findUserLocation();
 			const data = await BotService.getEventBots(state.user!.eventId!);
-			const {
-				botArray,
-				botHeaderInfo,
-				botItems,
-				botPaths,
-			} = formatEventBotsData(data, userLocation);
+			const { botArray, botHeaderInfo, botItems } = formatEventBotsData(
+				data,
+				userLocation
+			);
 
 			setMarkers(botArray);
 			setHeaderInfo(botHeaderInfo);
 			setInventories(botItems);
-			setBotPaths(botPaths);
 		} catch (err) {
 			if (!alert) {
 				setAlert(true);
+				console.log(err);
 				Alert.alert('Oops', 'Could not retrieve bot/location information.', [
 					{
 						text: 'Ok',
@@ -103,10 +166,8 @@ const MapScreen = () => {
 		try {
 			const mapNodes = await MapService.getMapNodes(latitude, longitude);
 			const { mapNodeArray, mapNodeHeaderInfo } = formatMapNodesData(mapNodes);
-			const { mapPaths } = formatMapPathsData(await MapService.getMapPaths());
 
 			setMarkers(mapNodeArray);
-			setBotPaths(mapPaths);
 			setHeaderInfo(mapNodeHeaderInfo);
 		} catch (err) {
 			if (!alert) {
@@ -225,7 +286,7 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={botPaths ? botPaths : []}
+						lineCoords={paths ? paths : []}
 						refresh={() => {
 							setMapNodes(
 								selectedBotForOrder.location.latitude,
@@ -236,6 +297,10 @@ const MapScreen = () => {
 						onSelect={(marker: MarkerData) => {
 							setSelectedMarker(marker);
 						}}
+						onNodeSelect={(marker: MarkerData) => {
+							addToRoute(marker);
+						}}
+						isMapPath={!botRoute || botRoute.length === 0 ? false : true}
 					/>
 				</View>
 				{selectedMarker && (
@@ -246,7 +311,6 @@ const MapScreen = () => {
 							title: 'Send',
 							onButton: () => {
 								BotService.sendBot(selectedBotForOrder._id, selectedMarker._id);
-
 								setLoading(true);
 								setTimeout(() => {
 									setLoading(false);
@@ -278,10 +342,11 @@ const MapScreen = () => {
 							latitude: lat,
 							longitude: lng,
 						}))}
-						lineCoords={botPaths ? botPaths : []}
+						lineCoords={[]}
 						refresh={runRequests}
 						selected={selectedMarker ? selectedMarker : undefined}
 						onSelect={(marker: MarkerData) => setSelectedMarker(marker)}
+						onNodeSelect={() => {}}
 					/>
 				</View>
 				{selectedMarker && (
@@ -329,12 +394,15 @@ const formatEventBotsData = (
 ) => {
 	const botMarkers: { [key: string]: MarkerData } = {};
 	const botHeaderInfo: MapMenuProps['info'] = {};
-	const botPaths: Location[][] = [];
 	const botItems: MapMenuProps['items'] = {};
 
 	apiData.forEach((bot, idx) => {
 		const { inventory, ...trimBot } = bot;
-		botMarkers[bot._id] = { ...trimBot, location: { ...trimBot.location } }; // clone location
+		botMarkers[bot._id] = {
+			...trimBot,
+			location: { ...trimBot.location },
+			type: 'bot',
+		}; // clone location
 
 		const items: ItemProps[] = [];
 		let itemCount = 0;
@@ -367,38 +435,37 @@ const formatEventBotsData = (
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
-		if (bot.status == 'InTransit') {
-			botPaths.push(bot.path);
-		}
-
 		botItems[bot._id] = items;
 	});
-	return { botArray: botMarkers, botHeaderInfo, botItems, botPaths };
+	return { botArray: botMarkers, botHeaderInfo, botItems };
 };
 
 const formatMapNodesData = (apiData: MapNode[]) => {
 	const mapNodeMarkers: { [key: string]: MarkerData } = {};
 	const mapNodeHeaderInfo: MapMenuProps['info'] = {};
 
-	apiData.forEach((node, idx) => {
-		// TODO: figure out what to name intermediate checkpoints
-		let name = node.name
-			? node.name
-			: 'Checkpoint ' +
-			  String.fromCharCode(65 + Math.floor(Math.random() * 26));
-		mapNodeMarkers[node._id] = {
-			_id: node._id,
-			name: name,
-			location: node.location,
-		};
+	apiData
+		.filter((node) => node.name)
+		.forEach((node, idx) => {
+			// TODO: figure out what to name intermediate checkpoints
+			let name = node.name
+				? node.name
+				: 'Checkpoint ' +
+				  String.fromCharCode(65 + Math.floor(Math.random() * 26));
+			mapNodeMarkers[node._id] = {
+				_id: node._id,
+				name: name,
+				location: node.location,
+				type: 'mapnode',
+			};
 
-		mapNodeHeaderInfo[node._id] = {
-			topLeft: name,
-			topRight: node.distance.toFixed(0).toString() + 'm away',
-			bottomRight: node.eta.toFixed(1).toString() + ' minutes',
-			imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
-		};
-	});
+			mapNodeHeaderInfo[node._id] = {
+				topLeft: name,
+				topRight: node.distance.toFixed(0).toString() + 'm away',
+				bottomRight: node.eta.toFixed(1).toString() + ' minutes',
+				imgSrc: [LocationImgA, LocationImgB, LocationImgC][idx % 3],
+			};
+		});
 	return { mapNodeArray: mapNodeMarkers, mapNodeHeaderInfo };
 };
 
