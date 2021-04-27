@@ -1,5 +1,5 @@
 import { Button } from 'react-native-elements';
-import { Dimensions, StyleSheet, TextInput, View } from 'react-native';
+import { Dimensions, StyleSheet, TextInput } from 'react-native';
 import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from '../Auth/Form';
