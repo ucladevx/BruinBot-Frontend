@@ -22,7 +22,7 @@ const EmailList = ({ navigation }: Props) => {
 	};
 
 	return (
-		<Form title="Join Our Email List!" navigation={navigation}>
+		<Form bigTitle title="Join Our Email List!" navigation={navigation}>
 			<TextInput
 				style={[styles.input, { width: screenWidth * 0.9 }]}
 				placeholder="Email"
