@@ -1,8 +1,10 @@
+import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Dimensions, StyleSheet, TextInput, View } from 'react-native';
 import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from '../Auth/Form';
+import ItemService from '../../services/ItemService';
+import Loading from '../../components/Loading';
 import React, { useState } from 'react';
 
 type Props = {
@@ -14,11 +16,28 @@ const screenHeight = Dimensions.get('window').height;
 
 const EmailList = ({ navigation }: Props) => {
 	const [email, setEmail] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const navigateForward = () => {
 		navigation.navigate('PaymentSuccess', {
 			success: true,
 		});
+	};
+
+	const submitEmail = async () => {
+		if (!email.includes('@')) {
+			Alert.alert('Please enter a valid email address.');
+		}
+		try {
+			setLoading(true);
+			await ItemService.addEmail(email);
+			setLoading(false);
+			navigateForward();
+		} catch (err) {
+			console.log(err);
+			Alert.alert('Something went wrong when submitting your email...');
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -30,11 +49,18 @@ const EmailList = ({ navigation }: Props) => {
 				onChangeText={(text) => setEmail(text)}
 			/>
 			<Button
-				onPress={navigateForward}
+				onPress={submitEmail}
 				buttonStyle={styles.button}
 				title="Submit"
 				titleStyle={styles.buttonText}
 			/>
+			{loading ? (
+				<View style={{ alignItems: 'center', flex: 1 }}>
+					<Loading loadingText={'Processing'} />
+				</View>
+			) : (
+				<View></View>
+			)}
 		</Form>
 	);
 };
