@@ -26,7 +26,9 @@ import LocationImgC from '../../assets/sampleImageLocation3.png';
 import Marker from '../../assets/marker.png';
 import Tank from '../../assets/tank.png';
 
-const MapScreen = ({ botSelected }: MapScreenProps) => {
+const MapScreen = ({ route, navigation }: MapScreenProps) => {
+	const botSelected = route.params?.botSelected || null;
+
 	// For displaying the markers on the map
 	const [markers, setMarkers] = useState<{ [key: string]: MarkerData } | null>(
 		null
@@ -49,15 +51,20 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 	// Id of the marker that is currently selected
 	const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
 
-	// true -> map nodes displayed on map, false -> bots displayed on map
-	const [showMapNodes, setShowMapNodes] = useState(false);
-
 	// Bot that was selected to send to some map node, used when showing map nodes
 	const botS: MarkerData | null = botSelected ? botSelected : null;
 	const [
 		selectedBotForOrder,
 		setSelectedBotForOrder,
 	] = useState<MarkerData | null>(botS);
+
+	// true -> map nodes displayed on map, false -> bots displayed on map
+	const [showMapNodes, setShowMapNodes] = useState(!!selectedBotForOrder);
+
+	useEffect(() => {
+		setSelectedBotForOrder(botSelected);
+		setShowMapNodes(!!botSelected);
+	}, [botSelected]);
 
 	const [hasLocationPermission, setLocationPermission] = useState('null');
 	const [alert, setAlert] = useState(false);
@@ -184,6 +191,15 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 		}
 	}
 
+	async function setMapNodesSelected() {
+		if (selectedBotForOrder) {
+			setMapNodes(
+				selectedBotForOrder.location.latitude,
+				selectedBotForOrder.location.longitude
+			);
+		}
+	}
+
 	/**
 	 * Finds and sets the user's location
 	 */
@@ -220,6 +236,9 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 		if (!showMapNodes && hasLocationPermission === 'granted') {
 			runRequests();
 			intervalId = setInterval(runRequests, MAP_REFRESH_RATE);
+		} else if (showMapNodes) {
+			setMapNodesSelected();
+			intervalId = setInterval(setMapNodesSelected, MAP_REFRESH_RATE);
 		} else {
 			clearInterval(intervalId!!);
 		}
@@ -357,13 +376,11 @@ const MapScreen = ({ botSelected }: MapScreenProps) => {
 						button={{
 							title: 'Order',
 							onButton: () => {
+								navigation.navigate('SelectMarker', {
+									markers: Object.values(markers),
+									selectedId: selectedMarker._id,
+								});
 								// TODO: add check for if bot is "InTransit"
-								setSelectedBotForOrder(selectedMarker);
-								setMapNodes(
-									selectedMarker.location.latitude,
-									selectedMarker.location.longitude
-								);
-								setShowMapNodes(true);
 							},
 						}}
 					/>
