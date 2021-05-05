@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { NAV_HEIGHT } from '../../constants';
 import { RootStackParamList } from '../../../App';
@@ -22,9 +22,13 @@ type Props = {
 };
 
 const SelectMarkerScreen = ({ route, navigation }: Props) => {
-	const [selected, setSelected] = useState<String | null>(null);
+	const { markers, selectedId } = route.params;
 
-	const { markers } = route.params;
+	const [selected, setSelected] = useState<String | null>(selectedId);
+
+	useEffect(() => {
+		setSelected(selectedId);
+	}, [selectedId]);
 
 	const handlePress = (id: string) => setSelected(id);
 
@@ -63,6 +67,16 @@ const SelectMarkerScreen = ({ route, navigation }: Props) => {
 					},
 				]}
 				disabled={selected === null}
+				onPress={() => {
+					// @ts-ignore
+					// Navigating inside a nested navigator gives an tsc error.
+					navigation.navigate('Map', {
+						screen: 'Map',
+						params: {
+							botSelected: markers.find((item) => item._id === selected),
+						},
+					});
+				}}
 			>
 				<Text style={styles.buttonText}>Continue</Text>
 			</TouchableOpacity>

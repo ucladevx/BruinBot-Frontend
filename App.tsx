@@ -39,7 +39,7 @@ export type RootStackParamList = {
 	PasswordReset: undefined;
 	Blank: undefined;
 	Map: undefined;
-	SelectMarker: { markers: MarkerData[] };
+	SelectMarker: { markers: MarkerData[]; selectedId: Bot['_id'] | null };
 	InventoryModification: { bot: Bot };
 	AddItem: { bot: Bot };
 	ItemWeight: {

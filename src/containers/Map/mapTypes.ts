@@ -1,6 +1,8 @@
+import { RootStackParamList as BottomRootStackParamList } from '../Navbar/BottomBarNavigator';
 import { ImageSourcePropType } from 'react-native';
 import { LatLng, Region } from 'react-native-maps';
 import { RootStackParamList } from '../../../App';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export interface Location {
@@ -42,6 +44,6 @@ export interface PropTypes {
 }
 
 export interface MapScreenProps {
-	botSelected?: MarkerData;
+	route: RouteProp<BottomRootStackParamList, 'Map'>;
 	navigation: StackNavigationProp<RootStackParamList, 'Map'>;
 }

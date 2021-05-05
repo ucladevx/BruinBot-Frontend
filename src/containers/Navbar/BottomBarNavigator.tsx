@@ -2,12 +2,18 @@ import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
+import { MarkerData } from '../Map/mapTypes';
 import CameraImage from '../../assets/camera.png';
 import MapImage from '../../assets/map.png';
 import MapScreen from '../Map/MapScreen';
 import QrScreen from '../QR/QrScreen';
 
-const BottomTab = createBottomTabNavigator();
+export type RootStackParamList = {
+	Map: { botSelected?: MarkerData };
+	Qr: undefined;
+};
+
+const BottomTab = createBottomTabNavigator<RootStackParamList>();
 
 interface IconProps {
 	color: string;
@@ -30,7 +36,7 @@ const BottomBarNavigator = () => {
 
 	return (
 		<BottomTab.Navigator
-			initialRouteName="Qr"
+			initialRouteName="Map"
 			tabBarOptions={{ inactiveTintColor: '#000' }}
 		>
 			<BottomTab.Screen
