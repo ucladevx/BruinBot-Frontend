@@ -49,4 +49,9 @@ const addItem = async (
 	return res.data;
 };
 
-export default { addItem };
+const addEmail = async (email: string) => {
+	const res = await axios.post('/email', { email });
+	return res.data;
+};
+
+export default { addItem, addEmail };
