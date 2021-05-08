@@ -109,7 +109,7 @@ const PaymentInfo = ({ navigation, route }: PaymentInfoProps) => {
 	};
 
 	return (
-		<Form title="Enter Payment Info" navigation={navigation}>
+		<Form bigTitle title="Enter Payment Info" navigation={navigation}>
 			<TextInput
 				style={[styles.input, { width: screenWidth * 0.9 }]}
 				placeholder="0000 0000 0000 0000"
