@@ -70,7 +70,7 @@ const SelectMarkerScreen = ({ route, navigation }: Props) => {
 				onPress={() => {
 					// @ts-ignore
 					// Navigating inside a nested navigator gives an tsc error.
-					navigation.navigate('Map', {
+					navigation.navigate('BottomBar', {
 						screen: 'Map',
 						params: {
 							botSelected: markers.find((item) => item._id === selected),
