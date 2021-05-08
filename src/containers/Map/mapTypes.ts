@@ -45,5 +45,5 @@ export interface PropTypes {
 
 export interface MapScreenProps {
 	route: RouteProp<BottomRootStackParamList, 'Map'>;
-	navigation: StackNavigationProp<RootStackParamList, 'Map'>;
+	navigation: StackNavigationProp<RootStackParamList, 'BottomBar'>;
 }
