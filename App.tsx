@@ -38,7 +38,7 @@ export type RootStackParamList = {
 	Signup: undefined;
 	PasswordReset: undefined;
 	Blank: undefined;
-	Map: undefined;
+	BottomBar: undefined;
 	SelectMarker: { markers: MarkerData[]; selectedId: Bot['_id'] | null };
 	InventoryModification: { bot: Bot };
 	AddItem: { bot: Bot };
@@ -116,20 +116,13 @@ const Home = () => {
 		stack = state.isEnterpriseMode ? (
 			<>
 				<Stack.Screen
-					name="Map"
+					name="BottomBar"
 					component={BottomBar}
 					options={{
 						unmountOnBlur: true,
 					}}
 				/>
 				<Stack.Screen name="ItemCatalogue" component={ItemCatalogue} />
-				<Stack.Screen
-					name="Qr"
-					component={BottomBar}
-					options={{
-						unmountOnBlur: true,
-					}}
-				/>
 				<Stack.Screen name="SelectMarker" component={SelectMarkerScreen} />
 				<Stack.Screen name="AddItem" component={AddItem} />
 				<Stack.Screen name="Dashboard" component={DashboardScreen} />
@@ -142,14 +135,7 @@ const Home = () => {
 		) : (
 			<>
 				<Stack.Screen
-					name="Qr"
-					component={BottomBar}
-					options={{
-						unmountOnBlur: true,
-					}}
-				/>
-				<Stack.Screen
-					name="Map"
+					name="BottomBar"
 					component={BottomBar}
 					options={{
 						unmountOnBlur: true,

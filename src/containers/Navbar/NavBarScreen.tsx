@@ -45,13 +45,32 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 	};
 
 	const customConfig: { [screen: string]: ButtonConfig } = {
-		Map: {
-			action: () => navigation.openDrawer(),
-			icon: Menu,
-		},
 		Qr: {
 			action: () => navigation.openDrawer(),
 			icon: Menu,
+		},
+		BottomBar: {
+			// when signed in, BottomBar holds Map and Qr
+			action: () => navigation.openDrawer(),
+			icon: Menu,
+		},
+		SelectMarker: {
+			action: () =>
+				// @ts-ignore
+				// Navigating inside a nested navigator gives an tsc error.
+				navigation.navigate('BottomBar', {
+					screen: 'Map', // go to Map from SelectMarker
+				}),
+			icon: Back,
+		},
+		Dashboard: {
+			action: () =>
+				// @ts-ignore
+				// Navigating inside a nested navigator gives an tsc error.
+				navigation.navigate('BottomBar', {
+					screen: 'Qr', // go to Qr from Dashboard
+				}),
+			icon: Back,
 		},
 	};
 

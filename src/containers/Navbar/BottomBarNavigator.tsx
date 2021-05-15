@@ -36,7 +36,7 @@ const BottomBarNavigator = () => {
 
 	return (
 		<BottomTab.Navigator
-			initialRouteName="Map"
+			initialRouteName="Map" // default to Map
 			tabBarOptions={{ inactiveTintColor: '#000' }}
 		>
 			<BottomTab.Screen
