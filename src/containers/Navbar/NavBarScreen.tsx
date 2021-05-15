@@ -10,7 +10,9 @@ import Back from '../../assets/back.png';
 import Help from '../../assets/help.png';
 import Logo from '../../assets/logo.png';
 import Menu from '../../assets/menu.png';
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { Ctx } from '../../components/StateProvider';
 
 export const NavCenter = () => <Image style={styles.logo} source={Logo} />;
 
@@ -35,6 +37,8 @@ export const HelpButton = () => {
 };
 
 export const HeaderButton = ({ navigation, screen }: Props) => {
+	const { state } = useContext(Ctx);
+
 	const defaultConfig: ButtonConfig = {
 		action: () => {
 			if (navigation.canGoBack()) {
@@ -70,6 +74,28 @@ export const HeaderButton = ({ navigation, screen }: Props) => {
 				navigation.navigate('BottomBar', {
 					screen: 'Qr', // go to Qr from Dashboard
 				}),
+			icon: Back,
+		},
+		PaymentSuccess: {
+			action: () => {
+				if (state.user && state.isEnterpriseMode) {
+					// @ts-ignore
+					// Navigating inside a nested navigator gives an tsc error.
+					navigation.navigate('BottomBar', {
+						screen: 'Map', // go to Map from PaymentSuccess
+					});
+				} else if (state.user) {
+					// @ts-ignore
+					// Navigating inside a nested navigator gives an tsc error.
+					navigation.navigate('BottomBar', {
+						screen: 'Qr', // go to Map from PaymentSuccess
+					});
+				} else {
+					// @ts-ignore
+					// Navigating inside a nested navigator gives an tsc error.
+					navigation.navigate('Qr');
+				}
+			},
 			icon: Back,
 		},
 	};
