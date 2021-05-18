@@ -320,6 +320,31 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 							addToRoute(marker);
 						}}
 						isMapPath={!botRoute || botRoute.length === 0 ? false : true}
+						onDone={async () => {
+							if (botRoute) {
+								setLoading(true);
+								let lats: number[] = [];
+								let longs: number[] = [];
+								botRoute.splice(1).map((marker) => {
+									lats.push(marker.location.latitude);
+									longs.push(marker.location.longitude);
+								});
+								await BotService.sendBot(
+									selectedBotForOrder._id,
+									botRoute[0]._id
+								);
+								await BotService.updateQueue(
+									selectedBotForOrder._id,
+									lats,
+									longs
+								);
+								setTimeout(() => {
+									setLoading(false);
+									setShowMapNodes(false);
+									setSelectedBotForOrder(null);
+								}, 1000);
+							}
+						}}
 					/>
 				</View>
 				{selectedMarker && (
