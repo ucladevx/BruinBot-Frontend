@@ -56,6 +56,7 @@ const MapComponent = ({
 	onSelect,
 	onNodeSelect,
 	isMapPath,
+	onDone,
 }: PropTypes) => {
 	const mapRef = useRef<MapView>(null);
 	const doneButtonBackgroundColor = isMapPath
@@ -304,7 +305,7 @@ const MapComponent = ({
 						backgroundColor: doneButtonBackgroundColor,
 					}}
 					containerStyle={styles.buttonContainer}
-					onPress={() => {}}
+					onPress={() => onDone()}
 				/>
 			)}
 			{/*<TouchableOpacity style={{...styles.button, ...styles.smallerButton, top: '7.9%', left: 18,}}>

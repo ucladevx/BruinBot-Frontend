@@ -31,6 +31,7 @@ export interface PropTypes {
 	refresh(): any;
 	selected?: MarkerData;
 	isMapPath?: boolean;
+	onDone?: any;
 
 	/**
 	 * Function for when a marker is selected
