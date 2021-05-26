@@ -136,7 +136,17 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 	async function runRequests() {
 		// TODO: use actual API given event id from logged in user
 		try {
-			const userLocation: Location = await findUserLocation();
+			let userLocation = null;
+			if (hasLocationPermission === 'granted') {
+				try {
+					userLocation = await findUserLocation();
+				} catch (err) {
+					// don't alert and ignore common iOS simulator bug
+					// where acquiring user location fails
+					console.log(err);
+				}
+			}
+
 			const data = await BotService.getEventBots(state.user!.eventId!);
 			const { botArray, botHeaderInfo, botItems } = formatEventBotsData(
 				data,
@@ -150,7 +160,7 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 			if (!alert) {
 				setAlert(true);
 				console.log(err);
-				Alert.alert('Oops', 'Could not retrieve bot/location information.', [
+				Alert.alert('Oops', 'Could not retrieve bot information.', [
 					{
 						text: 'Ok',
 						onPress: () => {
@@ -205,7 +215,6 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 	 */
 	async function findUserLocation() {
 		let location = await Loc.getCurrentPositionAsync({});
-		//console.log(location);
 		return {
 			longitude: location.coords.latitude,
 			latitude: location.coords.latitude,
@@ -213,34 +222,24 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 	}
 
 	useEffect(() => {
-		if (hasLocationPermission !== 'granted') {
+		if (
+			hasLocationPermission !== 'granted' &&
+			hasLocationPermission !== 'ignore'
+		) {
 			Permissions.askAsync(Permissions.LOCATION).then((res) => {
 				setLocationPermission(res.status);
-				if (res.status === 'granted') {
-					setAlert(true);
-					Alert.alert('Thank you', 'Location permissions granted.', [
-						{
-							text: 'Ok',
-							onPress: () => {
-								setAlert(false);
-							},
-						},
-					]);
-				}
 			});
 		}
 	}, [hasLocationPermission]);
 
 	useEffect(() => {
 		let intervalId: ReturnType<typeof setTimeout> | null = null;
-		if (!showMapNodes && hasLocationPermission === 'granted') {
+		if (!showMapNodes) {
 			runRequests();
 			intervalId = setInterval(runRequests, MAP_REFRESH_RATE);
-		} else if (showMapNodes) {
+		} else {
 			setMapNodesSelected();
 			intervalId = setInterval(setMapNodesSelected, MAP_REFRESH_RATE);
-		} else {
-			clearInterval(intervalId!!);
 		}
 		return () => {
 			clearInterval(intervalId!!);
@@ -248,40 +247,35 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [showMapNodes, hasLocationPermission]);
 
-	if (hasLocationPermission !== 'granted') {
-		if (!alert && hasLocationPermission === 'denied') {
-			setAlert(true);
-			Alert.alert('Oops', 'No access to location permissions.', [
-				{
-					text: 'Ok',
-					onPress: () => {
+	if (!alert && hasLocationPermission === 'denied') {
+		setAlert(true);
+		Alert.alert('Cannot Get Location', 'Continue without user location?', [
+			{
+				text: 'Continue',
+				onPress: () => {
+					setLocationPermission('ignore');
+					setAlert(false);
+				},
+			},
+			{
+				text: 'Open Settings',
+				onPress: () => {
+					if (Platform.OS == 'ios') {
+						// Linking for iOS
+						Linking.openURL('app-settings:');
+					} else {
+						// IntentLauncher for Android
+						IntentLauncher.startActivityAsync(
+							IntentLauncher.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS
+						);
+					}
+					setTimeout(() => {
 						setLocationPermission('null');
 						setAlert(false);
-					},
+					}, 5000); // wait before checking for location permission
 				},
-				{
-					text: 'Open Settings',
-					onPress: () => {
-						setAlert(false);
-						if (Platform.OS == 'ios') {
-							// Linking for iOS
-							Linking.openURL('app-settings:');
-						} else {
-							// IntentLauncher for Android
-							IntentLauncher.startActivityAsync(
-								IntentLauncher.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS
-							);
-						}
-						setLocationPermission('null');
-					},
-				},
-			]);
-		}
-		return (
-			<View style={styles.container}>
-				<Loading loadingText={'Loading'} />
-			</View>
-		);
+			},
+		]);
 	}
 
 	if (loading || !markers || !headerInfo) {
@@ -441,14 +435,14 @@ const formatEventBotsData = (
 					.toFixed(0)
 					.toString()
 					.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-			: '0';
+			: null;
 
 		botHeaderInfo[bot._id] = {
 			topLeft: bot.name,
 			topRight: itemCount.toString() + ' items',
-			// TODO: fix distance, items sold, and bot image
-			bottomLeft: distance + 'm away',
+			bottomLeft: distance ? distance + 'm away' : '',
 			bottomRight: itemsSold + ' items sold',
+			// TODO: fix bot image
 			imgSrc: [Bot, Tank, Crane][idx % 3],
 		};
 
