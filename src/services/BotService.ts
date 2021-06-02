@@ -64,4 +64,21 @@ async function sendBot(botId: string, nodeId: string) {
 	}
 }
 
-export default { getEventBots, getAllBots, getOneBot, sendBot };
+async function updateQueue(botId: string, lats: number[], longs: number[]) {
+	try {
+		let data: Bot = (
+			await axios.put('/bots/replaceQueue', {
+				botId: botId,
+				latitudeArray: lats,
+				longitudeArray: longs,
+			})
+		).data;
+		console.log(data);
+		return data;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export default { getEventBots, getAllBots, getOneBot, sendBot, updateQueue };
