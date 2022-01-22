@@ -32,6 +32,7 @@
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": ["tsx", "scss", "png", "jpeg", "gif"]
-    }
+    },
+    "sdkVersion": "41.0.0"
   }
 }
