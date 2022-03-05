@@ -1,6 +1,6 @@
 import { Button, Input, Text } from 'react-native-elements';
 import { Ctx } from '../../components/StateProvider';
-import { FirebaseError } from 'firebase';
+import firebase from 'firebase';
 import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { handleAuthErrors } from './FormUtils';
@@ -78,7 +78,7 @@ const PasswordResetEmailForm = ({ nextStage }: { nextStage: () => void }) => {
 						.then(() => {
 							nextStage();
 						})
-						.catch((error: FirebaseError) => {
+						.catch((error: firebase.FirebaseError) => {
 							setFormError(handleAuthErrors(error).email);
 						});
 				}}
@@ -112,7 +112,7 @@ const ChangePasswordForm = ({ nextStage }: { nextStage: () => void }) => {
 								setConfirmed(true);
 								setFormError('');
 							})
-							.catch((error: FirebaseError) => {
+							.catch((error: firebase.FirebaseError) => {
 								setFormError(handleAuthErrors(error).password);
 							});
 					}}
@@ -137,7 +137,7 @@ const ChangePasswordForm = ({ nextStage }: { nextStage: () => void }) => {
 							.then(() => {
 								nextStage();
 							})
-							.catch((error: FirebaseError) => {
+							.catch((error: firebase.FirebaseError) => {
 								setFormError(handleAuthErrors(error).password);
 							});
 					}}

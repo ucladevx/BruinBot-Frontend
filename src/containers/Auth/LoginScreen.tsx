@@ -10,7 +10,7 @@ import { styles } from './FormStyles';
 import Axios from 'axios';
 import Form from './Form';
 import React, { useContext, useEffect, useState } from 'react';
-import firebase, { FirebaseError } from 'firebase';
+import firebase from 'firebase';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Login'>;
@@ -61,8 +61,8 @@ const LoginScreen = ({ navigation }: Props) => {
 						.auth()
 						.signInWithEmailAndPassword(email, password)
 						// Fetch Firebase JWT
-						.then((user: firebase.User) => {
-							return Promise.all([user, user.getIdToken(true)]);
+						.then((user) => {
+							return Promise.all([user, user.user?.getIdToken(true)]);
 						})
 						// Fetch user data
 						.then(([user, token]) => {
@@ -81,7 +81,7 @@ const LoginScreen = ({ navigation }: Props) => {
 								user: {
 									_id: userData._id,
 									eventId: userData.eventId,
-									uid: user.uid,
+									uid: user.user?.uid || '',
 								},
 							});
 							dispatch({
@@ -89,7 +89,7 @@ const LoginScreen = ({ navigation }: Props) => {
 								isEnterpriseMode: userData.eventId !== null,
 							});
 						})
-						.catch((error: FirebaseError | any) => {
+						.catch((error: firebase.FirebaseError | any) => {
 							if (error.type === 'FirebaseError')
 								setFormErrors(handleAuthErrors(error));
 							else {

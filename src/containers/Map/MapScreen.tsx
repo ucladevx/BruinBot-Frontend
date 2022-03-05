@@ -1,6 +1,6 @@
+import * as IntentLauncher from 'expo-intent-launcher';
 import * as Linking from 'expo-linking';
 import * as Loc from 'expo-location';
-import * as Permissions from 'expo-permissions';
 import { Alert, Dimensions, Platform, StyleSheet, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -15,7 +15,6 @@ import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
 import { Location, MapScreenProps, MarkerData } from './mapTypes';
 
 import { Ctx } from '../../components/StateProvider';
-import { IntentLauncher } from 'expo';
 import { MAP_REFRESH_RATE } from '../../config';
 import Bot from '../../assets/robot.png';
 import CampusData from '../../assets/campusCoords.json';
@@ -53,10 +52,8 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 
 	// Bot that was selected to send to some map node, used when showing map nodes
 	const botS: MarkerData | null = botSelected ? botSelected : null;
-	const [
-		selectedBotForOrder,
-		setSelectedBotForOrder,
-	] = useState<MarkerData | null>(botS);
+	const [selectedBotForOrder, setSelectedBotForOrder] =
+		useState<MarkerData | null>(botS);
 
 	// true -> map nodes displayed on map, false -> bots displayed on map
 	const [showMapNodes, setShowMapNodes] = useState(!!selectedBotForOrder);
@@ -214,7 +211,7 @@ const MapScreen = ({ route, navigation }: MapScreenProps) => {
 
 	useEffect(() => {
 		if (hasLocationPermission !== 'granted') {
-			Permissions.askAsync(Permissions.LOCATION).then((res) => {
+			Loc.getForegroundPermissionsAsync().then((res) => {
 				setLocationPermission(res.status);
 				if (res.status === 'granted') {
 					setAlert(true);
