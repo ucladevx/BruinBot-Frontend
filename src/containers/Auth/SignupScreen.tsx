@@ -10,7 +10,7 @@ import { styles } from './FormStyles';
 import Axios from 'axios';
 import Form from './Form';
 import React, { useContext, useEffect, useState } from 'react';
-import firebase, { FirebaseError } from 'firebase';
+import firebase from 'firebase';
 
 type Props = {
 	navigation: StackNavigationProp<RootStackParamList, 'Signup'>;
@@ -62,7 +62,7 @@ const SignupScreen = ({ navigation }: Props) => {
 						.auth()
 						.createUserWithEmailAndPassword(email, password)
 						// Fetch Firebase JWT
-						.then((user) => Promise.all([user, user.getIdToken(true)]))
+						.then((user) => Promise.all([user, user.user?.getIdToken(true)]))
 						// Init user data in Mongo
 						.then(([user, token]) => {
 							return Promise.all([
@@ -82,11 +82,11 @@ const SignupScreen = ({ navigation }: Props) => {
 								user: {
 									_id: userData._id,
 									eventId: userData.eventId,
-									uid: user.uid,
+									uid: user.user?.uid || '',
 								},
 							});
 						})
-						.catch((error: FirebaseError | any) => {
+						.catch((error: firebase.FirebaseError | any) => {
 							setSigningIn(false);
 							// Only FirebaseError has code
 							if (error.code) setFormErrors(handleAuthErrors(error));
