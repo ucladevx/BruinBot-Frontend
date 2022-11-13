@@ -1,6 +1,6 @@
 import { Ctx } from '../components/StateProvider';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';

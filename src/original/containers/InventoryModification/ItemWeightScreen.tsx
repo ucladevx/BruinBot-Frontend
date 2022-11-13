@@ -1,5 +1,5 @@
 import { BASE_URL } from '../../config';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';

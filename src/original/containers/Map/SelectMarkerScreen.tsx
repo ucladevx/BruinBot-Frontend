@@ -12,7 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 
 import { NAV_HEIGHT } from '../../constants';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import BotIcon from '../../assets/botIcon.png';
 import MainStyles from '../../styles/main.scss';
 

@@ -1,4 +1,4 @@
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import QrComponent from './QrView';
 import React from 'react';

@@ -2,7 +2,7 @@ import { Bot } from '../../types/apiTypes';
 import { Button } from 'react-native-elements';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { ItemProps, MapMenuProps } from '../../types/inventoryTypes';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Crane from '../../assets/crane.png';

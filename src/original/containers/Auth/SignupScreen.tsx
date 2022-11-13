@@ -3,7 +3,7 @@ import { BASE_URL } from '../../config';
 import { Button, Input } from 'react-native-elements';
 import { Ctx } from '../../components/StateProvider';
 import { PasswordInput, handleAuthErrors } from './FormUtils';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { UserData } from '../../types/apiTypes';
 import { styles } from './FormStyles';

@@ -1,6 +1,6 @@
 import { Button } from 'react-native-elements';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';

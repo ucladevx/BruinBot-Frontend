@@ -1,7 +1,7 @@
 import { Button, Input, Text } from 'react-native-elements';
 import { Ctx } from '../../components/StateProvider';
 import { FirebaseError } from 'firebase';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { handleAuthErrors } from './FormUtils';
 import { styles } from './FormStyles';

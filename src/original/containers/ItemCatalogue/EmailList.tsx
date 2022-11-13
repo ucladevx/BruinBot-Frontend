@@ -1,6 +1,6 @@
 import { Alert, Dimensions, StyleSheet, TextInput, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from '../Auth/Form';
 import ItemService from '../../services/ItemService';

@@ -10,7 +10,7 @@ import {
 import { Icon } from 'react-native-elements';
 import React from 'react';
 
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import MainStyles from '../../styles/main.scss';
 
 interface HeaderProps {

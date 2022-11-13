@@ -5,7 +5,7 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 } from 'react-native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import Back from '../../assets/back.png';
 import Help from '../../assets/help.png';
 import Logo from '../../assets/logo.png';

@@ -1,6 +1,6 @@
 import { Bot } from './apiTypes';
 import { ImageSourcePropType } from 'react-native';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export interface ItemProps {

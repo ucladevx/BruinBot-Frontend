@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Ctx } from '../../components/StateProvider';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Form from '../Auth/Form';

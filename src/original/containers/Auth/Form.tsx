@@ -7,7 +7,7 @@ import {
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Text } from 'react-native-elements';
 import React from 'react';

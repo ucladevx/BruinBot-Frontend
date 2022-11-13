@@ -2,7 +2,7 @@ import * as Linking from 'expo-linking';
 import * as Permissions from 'expo-permissions';
 import * as URL from 'url';
 import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';

@@ -17,7 +17,7 @@ import { Bot } from '../../types/apiTypes';
 import { Ctx } from '../../components/StateProvider';
 import { Item } from '../../types/apiTypes';
 import { NAV_HEIGHT } from '../../constants';
-import { RootStackParamList } from '../../../App';
+import { RootStackParamList } from '../../../../App';
 import { RouteProp } from '@react-navigation/native';
 import { styles as formStyles } from '../Auth/FormStyles';
 import BotService from '../../services/BotService';
@@ -66,7 +66,8 @@ const AddItem = ({ navigation, route }: AddItemProps) => {
 
 	useEffect(() => {
 		(async () => {
-			const response: PermissionResponse = await Camera.requestPermissionsAsync();
+			const response: PermissionResponse =
+				await Camera.requestPermissionsAsync();
 			setHasPermission(response.status === 'granted');
 		})();
 	}, []);
